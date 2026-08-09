@@ -1,0 +1,45 @@
+:root {
+  --ink: #0f1419;
+  --ink-soft: #1a222c;
+  --ink-line: #2a3440;
+  --paper: #f3f1ec;
+  --paper-dim: #e8e4db;
+  --paper-line: #d5d0c4;
+  --amber: #f5b800;
+  --amber-dark: #d9a200;
+  --orange: #e05a22;
+  --steel: #1a3d5c;
+  --slate: #5a646e;
+  --slate-light: #9aa3ad;
+  --white: #ffffff;
+  --success: #2f8f5b;
+
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Barlow", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+
+  --fs-hero: clamp(2.4rem, 5vw, 4.6rem);
+  --fs-h1: clamp(2rem, 3.4vw, 3rem);
+  --fs-h2: clamp(1.6rem, 2.6vw, 2.25rem);
+  --fs-h3: clamp(1.15rem, 1.6vw, 1.4rem);
+  --fs-body: 1.05rem;
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.78rem;
+
+  --space-1: 0.4rem;
+  --space-2: 0.8rem;
+  --space-3: 1.25rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4.5rem;
+  --space-7: 7rem;
+
+  --radius: 2px;
+  --header-h: 76px;
+  --container: 1180px;
+
+  --shadow: 0 16px 40px rgba(15, 20, 25, 0.14);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fast: 0.2s;
+  --med: 0.4s;
+}
