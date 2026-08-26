@@ -1,28 +1,28 @@
 window.SITE_CONFIG = {
   company: {
-    name: "Bluelotus Enterprises",
+    name: "Bluelotus Infrasafety",
     shortName: "Bluelotus",
     tagline: "Where Protection Meets Innovation",
-    legalName: "Bluelotus Enterprises Pvt. Ltd.",
+    legalName: "Bluelotus Infrasafety",
     foundedYear: 2011,
-    logoText: "Bluelotus",
-    logoAccent: "Enterprises"
+    logo: "assets/img/logo.png",
+    logoMark: "assets/img/logo-mark.png"
   },
   contact: {
     phones: [
-      { label: "Sales", number: "+91 74833 94208" },
-      { label: "Support", number: "+91 88613 73750" }
+      { label: "Office", number: "+91 74833 94208" },
+      { label: "Sales", number: "+91 93377 45396" },
+      { label: "Support", number: "+91 91487 36860" }
     ],
     emails: [
-      { label: "General", address: "info@bluelotusafety.com" },
-      { label: "Sales", address: "sales@bluelotusafety.com" }
+      { label: "General", address: "info@bluelotusinfrasafety.com" }
     ],
     whatsapp: "+917483394208",
     address: {
-      line1: "No. 42, Industrial Layout, Peenya 2nd Stage",
-      line2: "Bengaluru, Karnataka 560058, India"
+      line1: "Door No. 1, Mukteswar Apartment, NH16 near Pachamwari Temple Street near Siva Temple",
+      line2: "Ankuli, Berhampur, Ganjam, Odisha - 760010"
     },
-    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31112.0!2d77.5!3d13.02!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1"
+    mapEmbedUrl: "https://maps.google.com/maps?q=Mukteswar%20Apartment%20Ankuli%20Berhampur%20Odisha%20760010&output=embed"
   },
   social: {
     facebook: "https://www.facebook.com/bluelotusafety",
@@ -31,10 +31,10 @@ window.SITE_CONFIG = {
     youtube: "https://www.youtube.com/@bluelotusenterprises"
   },
   seo: {
-    domain: "https://www.bluelotusafety.com",
-    defaultTitle: "Safety Equipment Supplier & Services in Bangalore",
-    defaultDescription: "Certified fire, road, and industrial safety equipment supplier in Bangalore. End-to-end supply, installation, and maintenance for contractors, industries, and government agencies.",
-    keywords: "safety equipment supplier bangalore, industrial safety equipment, fire safety products, road safety equipment, PPE supplier india, warehouse safety, construction safety equipment"
+    domain: "https://www.bluelotusinfrasafety.com",
+    defaultTitle: "Safety Equipment Supplier & Services in Berhampur, Odisha",
+    defaultDescription: "Certified fire, road, and industrial safety equipment supplier in Berhampur, Odisha. End-to-end supply, installation, and maintenance for contractors, industries, and government agencies.",
+    keywords: "safety equipment supplier berhampur, industrial safety equipment odisha, fire safety products, road safety equipment, PPE supplier india, warehouse safety, construction safety equipment"
   },
   stats: [
     { value: "13", suffix: "+", label: "Years in Operation" },

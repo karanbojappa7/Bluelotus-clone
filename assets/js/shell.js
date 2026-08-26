@@ -44,13 +44,23 @@
       .join("");
   }
 
+  function brandHtml() {
+    const mark = (window.SITE_CONFIG && window.SITE_CONFIG.company.logoMark) || "assets/img/logo-mark.png";
+    return `<a class="brand" href="index.html" aria-label="Bluelotus Infrasafety">
+      <span class="brand-mark-wrap">
+        <img class="brand-mark" src="${mark}" alt="" width="48" height="48">
+      </span>
+      <span class="brand-copy">
+        <span class="brand-name">BLUE LOTUS</span>
+        <span class="brand-sub">INFRASAFETY</span>
+      </span>
+    </a>`;
+  }
+
   function headerHtml() {
     return `<header class="site-header">
   <div class="container navbar-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-main" data-config="company.logoText"></span>
-      <span class="brand-accent" data-config="company.logoAccent"></span>
-    </a>
+    ${brandHtml()}
     <nav class="site-nav" id="mainNav" aria-label="Primary">
       <ul class="nav-links">${navItems()}</ul>
     </nav>
@@ -79,10 +89,7 @@
     <div class="hazard-rule mb-5"></div>
     <div class="footer-grid">
       <div>
-        <a class="brand" href="index.html">
-          <span class="brand-main" data-config="company.logoText"></span>
-          <span class="brand-accent" data-config="company.logoAccent"></span>
-        </a>
+        ${brandHtml()}
         <p class="footer-blurb">Certified safety equipment supply, installation, and maintenance for industries, contractors, and government agencies across India.</p>
         <div class="social-row mt-4">${socialLinks()}</div>
       </div>
@@ -102,11 +109,7 @@
       </div>
       <div>
         <h5 class="footer-heading">Get In Touch</h5>
-        <ul class="footer-links">
-          <li><a data-config-tel="contact.phones.0.number" data-config="contact.phones.0.number"></a></li>
-          <li><a data-config-mailto="contact.emails.0.address" data-config="contact.emails.0.address"></a></li>
-          <li><span data-config="contact.address.line1"></span>, <span data-config="contact.address.line2"></span></li>
-        </ul>
+        <ul class="footer-links" data-render="footer-contact"></ul>
       </div>
     </div>
     <div class="footer-bottom">

@@ -28,6 +28,10 @@
     });
   }
 
+  function phoneHref(number) {
+    return "tel:" + String(number).replace(/[^\d+]/g, "");
+  }
+
   function formatDate(date, opts) {
     return new Date(date).toLocaleDateString("en-GB", opts);
   }
@@ -173,6 +177,21 @@
     );
   }
 
+  function buildFooterContact() {
+    const phones = CFG.contact.phones
+      .map(function (p) {
+        return `<li><a href="${phoneHref(p.number)}">${p.number}</a></li>`;
+      })
+      .join("");
+    const emails = CFG.contact.emails
+      .map(function (e) {
+        return `<li><a href="mailto:${e.address}">${e.address}</a></li>`;
+      })
+      .join("");
+    const address = `<li>${CFG.contact.address.line1}, ${CFG.contact.address.line2}</li>`;
+    fill("[data-render='footer-contact']", phones + emails + address);
+  }
+
   function buildContactCards() {
     const cards = [
       { icon: "phone", title: "Call Us", body: CFG.contact.phones.map(function (p) { return p.number; }).join(" / ") },
@@ -223,8 +242,9 @@
       address: {
         "@type": "PostalAddress",
         streetAddress: CFG.contact.address.line1,
-        addressLocality: "Bengaluru",
-        addressRegion: "Karnataka",
+        addressLocality: "Berhampur",
+        addressRegion: "Odisha",
+        postalCode: "760010",
         addressCountry: "IN"
       },
       sameAs: Object.values(CFG.social)
@@ -237,10 +257,12 @@
     injectSchema();
     applyTextBindings();
     applyAttrBindings("href", "href");
+    applyAttrBindings("src", "src");
     applyAttrBindings("tel", "href", "tel:");
     applyAttrBindings("mailto", "href", "mailto:");
     buildNavCategories();
     buildFooterCategories();
+    buildFooterContact();
     buildStats();
     buildCategories($("body").attr("data-categories-limit"));
     buildServices();

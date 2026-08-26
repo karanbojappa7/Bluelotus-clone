@@ -1,4 +1,4 @@
-# Bluelotus Enterprises — Website
+# Bluelotus Infrasafety — Website
 
 Responsive marketing site for a safety equipment supplier. Plain HTML/CSS/JS, no build step.
 
@@ -29,7 +29,7 @@ saroj/
     │   └── blog-single.js
     └── img/
         ├── sprite.svg
-        ├── favicon.svg
+        ├── logo.png
         ├── hero.jpg
         ├── about.jpg
         ├── products.jpg
