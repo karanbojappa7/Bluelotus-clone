@@ -47,8 +47,8 @@ admin_header('Categories', 'categories');
           <td class="muted"><?= e(truncate($cat['desc'])) ?></td>
           <td class="actions">
             <a class="btn btn-secondary btn-sm" href="category-form.php?id=<?= e(urlencode($cat['id'])) ?>">Edit</a>
-            <a class="btn btn-secondary btn-sm" href="../category.html?cat=<?= e(urlencode($cat['id'])) ?>" target="_blank" rel="noopener">View</a>
-            <form method="post" onsubmit="return confirm('Delete this category?');">
+            <a class="btn btn-secondary btn-sm" href="../products/<?= e(rawurlencode($cat['id'])) ?>" target="_blank" rel="noopener">View</a>
+            <form method="post" data-confirm="Delete this category? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="id" value="<?= e($cat['id']) ?>">

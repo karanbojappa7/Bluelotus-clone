@@ -2,37 +2,12 @@
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/lib/seo_fields.php';
 require_login();
 
 $id = isset($_GET['id']) ? (string) $_GET['id'] : '';
 $existing = $id !== '' ? get_category($id) : null;
 $errors = [];
-
-function encode_pairs(string $text, array $keys): array
-{
-    $blocks = preg_split("/\n\s*\n/", trim($text)) ?: [];
-    $out = [];
-    foreach ($blocks as $block) {
-        $lines = lines_to_array($block);
-        if (count($lines) < 2) {
-            continue;
-        }
-        $item = [];
-        $item[$keys[0]] = array_shift($lines);
-        $item[$keys[1]] = implode(' ', $lines);
-        $out[] = $item;
-    }
-    return $out;
-}
-
-function decode_pairs(array $items, array $keys): string
-{
-    $blocks = [];
-    foreach ($items as $item) {
-        $blocks[] = ($item[$keys[0]] ?? '') . "\n" . ($item[$keys[1]] ?? '');
-    }
-    return implode("\n\n", $blocks);
-}
 
 $category = [
     'id' => $existing['id'] ?? '',
@@ -42,8 +17,14 @@ $category = [
     'headline' => $existing['headline'] ?? '',
     'intro' => $existing['intro'] ?? '',
     'buyers' => $existing['buyers'] ?? '',
-    'useCases' => decode_pairs($existing['useCases'] ?? [], ['title', 'text']),
-    'faqs' => decode_pairs($existing['faqs'] ?? [], ['q', 'a']),
+    'useCases' => format_blocks($existing['useCases'] ?? [], 'title', 'text'),
+    'faqs' => format_blocks($existing['faqs'] ?? [], 'q', 'a'),
+    'metaTitle' => $existing['metaTitle'] ?? '',
+    'metaDescription' => $existing['metaDescription'] ?? '',
+    'metaKeywords' => $existing['metaKeywords'] ?? '',
+    'canonical' => $existing['canonical'] ?? '',
+    'ogImage' => $existing['ogImage'] ?? '',
+    'noindex' => !empty($existing['noindex']),
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,44 +38,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category['buyers'] = post('buyers');
     $category['useCases'] = post('useCases');
     $category['faqs'] = post('faqs');
+    $category['metaTitle'] = post('metaTitle');
+    $category['metaDescription'] = post('metaDescription');
+    $category['metaKeywords'] = post('metaKeywords');
+    $category['canonical'] = post('canonical');
+    $category['ogImage'] = post('ogImage');
+    $category['noindex'] = isset($_POST['noindex']);
+    $now = gmdate('c');
 
     if ($category['name'] === '' || $category['id'] === '') {
         $errors[] = 'Name and ID are required.';
     }
 
     if (!$errors) {
-        $useCases = json_encode(encode_pairs($category['useCases'], ['title', 'text']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $faqs = json_encode(encode_pairs($category['faqs'], ['q', 'a']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $useCases = json_encode(parse_blocks($category['useCases'], 'title', 'text'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $faqs = json_encode(parse_blocks($category['faqs'], 'q', 'a'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         try {
             if ($existing) {
                 if ($category['id'] !== $existing['id']) {
                     db()->prepare('UPDATE products SET category = ? WHERE category = ?')->execute([$category['id'], $existing['id']]);
                     $stmt = db()->prepare(
-                        'UPDATE categories SET id=?, icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, use_cases=?, faqs=? WHERE id=?'
+                        'UPDATE categories SET id=?, icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, use_cases=?, faqs=?,
+                         meta_title=?, meta_description=?, meta_keywords=?, canonical=?, og_image=?, noindex=?, updated_at=? WHERE id=?'
                     );
                     $stmt->execute([
                         $category['id'], $category['icon'], $category['name'], $category['desc'], $category['headline'],
-                        $category['intro'], $category['buyers'], $useCases, $faqs, $existing['id']
+                        $category['intro'], $category['buyers'], $useCases, $faqs,
+                        $category['metaTitle'], $category['metaDescription'], $category['metaKeywords'],
+                        $category['canonical'], $category['ogImage'], $category['noindex'] ? 1 : 0, $now, $existing['id']
                     ]);
                 } else {
                     $stmt = db()->prepare(
-                        'UPDATE categories SET icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, use_cases=?, faqs=? WHERE id=?'
+                        'UPDATE categories SET icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, use_cases=?, faqs=?,
+                         meta_title=?, meta_description=?, meta_keywords=?, canonical=?, og_image=?, noindex=?, updated_at=? WHERE id=?'
                     );
                     $stmt->execute([
                         $category['icon'], $category['name'], $category['desc'], $category['headline'],
-                        $category['intro'], $category['buyers'], $useCases, $faqs, $existing['id']
+                        $category['intro'], $category['buyers'], $useCases, $faqs,
+                        $category['metaTitle'], $category['metaDescription'], $category['metaKeywords'],
+                        $category['canonical'], $category['ogImage'], $category['noindex'] ? 1 : 0, $now, $existing['id']
                     ]);
                 }
                 flash('ok', 'Category updated.');
             } else {
                 $sort = (int) db()->query('SELECT COALESCE(MAX(sort_order), -1) + 1 FROM categories')->fetchColumn();
                 $stmt = db()->prepare(
-                    'INSERT INTO categories (id, icon, name, `desc`, headline, intro, buyers, use_cases, faqs, sort_order)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                    'INSERT INTO categories (id, icon, name, `desc`, headline, intro, buyers, use_cases, faqs, sort_order,
+                     meta_title, meta_description, meta_keywords, canonical, og_image, noindex, updated_at)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
                 );
                 $stmt->execute([
                     $category['id'], $category['icon'], $category['name'], $category['desc'], $category['headline'],
-                    $category['intro'], $category['buyers'], $useCases, $faqs, $sort
+                    $category['intro'], $category['buyers'], $useCases, $faqs, $sort,
+                    $category['metaTitle'], $category['metaDescription'], $category['metaKeywords'],
+                    $category['canonical'], $category['ogImage'], $category['noindex'] ? 1 : 0, $now
                 ]);
                 flash('ok', 'Category created.');
             }
@@ -120,7 +117,7 @@ admin_header($existing ? 'Edit Category' : 'Add Category', 'categories');
       <input type="text" name="name" required value="<?= e($category['name']) ?>">
     </label>
     <label>ID
-      <input type="text" name="id" value="<?= e($category['id']) ?>">
+      <input type="text" name="id" value="<?= e($category['id']) ?>" data-preview-base="/products/">
     </label>
     <label>Icon key
       <input type="text" name="icon" value="<?= e($category['icon']) ?>">
@@ -144,6 +141,16 @@ admin_header($existing ? 'Edit Category' : 'Add Category', 'categories');
       <textarea name="faqs" rows="8"><?= e($category['faqs']) ?></textarea>
     </label>
   </div>
+  <?php
+  render_seo_panel($category, [
+      'kind' => 'category',
+      'previewBase' => 'products/',
+      'slug' => $category['id'],
+      'fallbackTitle' => $category['name'],
+      'fallbackDescription' => $category['intro'] !== '' ? $category['intro'] : $category['desc'],
+  ]);
+  ?>
+
   <div class="form-actions">
     <button class="btn" type="submit">Save Category</button>
     <a class="btn btn-secondary" href="categories.php">Cancel</a>

@@ -1,4 +1,8 @@
 (function ($) {
+  function scrollY() {
+    return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  }
+
   function initHeader() {
     const $header = $(".site-header");
     const $btn = $(".nav-toggle");
@@ -6,10 +10,7 @@
     if (!$header.length || !$btn.length || !$nav.length) return;
 
     function pastHeroCarousel() {
-      const $carousel = $("#heroCarousel");
-      if (!$carousel.length) return $(window).scrollTop() > 24;
-      const end = $carousel.offset().top + $carousel.outerHeight() - window.innerHeight;
-      return $(window).scrollTop() > end - 8;
+      return scrollY() > 12;
     }
 
     let headerTick = false;
@@ -32,34 +33,82 @@
     }
 
     onScroll();
-    $(window).on("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("scroll", onScroll, { passive: true });
     $btn.on("click", function () {
       setOpen(!$nav.hasClass("is-open"));
+    });
+    $nav.on("click", ".dropdown-toggle", function (e) {
+      e.preventDefault();
+      const $item = $(this).closest(".has-dropdown");
+      const open = !$item.hasClass("is-open");
+      $item.toggleClass("is-open", open);
+      $(this).attr("aria-expanded", String(open));
+      $item.children(".nav-link").attr("aria-expanded", String(open));
     });
     $nav.on("click", "a", function () {
       if (window.matchMedia("(max-width: 991px)").matches) setOpen(false);
     });
+    $(document).on("keydown", function (e) {
+      if (e.key === "Escape" && $nav.hasClass("is-open")) {
+        setOpen(false);
+        $btn.trigger("focus");
+      }
+    });
     $(window).on("resize", function () {
-      if (window.matchMedia("(min-width: 992px)").matches) setOpen(false);
+      if (window.matchMedia("(min-width: 992px)").matches) {
+        setOpen(false);
+        $(".has-dropdown").removeClass("is-open");
+      }
     });
   }
 
   function initBackToTop() {
     const $btn = $(".back-to-top");
     if (!$btn.length) return;
-    $(window).on("scroll", function () {
-      $btn.toggleClass("is-visible", $(window).scrollTop() > 500);
-    });
+    let tick = false;
+    $(window).on(
+      "scroll",
+      function () {
+        if (tick) return;
+        tick = true;
+        window.requestAnimationFrame(function () {
+          $btn.toggleClass("is-visible", $(window).scrollTop() > 500);
+          tick = false;
+        });
+      },
+      { passive: true }
+    );
     $btn.on("click", function () {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) {
+        window.scrollTo(0, 0);
+        return;
+      }
       $("html, body").animate({ scrollTop: 0 }, 400);
     });
+  }
+
+  function initImageFallback() {
+    const fallback = window.SITE_SHELL.fallbackImage;
+    document.addEventListener(
+      "error",
+      function (e) {
+        const img = e.target;
+        if (!(img instanceof HTMLImageElement) || !img.hasAttribute("data-fallback")) return;
+        if (img.dataset.fallbackApplied === "1") return;
+        img.dataset.fallbackApplied = "1";
+        img.classList.add("is-broken");
+        img.src = fallback;
+      },
+      true
+    );
   }
 
   function initWhatsapp() {
     const $fab = $(".whatsapp-fab");
     if (!$fab.length || !window.SITE_CONFIG) return;
-    const page = (location.pathname.split("/").pop() || "").toLowerCase();
-    if (page === "product.html") return;
+    if (document.getElementById("prodWhatsapp")) return;
     const number = window.SITE_CONFIG.contact.whatsapp.replace("+", "");
     $fab.attr(
       "href",
@@ -78,24 +127,94 @@
     }
   }
 
+  function fieldError($field) {
+    const value = $.trim($field.val());
+    const type = ($field.attr("type") || "").toLowerCase();
+
+    if ($field.is("[required]") && value === "") {
+      return "This field is required.";
+    }
+    if (value === "") return "";
+    if (type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+      return "Enter a valid email address.";
+    }
+    if (type === "tel" && value.replace(/[^\d]/g, "").length < 10) {
+      return "Enter a phone number with at least 10 digits.";
+    }
+    if ($field.is("textarea") && $field.is("[required]") && value.length < 10) {
+      return "Tell us a little more — at least 10 characters.";
+    }
+    return "";
+  }
+
+  function showFieldError($field, message) {
+    const id = $field.attr("id");
+    const errorId = id ? id + "-error" : null;
+    let $msg = $field.siblings(".field-error-msg");
+
+    $field.toggleClass("is-invalid", Boolean(message));
+    $field.attr("aria-invalid", message ? "true" : null);
+
+    if (!message) {
+      $msg.remove();
+      $field.removeAttr("aria-describedby");
+      return;
+    }
+    if (!$msg.length) {
+      $msg = $('<span class="field-error-msg" role="alert"></span>');
+      if (errorId) $msg.attr("id", errorId);
+      $field.after($msg);
+    }
+    $msg.text(message);
+    if (errorId) $field.attr("aria-describedby", errorId);
+  }
+
   function initForms() {
+    $(document).on("blur", "form[data-validate] [required], form[data-validate] [type='email'], form[data-validate] [type='tel']", function () {
+      showFieldError($(this), fieldError($(this)));
+    });
+
+    $(document).on("input change", "form[data-validate] .is-invalid", function () {
+      const message = fieldError($(this));
+      if (!message) showFieldError($(this), "");
+    });
+
     $(document).on("submit", "form[data-validate]", function (e) {
       e.preventDefault();
       const $form = $(this);
-      let valid = true;
-      $form.find("[required]").each(function () {
-        const ok = $.trim($(this).val()).length > 0;
-        $(this).toggleClass("is-invalid", !ok);
-        if (!ok) valid = false;
-      });
       const $feedback = $form.find("[data-form-feedback]");
-      if (!$feedback.length) return;
-      if (valid) {
-        $feedback.text("Thank you. Our team will get back to you within one business day.").attr("class", "form-feedback is-success");
-        $form[0].reset();
-      } else {
-        $feedback.text("Please fill in all required fields before submitting.").attr("class", "form-feedback is-error");
+      let $firstBad = null;
+
+      $form.find("input, textarea, select").each(function () {
+        const $field = $(this);
+        const message = fieldError($field);
+        showFieldError($field, message);
+        if (message && !$firstBad) $firstBad = $field;
+      });
+
+      if ($firstBad) {
+        $feedback
+          .text("Please correct the highlighted fields.")
+          .attr("class", "form-feedback is-error")
+          .attr("role", "alert");
+        $firstBad.trigger("focus");
+        return;
       }
+
+      const $submit = $form.find("[type='submit']");
+      $submit.prop("disabled", true).attr("data-label", $submit.text()).text("Sending…");
+
+      $feedback
+        .text("Thank you. Our team will get back to you within one business day.")
+        .attr("class", "form-feedback is-success")
+        .attr("role", "status");
+      $form[0].reset();
+      $form.find(".is-invalid").removeClass("is-invalid");
+      $form.find(".field-error-msg").remove();
+
+      window.setTimeout(function () {
+        $submit.prop("disabled", false).text($submit.attr("data-label") || "Submit Request");
+      }, 1200);
     });
   }
 
@@ -139,18 +258,44 @@
     const $tabs = $("[data-render='service-tabs']");
     const $panels = $("[data-render='service-panels']");
     if (!$tabs.length || !$panels.length) return;
-    $tabs.on("click", ".service-tab-btn", function () {
-      const $btn = $(this);
-      $tabs.find(".service-tab-btn").removeClass("is-active");
-      $btn.addClass("is-active");
+
+    function activate($btn) {
+      const $all = $tabs.find(".service-tab-btn");
+      $all.removeClass("is-active").attr({ "aria-selected": "false", tabindex: "-1" });
+      $btn.addClass("is-active").attr({ "aria-selected": "true", tabindex: "0" });
       const id = $btn.attr("data-tab-target");
       $panels.find(".service-panel").each(function () {
         $(this).toggleClass("is-active", this.id === id);
       });
+    }
+
+    $tabs.on("click", ".service-tab-btn", function () {
+      activate($(this));
+    });
+
+    $tabs.on("keydown", ".service-tab-btn", function (e) {
+      const keys = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      const $all = $tabs.find(".service-tab-btn");
+      const index = $all.index(this);
+      let next = null;
+
+      if (keys[e.key]) next = (index + keys[e.key] + $all.length) % $all.length;
+      else if (e.key === "Home") next = 0;
+      else if (e.key === "End") next = $all.length - 1;
+      if (next === null) return;
+
+      e.preventDefault();
+      const $target = $all.eq(next);
+      activate($target);
+      $target.trigger("focus");
     });
   }
 
   function initReveal() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      $("[data-reveal]").addClass("is-in");
+      return;
+    }
     const $nodes = $("[data-reveal]").not(".is-in");
     if (!$nodes.length) return;
     const observer = new IntersectionObserver(
@@ -292,6 +437,7 @@
   function onShell() {
     initHeader();
     initBackToTop();
+    initImageFallback();
     initHeroCarousel();
   }
 

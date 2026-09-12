@@ -1,33 +1,19 @@
-<!DOCTYPE html>
-<html lang="en" data-page-title="Contact Us" data-page-desc="Get in touch with Bluelotus Infrasafety for safety equipment quotes, site audits, and installation support in Berhampur, Odisha.">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Us | Bluelotus Infrasafety</title>
-<meta name="description" content="Get in touch with Bluelotus Infrasafety for safety equipment quotes and site audits.">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.bluelotusinfrasafety.com/contact.html">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Contact Us | Bluelotus Infrasafety">
-<meta property="og:description" content="Get in touch with Bluelotus Infrasafety for safety equipment quotes and site audits.">
-<meta property="og:image" content="assets/img/og-cover.jpg">
-<link rel="icon" href="assets/img/logo.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/tokens.css">
-<link rel="stylesheet" href="assets/css/site.css">
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div data-site="header"></div>
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/admin/bootstrap.php';
 
-<main id="main">
+page_head([
+    'title' => 'Contact Us',
+    'description' => 'Call, email, or message ' . brand_name() . ' in Berhampur, Odisha for certified safety equipment supply, installation, and bulk project quotes.',
+    'canonical' => 'contact',
+    'breadcrumbs' => ['Home' => '/', 'Contact Us' => null],
+]);
+?>
 <section class="page-header">
   <div class="container">
     <span class="eyebrow eyebrow--light">Get In Touch</span>
     <h1 class="page-title">Tell us about your site, we'll take it from there.</h1>
-    <div class="breadcrumb-row"><a href="index.html">Home</a> / <span>Contact Us</span></div>
+    <div class="breadcrumb-row"><a href="<?= e(url_for('')) ?>">Home</a> / <span>Contact Us</span></div>
   </div>
 </section>
 
@@ -87,15 +73,4 @@
 <section class="map-section" aria-label="Location map">
   <iframe class="map-frame" data-map-embed title="Bluelotus Infrasafety location map" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </section>
-</main>
-
-<div data-site="footer"></div>
-<div data-site="fabs"></div>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="config/site.config.php"></script>
-<script src="assets/js/shell.js"></script>
-<script src="assets/js/render.js"></script>
-<script src="assets/js/app.js"></script>
-</body>
-</html>
+<?php page_foot(); ?>

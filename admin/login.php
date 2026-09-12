@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
+cms_security_headers(true);
 
 if (!db_ready()) {
     redirect('install.php');
@@ -9,17 +10,27 @@ if (current_user()) {
     redirect('index.php');
 }
 
+$ip = cms_client_ip();
+$lockout = login_lockout_seconds($ip);
 $error = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
     $username = post('username');
     $password = post('password');
-    if ($username === '' || $password === '') {
+    if ($lockout > 0) {
+        $error = 'Too many failed attempts. Try again in ' . describe_lockout($lockout) . '.';
+    } elseif ($username === '' || $password === '') {
         $error = 'Enter username and password.';
     } elseif (attempt_login($username, $password)) {
+        clear_login_attempts($ip);
         redirect('index.php');
     } else {
-        $error = 'Invalid username or password.';
+        record_failed_login($ip, $username);
+        $lockout = login_lockout_seconds($ip);
+        $error = $lockout > 0
+            ? 'Too many failed attempts. Try again in ' . describe_lockout($lockout) . '.'
+            : 'Invalid username or password.';
     }
 }
 $flash = take_flash();
@@ -45,12 +56,12 @@ $flash = take_flash();
     <form method="post" autocomplete="off">
       <?= csrf_field() ?>
       <label>Username
-        <input type="text" name="username" required autofocus value="<?= e(post('username', 'admin')) ?>">
+        <input type="text" name="username" required autofocus value="<?= e(post('username')) ?>" <?= $lockout > 0 ? 'disabled' : '' ?>>
       </label>
       <label>Password
-        <input type="password" name="password" required>
+        <input type="password" name="password" required <?= $lockout > 0 ? 'disabled' : '' ?>>
       </label>
-      <button class="btn" type="submit">Sign in</button>
+      <button class="btn" type="submit" <?= $lockout > 0 ? 'disabled' : '' ?>>Sign in</button>
     </form>
   </div>
 </body>

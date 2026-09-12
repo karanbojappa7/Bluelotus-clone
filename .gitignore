@@ -1,0 +1,6 @@
+admin/config.local.php
+assets/img/uploads/*
+!assets/img/uploads/.htaccess
+*.log
+.DS_Store
+Thumbs.db

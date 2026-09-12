@@ -89,4 +89,7 @@
 <symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M12 19V5M6 11l6-6 6 6"/>
 </symbol>
+<symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+</symbol>
 </svg>

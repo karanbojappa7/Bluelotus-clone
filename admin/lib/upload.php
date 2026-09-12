@@ -6,6 +6,14 @@ function ensure_uploads_dir(): void
     if (!is_dir(CMS_UPLOADS)) {
         mkdir(CMS_UPLOADS, 0755, true);
     }
+    $guard = CMS_UPLOADS . '/.htaccess';
+    if (!is_file($guard)) {
+        $source = CMS_ROOT . '/assets/img/uploads/.htaccess';
+        $rules = is_file($source) && $source !== $guard
+            ? (string) file_get_contents($source)
+            : "php_flag engine off\n<FilesMatch \"\\.(?i:php|phtml|phar|pl|py|cgi|sh)$\">\n  Require all denied\n</FilesMatch>\n";
+        @file_put_contents($guard, $rules);
+    }
 }
 
 function uploaded_files(string $field): array

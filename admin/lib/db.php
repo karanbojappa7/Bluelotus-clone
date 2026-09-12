@@ -96,7 +96,45 @@ function migrate(): void
         $pdo->exec($sql);
     }
 
+    foreach (['products', 'categories'] as $table) {
+        ensure_column($table, 'meta_title', 'VARCHAR(191) NOT NULL DEFAULT ""');
+        ensure_column($table, 'meta_description', 'VARCHAR(320) NOT NULL DEFAULT ""');
+        ensure_column($table, 'meta_keywords', 'VARCHAR(320) NOT NULL DEFAULT ""');
+        ensure_column($table, 'canonical', 'VARCHAR(255) NOT NULL DEFAULT ""');
+        ensure_column($table, 'og_image', 'VARCHAR(255) NOT NULL DEFAULT ""');
+        ensure_column($table, 'noindex', 'TINYINT(1) NOT NULL DEFAULT 0');
+        ensure_column($table, 'updated_at', 'VARCHAR(40) NOT NULL DEFAULT ""');
+    }
+
+    ensure_column('products', 'brand', 'VARCHAR(120) NOT NULL DEFAULT ""');
+    ensure_column('products', 'sku', 'VARCHAR(120) NOT NULL DEFAULT ""');
+    ensure_column('products', 'gtin', 'VARCHAR(60) NOT NULL DEFAULT ""');
+    ensure_column('products', 'mpn', 'VARCHAR(60) NOT NULL DEFAULT ""');
+    ensure_column('products', 'item_condition', 'VARCHAR(40) NOT NULL DEFAULT ""');
+    ensure_column('products', 'availability', 'VARCHAR(40) NOT NULL DEFAULT ""');
+    ensure_column('products', 'price', 'VARCHAR(40) NOT NULL DEFAULT ""');
+    ensure_column('products', 'currency', 'VARCHAR(10) NOT NULL DEFAULT ""');
+
     migrate_leadership_from_settings();
+}
+
+function ensure_column(string $table, string $column, string $definition): void
+{
+    static $cache = [];
+    $key = $table . '.' . $column;
+    if (isset($cache[$key])) {
+        return;
+    }
+    $cache[$key] = true;
+    try {
+        $stmt = db()->prepare('SHOW COLUMNS FROM `' . $table . '` LIKE ?');
+        $stmt->execute([$column]);
+        if ($stmt->fetch()) {
+            return;
+        }
+        db()->exec('ALTER TABLE `' . $table . '` ADD COLUMN `' . $column . '` ' . $definition);
+    } catch (Throwable $e) {
+    }
 }
 
 function migrate_leadership_from_settings(): void

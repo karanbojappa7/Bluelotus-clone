@@ -1,31 +1,15 @@
-<!DOCTYPE html>
-<html lang="en" data-page-title="Home" data-page-desc="Certified fire, road, and industrial safety equipment supplier in Berhampur, Odisha. End-to-end supply, installation, and maintenance for contractors, industries, and government agencies.">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bluelotus Infrasafety | Safety Equipment Supplier & Services in Berhampur, Odisha</title>
-<meta name="description" content="Certified fire, road, and industrial safety equipment supplier in Berhampur, Odisha. End-to-end supply, installation, and maintenance for contractors, industries, and government agencies.">
-<meta name="keywords" content="safety equipment supplier berhampur, industrial safety equipment odisha, fire safety products, road safety equipment, PPE supplier india">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.bluelotusinfrasafety.com/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Bluelotus Infrasafety | Safety Equipment Supplier & Services in Berhampur, Odisha">
-<meta property="og:description" content="Certified fire, road, and industrial safety equipment supplier in Berhampur, Odisha.">
-<meta property="og:image" content="assets/img/og-cover.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="assets/img/logo.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/tokens.css">
-<link rel="stylesheet" href="assets/css/site.css">
-</head>
-<body data-blog-limit="4" data-products-limit="12">
-<a class="skip-link" href="#main">Skip to content</a>
-<div data-site="header"></div>
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/admin/bootstrap.php';
 
-<main id="main">
-
+page_head([
+    'fullTitle' => brand_name() . ' | ' . (string) (seo_settings()['defaultTitle'] ?? 'Safety Equipment Supplier'),
+    'description' => (string) (seo_settings()['defaultDescription'] ?? ''),
+    'canonical' => '',
+    'breadcrumbs' => ['Home' => null],
+    'bodyAttr' => 'data-blog-limit="4" data-products-limit="12"',
+]);
+?>
 <section class="hero-carousel" id="heroCarousel">
   <div class="hero-carousel-pin">
     <div class="hero-slides">
@@ -36,8 +20,8 @@
           <h1 class="hero-title">Protection engineered for <em>every worksite,</em> every day.</h1>
           <p class="hero-sub">We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.</p>
           <div class="hero-actions">
-            <a href="contact.html" class="btn btn-primary">Request a Site Audit <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
-            <a href="products.html" class="btn btn-ghost">Browse Product Range</a>
+            <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary">Request a Site Audit <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
+            <a href="<?= e(url_for('products')) ?>" class="btn btn-ghost">Browse Product Range</a>
           </div>
         </div>
       </article>
@@ -48,7 +32,7 @@
           <h1 class="hero-title">Contain fire <em>before</em> it reaches people.</h1>
           <p class="hero-sub">Extinguishers, hydrants, and detection specified for Indian sites — installed and maintained by our own crews.</p>
           <div class="hero-actions">
-            <a href="category.html?cat=fire-safety" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+            <a href="<?= e(category_path('fire-safety')) ?>" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
           </div>
         </div>
       </article>
@@ -59,7 +43,7 @@
           <h1 class="hero-title">Keep every lane and <em>work zone</em> under control.</h1>
           <p class="hero-sub">Barricades, cones, signage, and crash protection built for highways, yards, and temporary site approaches.</p>
           <div class="hero-actions">
-            <a href="category.html?cat=road-traffic-safety" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+            <a href="<?= e(category_path('road-traffic-safety')) ?>" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
           </div>
         </div>
       </article>
@@ -70,7 +54,7 @@
           <h1 class="hero-title">Audit, install, and <em>stay accountable.</em></h1>
           <p class="hero-sub">Consultancy, installation, and 24/7 maintenance — one team past the invoice, not a chain of vendors.</p>
           <div class="hero-actions">
-            <a href="services.html" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+            <a href="<?= e(url_for('faq')) ?>" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
           </div>
         </div>
       </article>
@@ -102,7 +86,7 @@
     </div>
     <div class="grid grid-3" data-render="categories"></div>
     <div class="text-center mt-5" data-reveal>
-      <a href="products.html" class="btn btn-outline">View All Products <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+      <a href="<?= e(url_for('products')) ?>" class="btn btn-outline">View All Products <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
     </div>
   </div>
 </section>
@@ -114,7 +98,7 @@
         <span class="eyebrow">Product Catalog</span>
         <h2 class="section-title">Equipment stocked for live sites</h2>
       </div>
-      <a href="products.html" class="btn btn-outline" data-reveal>Browse Full Range</a>
+      <a href="<?= e(url_for('products')) ?>" class="btn btn-outline" data-reveal>Browse Full Range</a>
     </div>
     <div class="product-grid" data-render="products"></div>
   </div>
@@ -128,9 +112,9 @@
         <h2 class="section-title">Built for accountability, not just supply</h2>
         <p class="section-sub">We hold the relationship end to end — audit, spec, install, and maintain — so nothing falls through the gap between vendors.</p>
         <div class="cluster mt-4">
-          <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="assets/img/sprite.svg#icon-shield"></use></svg> ISO Certified</span>
-          <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="assets/img/sprite.svg#icon-award"></use></svg> OEM Backed</span>
-          <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="assets/img/sprite.svg#icon-truck"></use></svg> Pan-India Delivery</span>
+          <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-shield')) ?>"></use></svg> ISO Certified</span>
+          <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-award')) ?>"></use></svg> OEM Backed</span>
+          <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-truck')) ?>"></use></svg> Pan-India Delivery</span>
         </div>
       </div>
       <div data-reveal>
@@ -146,14 +130,12 @@
   <div class="container">
     <div class="section-head">
       <div data-reveal>
-        <span class="eyebrow">Services</span>
-        <h2 class="section-title">Support that goes beyond the invoice</h2>
+        <span class="eyebrow">FAQ</span>
+        <h2 class="section-title">Answers before you call</h2>
       </div>
+      <a href="<?= e(url_for('faq')) ?>" class="btn btn-outline" data-reveal>View All FAQs</a>
     </div>
-    <div data-reveal>
-      <div class="service-tabs" data-render="service-tabs"></div>
-      <div data-render="service-panels"></div>
-    </div>
+    <div class="faq-list" data-render="faqs" data-reveal></div>
   </div>
 </section>
 
@@ -185,7 +167,7 @@
         <span class="eyebrow">From the Blog</span>
         <h2 class="section-title">Field notes on safety standards</h2>
       </div>
-      <a href="blog.html" class="btn btn-outline" data-reveal>All Articles</a>
+      <a href="<?= e(url_for('blog')) ?>" class="btn btn-outline" data-reveal>All Articles</a>
     </div>
     <div class="grid grid-4" data-render="blog"></div>
   </div>
@@ -198,21 +180,9 @@
         <span class="eyebrow eyebrow--light eyebrow--center">Get Started</span>
         <h2 class="section-title">Ready to safety-proof your site?</h2>
         <p>Tell us your site type and headcount — we'll come back with a scoped safety plan within 48 hours.</p>
-        <a href="contact.html" class="btn btn-primary mt-4">Talk to Our Team</a>
+        <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Talk to Our Team</a>
       </div>
     </div>
   </div>
 </section>
-
-</main>
-
-<div data-site="footer"></div>
-<div data-site="fabs"></div>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="config/site.config.php"></script>
-<script src="assets/js/shell.js"></script>
-<script src="assets/js/render.js"></script>
-<script src="assets/js/app.js"></script>
-</body>
-</html>
+<?php page_foot(); ?>

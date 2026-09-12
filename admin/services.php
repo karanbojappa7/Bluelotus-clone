@@ -42,7 +42,7 @@ admin_header('Services', 'services');
           <td class="muted"><?= e(truncate($s['summary'], 100)) ?></td>
           <td class="actions">
             <a class="btn btn-secondary btn-sm" href="service-form.php?id=<?= e(urlencode($s['id'])) ?>">Edit</a>
-            <form method="post" onsubmit="return confirm('Delete this service?');">
+            <form method="post" data-confirm="Delete this service? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="id" value="<?= e($s['id']) ?>">

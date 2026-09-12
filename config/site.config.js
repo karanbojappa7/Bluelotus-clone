@@ -51,11 +51,6 @@ window.SITE_CONFIG = {
     },
     "stats": [
         {
-            "value": "13",
-            "suffix": "+",
-            "label": "Years of Indian Industrial Experience"
-        },
-        {
             "value": "4200",
             "suffix": "+",
             "label": "Sites Equipped"
@@ -69,6 +64,11 @@ window.SITE_CONFIG = {
             "value": "24",
             "suffix": "/7",
             "label": "Emergency Support"
+        },
+        {
+            "value": "13",
+            "suffix": "+",
+            "label": ""
         }
     ],
     "leadership": [
@@ -141,7 +141,14 @@ window.SITE_CONFIG = {
                     "q": "Do you deliver across India?",
                     "a": "Yes. Based in Berhampur, Odisha, our logistics network supports delivery and project supply for clients throughout India."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "warehouse-safety",
@@ -174,7 +181,14 @@ window.SITE_CONFIG = {
                     "q": "Can you match existing rack systems?",
                     "a": "We specify guards and barriers to suit common rack footprints and aisle widths."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "fire-safety",
@@ -203,7 +217,14 @@ window.SITE_CONFIG = {
                     "q": "Do you offer AMC for fire systems?",
                     "a": "Yes. Our maintenance contracts cover inspection, refill, and emergency response."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "industrial-safety",
@@ -232,7 +253,14 @@ window.SITE_CONFIG = {
                     "q": "Are products certified?",
                     "a": "We supply lines checked against applicable IS / EN standards before recommendation."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "logistic-safety",
@@ -257,7 +285,14 @@ window.SITE_CONFIG = {
                     "q": "Can you equip multi-location depots?",
                     "a": "Yes — we support phased rollouts with inventory tracking across sites."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "construction-safety",
@@ -282,7 +317,14 @@ window.SITE_CONFIG = {
                     "q": "Do you supply project packs?",
                     "a": "We assemble site starter kits with PPE and barricading for rapid mobilization."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "household-safety",
@@ -307,7 +349,14 @@ window.SITE_CONFIG = {
                     "q": "Can societies order in bulk?",
                     "a": "Yes — we supply society-wide packs with installation guidance."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "water-safety",
@@ -332,7 +381,14 @@ window.SITE_CONFIG = {
                     "q": "Do you install pool safety gear?",
                     "a": "We supply and can coordinate mounting of rings and cabinets on site."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "tree-safety",
@@ -357,7 +413,14 @@ window.SITE_CONFIG = {
                     "q": "Is training included?",
                     "a": "We can arrange product familiarization for site crews on request."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         },
         {
             "id": "safety-wearable",
@@ -382,10 +445,93 @@ window.SITE_CONFIG = {
                     "q": "Can you brand apparel?",
                     "a": "Bulk orders can include company ID marking where the product line allows."
                 }
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "updatedAt": ""
         }
     ],
     "products": [
+        {
+            "slug": "barricades-safety-cones",
+            "category": "road-traffic-safety",
+            "name": "Barricades & Safety Cones",
+            "short": "High-visibility PVC/ABS barricades and cones for lane control and temporary closures.",
+            "description": "Durable traffic barricades and cones with reflective sleeves for day/night visibility. Ideal for road works, events, and industrial yards. Available in standard heights with optional rubber bases for wind stability.",
+            "tags": [
+                "Traffic Barricade",
+                "Safety Cone",
+                "Lane Closure",
+                "Reflective Cone"
+            ],
+            "features": [
+                "High-visibility colours",
+                "Reflective banding options",
+                "Stackable storage",
+                "Suitable for temporary & semi-permanent use"
+            ],
+            "images": [
+                "assets/img/products.jpg",
+                "assets/img/hero.jpg",
+                "assets/img/blog-4.jpg"
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
+        },
+        {
+            "slug": "temporary-fencing",
+            "category": "road-traffic-safety",
+            "name": "Temporary Fencing",
+            "short": "Modular temporary fencing panels for site perimeter and crowd control.",
+            "description": "Quick-deploy temporary fencing systems for construction perimeters, events, and restricted zones. Panels connect with clamps and feet for stable freestanding installation.",
+            "tags": [
+                "Temporary Fence",
+                "Site Perimeter",
+                "Crowd Control"
+            ],
+            "features": [
+                "Modular panel system",
+                "Fast install / remove",
+                "Reusable across projects",
+                "Compatible with mesh & solid options"
+            ],
+            "images": [
+                "assets/img/products.jpg",
+                "assets/img/about.jpg"
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
+        },
         {
             "slug": "spring-post",
             "category": "road-traffic-safety",
@@ -410,53 +556,22 @@ window.SITE_CONFIG = {
                 "assets/img/blog-4.jpg",
                 "assets/img/hero.jpg",
                 "assets/img/about.jpg"
-            ]
-        },
-        {
-            "slug": "barricades-safety-cones",
-            "category": "road-traffic-safety",
-            "name": "Barricades & Safety Cones",
-            "short": "High-visibility PVC/ABS barricades and cones for lane control and temporary closures.",
-            "description": "Durable traffic barricades and cones with reflective sleeves for day/night visibility. Ideal for road works, events, and industrial yards. Available in standard heights with optional rubber bases for wind stability.",
-            "tags": [
-                "Traffic Barricade",
-                "Safety Cone",
-                "Lane Closure",
-                "Reflective Cone"
             ],
-            "features": [
-                "High-visibility colours",
-                "Reflective banding options",
-                "Stackable storage",
-                "Suitable for temporary & semi-permanent use"
-            ],
-            "images": [
-                "assets/img/products.jpg",
-                "assets/img/hero.jpg",
-                "assets/img/blog-4.jpg"
-            ]
-        },
-        {
-            "slug": "temporary-fencing",
-            "category": "road-traffic-safety",
-            "name": "Temporary Fencing",
-            "short": "Modular temporary fencing panels for site perimeter and crowd control.",
-            "description": "Quick-deploy temporary fencing systems for construction perimeters, events, and restricted zones. Panels connect with clamps and feet for stable freestanding installation.",
-            "tags": [
-                "Temporary Fence",
-                "Site Perimeter",
-                "Crowd Control"
-            ],
-            "features": [
-                "Modular panel system",
-                "Fast install / remove",
-                "Reusable across projects",
-                "Compatible with mesh & solid options"
-            ],
-            "images": [
-                "assets/img/products.jpg",
-                "assets/img/about.jpg"
-            ]
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "road-studs",
@@ -478,7 +593,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-4.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "pedestrian-safety",
@@ -498,7 +628,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/blog-2.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "road-lighting-visibility",
@@ -519,7 +664,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/hero.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "delineator-posts",
@@ -540,7 +700,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/blog-4.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "median-barrier",
@@ -560,7 +735,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/hero.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "road-marking",
@@ -580,7 +770,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-4.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "crash-barrier",
@@ -601,7 +806,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/hero.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "bollards",
@@ -621,7 +841,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "parking-marking",
@@ -641,7 +876,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/blog-1.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "zebra-crossing",
@@ -661,7 +911,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-4.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "boom-barrier",
@@ -681,7 +946,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/hero.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "jersey-barrier",
@@ -701,7 +981,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/hero.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "roller-barrier",
@@ -721,7 +1016,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/hero.jpg",
                 "assets/img/blog-4.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "convex-mirror",
@@ -741,7 +1051,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "water-fillable-barrier",
@@ -761,7 +1086,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/blog-4.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "kerb-marking",
@@ -781,7 +1121,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-4.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "intelligent-transportation-systems",
@@ -802,7 +1157,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/hero.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "heavy-duty-barrier",
@@ -822,7 +1192,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/hero.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "speed-breaker",
@@ -843,7 +1228,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/blog-4.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "highway-signs",
@@ -864,7 +1264,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-4.jpg",
                 "assets/img/hero.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "traffic-cones",
@@ -884,7 +1299,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "flexible-median-marker",
@@ -904,7 +1334,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/blog-4.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "modular-barrier",
@@ -924,7 +1369,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "expandable-barrier",
@@ -944,7 +1404,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/hero.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "traffic-signs",
@@ -965,7 +1440,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-4.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "rack-guards",
@@ -985,7 +1475,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "dock-bumpers",
@@ -1005,7 +1510,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "fire-extinguishers",
@@ -1025,7 +1545,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/hero.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "hydrant-accessories",
@@ -1045,7 +1580,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/hero.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "safety-helmets",
@@ -1065,7 +1615,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/blog-1.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "fall-harness",
@@ -1085,7 +1650,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "yard-barriers",
@@ -1105,7 +1685,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/products.jpg",
                 "assets/img/hero.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "site-ppe-kit",
@@ -1125,7 +1720,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-1.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "home-safety-kit",
@@ -1145,7 +1755,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-2.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "life-buoy",
@@ -1165,7 +1790,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-3.jpg",
                 "assets/img/about.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "tree-guard",
@@ -1185,7 +1825,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/about.jpg",
                 "assets/img/blog-2.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         },
         {
             "slug": "hi-vis-vest",
@@ -1205,7 +1860,22 @@ window.SITE_CONFIG = {
             "images": [
                 "assets/img/blog-1.jpg",
                 "assets/img/products.jpg"
-            ]
+            ],
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "brand": "",
+            "sku": "",
+            "gtin": "",
+            "mpn": "",
+            "condition": "",
+            "availability": "",
+            "price": "",
+            "currency": "",
+            "updatedAt": ""
         }
     ],
     "services": [
@@ -1304,5 +1974,31 @@ window.SITE_CONFIG = {
         "BEML",
         "ABB India",
         "Titan Engineering"
+    ],
+    "faqs": [
+        {
+            "q": "Which areas do you supply?",
+            "a": "We supply and install across India from our base in Berhampur, Odisha — including industrial sites, campuses, highways, and government projects."
+        },
+        {
+            "q": "Do you only sell products, or do you install as well?",
+            "a": "Both. We supply certified equipment and handle installation, commissioning, and maintenance with our own crews."
+        },
+        {
+            "q": "Can I place a bulk or government order?",
+            "a": "Yes. We handle wholesale and project orders with staged delivery. Share your quantity and timeline on the contact page for a scoped quote."
+        },
+        {
+            "q": "Are your products certified?",
+            "a": "Product lines are checked against applicable IS, ISO, IRC, and OEM standards before they enter the catalog."
+        },
+        {
+            "q": "How do I request a quote?",
+            "a": "Call +91 74833 94208, email us, or send the form on the contact page. We typically respond within one business day."
+        },
+        {
+            "q": "Do you offer after-sales and emergency support?",
+            "a": "Yes. Maintenance contracts, refills, and 24/7 breakdown response are available for installed systems."
+        }
     ]
 };

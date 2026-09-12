@@ -36,7 +36,7 @@ admin_header('Testimonials', 'testimonials');
           <td class="muted"><?= e(truncate($item['quote'] ?? '', 100)) ?></td>
           <td class="actions">
             <a class="btn btn-secondary btn-sm" href="testimonial-form.php?index=<?= $realIndex ?>">Edit</a>
-            <form method="post" onsubmit="return confirm('Delete this testimonial?');">
+            <form method="post" data-confirm="Delete this testimonial? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="index" value="<?= $realIndex ?>">

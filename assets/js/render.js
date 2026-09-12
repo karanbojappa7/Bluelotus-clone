@@ -2,6 +2,8 @@
   const CFG = window.SITE_CONFIG;
   if (!CFG) return;
 
+  const esc = window.SITE_SHELL.esc;
+
   function icon(name) {
     return window.SITE_SHELL.icon(name, 18);
   }
@@ -33,7 +35,9 @@
   }
 
   function formatDate(date, opts) {
-    return new Date(date).toLocaleDateString("en-GB", opts);
+    const parsed = new Date(date);
+    if (isNaN(parsed.getTime())) return "";
+    return parsed.toLocaleDateString("en-GB", opts);
   }
 
   function fill(selector, html) {
@@ -41,12 +45,16 @@
     if ($mount.length) $mount.html(html);
   }
 
+  const categoryHref = window.SITE_SHELL.categoryUrl;
+  const postHref = window.SITE_SHELL.postUrl;
+  const siteUrl = window.SITE_SHELL.url;
+
   function buildNavCategories() {
     fill(
       "[data-render='nav-categories']",
-      CFG.categories
+      (CFG.categories || [])
         .map(function (c) {
-          return `<li><a class="dropdown-item" href="category.html?cat=${c.id}">${c.name}</a></li>`;
+          return `<li><a class="dropdown-item" href="${categoryHref(c.id)}">${esc(c.name)}</a></li>`;
         })
         .join("")
     );
@@ -55,10 +63,10 @@
   function buildFooterCategories() {
     fill(
       "[data-render='footer-categories']",
-      CFG.categories
+      (CFG.categories || [])
         .slice(0, 8)
         .map(function (c) {
-          return `<li><a href="category.html?cat=${c.id}">${c.name}</a></li>`;
+          return `<li><a href="${categoryHref(c.id)}">${esc(c.name)}</a></li>`;
         })
         .join("")
     );
@@ -67,50 +75,56 @@
   function buildStats() {
     fill(
       "[data-render='stats']",
-      CFG.stats
+      (CFG.stats || [])
         .map(function (s) {
+          const suffix = esc(s.suffix);
           return `<div class="stat-plate">
-            <div class="value" data-count="${s.value}" data-suffix="${s.suffix}">0${s.suffix}</div>
-            <div class="label">${s.label}</div>
+            <div class="value" data-count="${esc(s.value)}" data-suffix="${suffix}">0${suffix}</div>
+            <div class="label">${esc(s.label)}</div>
           </div>`;
         })
         .join("")
     );
   }
 
-  function productCard(p) {
-    const img = (p.images && p.images[0]) || "assets/img/products.jpg";
-    return `<a class="product-card" href="product.html?slug=${p.slug}" data-reveal>
-      <span class="product-card-media">
-        <img src="${img}" alt="${p.name}" width="480" height="320" loading="lazy">
-      </span>
-      <span class="product-card-body">
-        <strong>${p.name}</strong>
-        <em>${p.short}</em>
-        <span class="tile-link">View Product ${icon("arrow")}</span>
-      </span>
-    </a>`;
-  }
-
   function buildProducts(limit) {
     const $mount = $("[data-render='products']");
     if (!$mount.length) return;
-    const list = limit ? (CFG.products || []).slice(0, Number(limit)) : CFG.products || [];
-    fill("[data-render='products']", list.map(productCard).join(""));
+    const all = CFG.products || [];
+    const list = limit ? all.slice(0, Number(limit)) : all;
+    if (!list.length) {
+      $mount.html('<p class="empty-note">Our catalog is being updated. Please check back shortly.</p>');
+      return;
+    }
+    $mount.html(list.map(window.SITE_SHELL.productCard).join(""));
   }
 
   function buildCategories(limit) {
-    const list = limit ? CFG.categories.slice(0, Number(limit)) : CFG.categories;
+    const all = CFG.categories || [];
+    const list = limit ? all.slice(0, Number(limit)) : all;
     fill(
       "[data-render='categories']",
       list
         .map(function (c) {
-          return `<a class="tile" id="${c.id}" href="category.html?cat=${c.id}" data-reveal>
+          return `<a class="tile" id="${esc(c.id)}" href="${categoryHref(c.id)}" data-reveal>
             <div class="icon-wrap">${icon(c.icon)}</div>
-            <h3>${c.name}</h3>
-            <p>${c.desc}</p>
+            <h3>${esc(c.name)}</h3>
+            <p>${esc(c.desc)}</p>
             <span class="tile-link">View Range ${icon("arrow")}</span>
           </a>`;
+        })
+        .join("")
+    );
+  }
+
+  function buildFaqs() {
+    const $mount = $("[data-render='faqs']");
+    if (!$mount.length) return;
+    fill(
+      "[data-render='faqs']",
+      (CFG.faqs || [])
+        .map(function (f) {
+          return `<details class="faq-item"><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`;
         })
         .join("")
     );
@@ -120,43 +134,46 @@
     const $tabs = $("[data-render='service-tabs']");
     const $panels = $("[data-render='service-panels']");
     if (!$tabs.length || !$panels.length) return;
+    const services = CFG.services || [];
     $tabs.html(
-      CFG.services
+      services
         .map(function (s, i) {
-          return `<button type="button" class="service-tab-btn${i === 0 ? " is-active" : ""}" data-tab-target="panel-${s.id}">${s.name}</button>`;
+          const active = i === 0;
+          return `<button type="button" role="tab" id="tab-${esc(s.id)}" aria-controls="panel-${esc(s.id)}" aria-selected="${active}" tabindex="${active ? 0 : -1}" class="service-tab-btn${active ? " is-active" : ""}" data-tab-target="panel-${esc(s.id)}">${esc(s.name)}</button>`;
         })
         .join("")
     );
     $panels.html(
-      CFG.services
+      services
         .map(function (s, i) {
-          return `<div class="service-panel${i === 0 ? " is-active" : ""}" id="panel-${s.id}">
+          return `<div class="service-panel${i === 0 ? " is-active" : ""}" id="panel-${esc(s.id)}" role="tabpanel" aria-labelledby="tab-${esc(s.id)}">
             <div class="service-visual">
               <div class="icon-wrap">${icon(s.icon)}</div>
-              <h3>${s.name}</h3>
-              <p>${s.summary}</p>
+              <h3>${esc(s.name)}</h3>
+              <p>${esc(s.summary)}</p>
             </div>
             <div class="service-panel-body">
               <span class="eyebrow">Scope of Work</span>
-              <ul class="service-panel-points">${s.points.map(function (p) { return `<li>${p}</li>`; }).join("")}</ul>
-              <a href="contact.html" class="btn btn-outline">Request This Service ${icon("arrow")}</a>
+              <ul class="service-panel-points">${(s.points || []).map(function (p) { return `<li>${esc(p)}</li>`; }).join("")}</ul>
+              <a href="${siteUrl("contact")}" class="btn btn-outline">Request This Service ${icon("arrow")}</a>
             </div>
           </div>`;
         })
         .join("")
     );
+    $tabs.attr("role", "tablist");
   }
 
   function buildTestimonials() {
     fill(
       "[data-render='testimonials']",
-      CFG.testimonials
+      (CFG.testimonials || [])
         .map(function (t) {
           return `<div class="testimonial-card" data-reveal>
-            <p class="testimonial-quote">${t.quote}</p>
+            <p class="testimonial-quote">${esc(t.quote)}</p>
             <div class="testimonial-author">
-              <span class="name">${t.name}</span>
-              <span class="role">${t.role}</span>
+              <span class="name">${esc(t.name)}</span>
+              <span class="role">${esc(t.role)}</span>
             </div>
           </div>`;
         })
@@ -179,29 +196,29 @@
   function buildLeadership() {
     const $mount = $("[data-render='leadership']");
     if (!$mount.length || $mount.children().length) return;
-    const list = CFG.leadership || [];
     fill(
       "[data-render='leadership']",
-      list
+      (CFG.leadership || [])
         .map(function (person) {
-          const designation = person.designation || person.role || "";
-          const background = person.background || person.bio || "";
+          const name = esc(person.name);
+          const designation = esc(person.designation || person.role || "");
+          const background = esc(person.background || person.bio || "");
           const photo = person.image
-            ? `<img src="${person.image}" alt="${person.name}" width="480" height="360" loading="lazy">`
-            : `<span class="leader-fallback" aria-hidden="true">${initials(person.name)}</span>`;
+            ? `<img src="${esc(siteUrl(person.image))}" alt="${name}" width="480" height="360" loading="lazy" data-fallback>`
+            : `<span class="leader-fallback" aria-hidden="true">${esc(initials(person.name))}</span>`;
           const linkedin = person.linkedin
-            ? `<a class="leader-in" href="${person.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn profile for ${person.name}">${icon("linkedin")}</a>`
+            ? `<a class="leader-in" href="${esc(person.linkedin)}" target="_blank" rel="noopener" aria-label="LinkedIn profile for ${name}">${icon("linkedin")}</a>`
             : "";
           const experience = person.experience
-            ? `<div class="leader-meta"><span>Experience</span><p>${person.experience}</p></div>`
+            ? `<div class="leader-meta"><span>Experience</span><p>${esc(person.experience)}</p></div>`
             : "";
           const expertise = person.expertise
-            ? `<div class="leader-meta"><span>Area of expertise</span><p>${person.expertise}</p></div>`
+            ? `<div class="leader-meta"><span>Area of expertise</span><p>${esc(person.expertise)}</p></div>`
             : "";
           return `<article class="leader-card" data-reveal>
             <div class="leader-photo">${photo}</div>
             <div class="leader-body">
-              <h3>${person.name}</h3>
+              <h3>${name}</h3>
               <p class="leader-role">${designation}</p>
               ${experience}
               ${expertise}
@@ -215,20 +232,23 @@
   }
 
   function buildBlog(limit) {
-    const list = limit ? CFG.blog.slice(0, Number(limit)) : CFG.blog;
+    const all = CFG.blog || [];
+    const list = limit ? all.slice(0, Number(limit)) : all;
     fill(
       "[data-render='blog']",
       list
         .map(function (b) {
+          const href = postHref(b.slug);
+          const title = esc(b.title);
           return `<article class="blog-card" data-reveal>
-            <a class="blog-card-media" href="blog-single.html?post=${b.slug}">
-              <span class="blog-card-date">${formatDate(b.date, { day: "2-digit", month: "short" })}</span>
-              <img src="${b.image}" alt="${b.title}" width="600" height="400" loading="lazy">
+            <a class="blog-card-media" href="${href}">
+              <span class="blog-card-date">${esc(formatDate(b.date, { day: "2-digit", month: "short" }))}</span>
+              <img src="${esc(siteUrl(b.image))}" alt="${title}" width="600" height="400" loading="lazy" data-fallback>
             </a>
             <div class="blog-card-body">
-              <h3><a href="blog-single.html?post=${b.slug}">${b.title}</a></h3>
-              <p>${b.excerpt}</p>
-              <a class="blog-read-more" href="blog-single.html?post=${b.slug}">Read More ${icon("arrow")}</a>
+              <h3><a href="${href}">${title}</a></h3>
+              <p>${esc(b.excerpt)}</p>
+              <a class="blog-read-more" href="${href}">Read More ${icon("arrow")}</a>
             </div>
           </article>`;
         })
@@ -237,38 +257,43 @@
   }
 
   function buildClients() {
-    const doubled = CFG.clients.concat(CFG.clients);
+    const clients = CFG.clients || [];
     fill(
       "[data-render='clients']",
-      doubled
+      clients
+        .concat(clients)
         .map(function (c) {
-          return `<span>${c}</span>`;
+          return `<span>${esc(c)}</span>`;
         })
         .join("")
     );
   }
 
   function buildFooterContact() {
-    const phones = CFG.contact.phones
+    const contact = CFG.contact || {};
+    const phones = (contact.phones || [])
       .map(function (p) {
-        return `<li><a href="${phoneHref(p.number)}">${p.number}</a></li>`;
+        return `<li><a href="${esc(phoneHref(p.number))}">${esc(p.number)}</a></li>`;
       })
       .join("");
-    const emails = CFG.contact.emails
+    const emails = (contact.emails || [])
       .map(function (e) {
-        return `<li><a href="mailto:${e.address}">${e.address}</a></li>`;
+        return `<li><a href="mailto:${esc(e.address)}">${esc(e.address)}</a></li>`;
       })
       .join("");
-    const address = `<li>${CFG.contact.address.line1}, ${CFG.contact.address.line2}</li>`;
+    const addr = contact.address || {};
+    const address = `<li>${esc([addr.line1, addr.line2].filter(Boolean).join(", "))}</li>`;
     fill("[data-render='footer-contact']", phones + emails + address);
   }
 
   function buildContactCards() {
+    const contact = CFG.contact || {};
+    const addr = contact.address || {};
     const cards = [
-      { icon: "phone", title: "Call Us", body: CFG.contact.phones.map(function (p) { return p.number; }).join(" / ") },
-      { icon: "mail", title: "Email Us", body: CFG.contact.emails.map(function (e) { return e.address; }).join(" / ") },
-      { icon: "pin", title: "Visit Us", body: CFG.contact.address.line1 + ", " + CFG.contact.address.line2 },
-      { icon: "clock", title: "Working Hours", body: CFG.contact.workingHours || "Mon – Sat, 9:00 AM – 7:00 PM" }
+      { icon: "phone", title: "Call Us", body: (contact.phones || []).map(function (p) { return p.number; }).join(" / ") },
+      { icon: "mail", title: "Email Us", body: (contact.emails || []).map(function (e) { return e.address; }).join(" / ") },
+      { icon: "pin", title: "Visit Us", body: [addr.line1, addr.line2].filter(Boolean).join(", ") },
+      { icon: "clock", title: "Working Hours", body: contact.workingHours || "Mon – Sat, 9:00 AM – 7:00 PM" }
     ];
     fill(
       "[data-render='contact-cards']",
@@ -276,7 +301,7 @@
         .map(function (c) {
           return `<div class="contact-card">
             <div class="icon-wrap">${icon(c.icon)}</div>
-            <div><h4>${c.title}</h4><p>${c.body}</p></div>
+            <div><h4>${esc(c.title)}</h4><p>${esc(c.body)}</p></div>
           </div>`;
         })
         .join("")
@@ -285,40 +310,45 @@
 
   function setMeta() {
     const $html = $("html");
+    const seo = CFG.seo || {};
     const title = $html.attr("data-page-title");
-    const desc = $html.attr("data-page-desc") || CFG.seo.defaultDescription;
-    document.title = title ? title + " | " + CFG.company.name : CFG.company.name + " | " + CFG.seo.defaultTitle;
+    const desc = $html.attr("data-page-desc") || seo.defaultDescription;
+    document.title = title ? title + " | " + CFG.company.name : CFG.company.name + " | " + seo.defaultTitle;
     $("meta[name='description']").attr("content", desc);
-    $("meta[name='keywords']").attr("content", CFG.seo.keywords);
+    $("meta[name='keywords']").attr("content", seo.keywords);
     const pageFile = location.pathname.split("/").pop() || "";
-    $("link[rel='canonical']").attr("href", pageFile ? CFG.seo.domain + "/" + pageFile : CFG.seo.domain + "/");
+    $("link[rel='canonical']").attr("href", seo.domain + "/" + pageFile);
     $("meta[property='og:title']").attr("content", document.title);
     $("meta[property='og:description']").attr("content", desc);
     if (!$("meta[property='og:image']").length) {
       $("head").append('<meta property="og:image">');
     }
-    $("meta[property='og:image']").attr("content", CFG.seo.domain + "/assets/img/og-cover.jpg");
+    $("meta[property='og:image']").attr("content", seo.domain + "/assets/img/og-cover.jpg");
   }
 
   function injectSchema() {
+    const contact = CFG.contact || {};
+    const addr = contact.address || {};
+    const phone = (contact.phones || [])[0];
+    const email = (contact.emails || [])[0];
     const schema = {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       name: CFG.company.name,
       description: CFG.seo.defaultDescription,
       url: CFG.seo.domain,
-      telephone: CFG.contact.phones[0].number,
-      email: CFG.contact.emails[0].address,
+      telephone: phone ? phone.number : undefined,
+      email: email ? email.address : undefined,
       image: CFG.seo.domain + "/assets/img/og-cover.jpg",
       address: {
         "@type": "PostalAddress",
-        streetAddress: CFG.contact.address.line1,
+        streetAddress: addr.line1,
         addressLocality: "Berhampur",
         addressRegion: "Odisha",
         postalCode: "760010",
         addressCountry: "IN"
       },
-      sameAs: Object.values(CFG.social)
+      sameAs: Object.values(CFG.social || {}).filter(Boolean)
     };
     $("head").append($("<script>", { type: "application/ld+json" }).text(JSON.stringify(schema)));
   }
@@ -338,6 +368,7 @@
     buildCategories($("body").attr("data-categories-limit"));
     buildProducts($("body").attr("data-products-limit"));
     buildServices();
+    buildFaqs();
     buildTestimonials();
     buildLeadership();
     buildBlog($("body").attr("data-blog-limit"));

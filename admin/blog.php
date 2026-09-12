@@ -36,8 +36,8 @@ admin_header('Blog Posts', 'blog');
           <td><?= e($item['date'] ?? '') ?></td>
           <td class="actions">
             <a class="btn btn-secondary btn-sm" href="blog-form.php?index=<?= $realIndex ?>">Edit</a>
-            <a class="btn btn-secondary btn-sm" href="../blog-single.html?post=<?= e(urlencode($item['slug'] ?? '')) ?>" target="_blank" rel="noopener">View</a>
-            <form method="post" onsubmit="return confirm('Delete this post?');">
+            <a class="btn btn-secondary btn-sm" href="../blog/<?= e(rawurlencode($item['slug'] ?? '')) ?>" target="_blank" rel="noopener">View</a>
+            <form method="post" data-confirm="Delete this blog post? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="index" value="<?= $realIndex ?>">

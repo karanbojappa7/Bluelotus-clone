@@ -32,7 +32,7 @@ $leadersHtml = db_ready() ? render_leadership_cards() : '';
   <div class="container">
     <span class="eyebrow eyebrow--light">About Bluelotus</span>
     <h1 class="page-title">Safety systems built by people who install them.</h1>
-    <div class="breadcrumb-row"><a href="index.html">Home</a> / <span>About Us</span></div>
+    <div class="breadcrumb-row"><a href="<?= e(url_for('')) ?>">Home</a> / <span>About Us</span></div>
   </div>
 </section>
 
@@ -97,7 +97,7 @@ $leadersHtml = db_ready() ? render_leadership_cards() : '';
       <div class="cta-banner-inner">
         <span class="eyebrow eyebrow--light eyebrow--center">Work With Us</span>
         <h2 class="section-title">Let's talk about your site's safety plan</h2>
-        <a href="contact.html" class="btn btn-primary mt-4">Contact Our Team</a>
+        <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Contact Our Team</a>
       </div>
     </div>
   </div>

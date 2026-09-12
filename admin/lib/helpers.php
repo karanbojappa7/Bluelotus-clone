@@ -61,6 +61,43 @@ function json_list(?string $json): array
     return is_array($data) ? $data : [];
 }
 
+function field_class(array $errors, string $key, bool $full = false): string
+{
+    $classes = $full ? ['full'] : [];
+    if (isset($errors[$key])) {
+        $classes[] = 'field-error';
+    }
+    return implode(' ', $classes);
+}
+
+function field_msg(array $errors, string $key): string
+{
+    return isset($errors[$key]) ? '<span class="field-msg">' . e($errors[$key]) . '</span>' : '';
+}
+
+function parse_blocks(string $text, string $firstKey, string $restKey): array
+{
+    $out = [];
+    foreach (preg_split('/\R\s*\R/', trim($text)) ?: [] as $block) {
+        $lines = lines_to_array($block);
+        if (count($lines) < 2) {
+            continue;
+        }
+        $first = array_shift($lines);
+        $out[] = [$firstKey => $first, $restKey => implode(' ', $lines)];
+    }
+    return $out;
+}
+
+function format_blocks(array $items, string $firstKey, string $restKey): string
+{
+    $blocks = [];
+    foreach ($items as $item) {
+        $blocks[] = ($item[$firstKey] ?? '') . "\n" . ($item[$restKey] ?? '');
+    }
+    return implode("\n\n", $blocks);
+}
+
 function truncate(string $text, int $width = 90): string
 {
     if (function_exists('mb_strimwidth')) {

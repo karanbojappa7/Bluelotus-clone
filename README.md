@@ -1,48 +1,95 @@
 # Bluelotus Infrasafety — Website
 
-Responsive marketing site with a PHP admin CMS. Almost all public content is editable from the admin panel.
+Server-rendered marketing site with a PHP admin CMS. Every public page is rendered by PHP so
+search engines and social scrapers see real content and real meta tags — no JavaScript required.
 
 ## Run locally
 
 ```
-php -S localhost:8000
+# XAMPP (Apache + MySQL) — clean URLs need mod_rewrite
+http://localhost/saroj/
+http://localhost/saroj/admin/
 ```
 
-- Site: http://localhost:8000  
-- Admin: http://localhost:8000/admin/  
-- First-time install: http://localhost:8000/admin/install.php  
+First-time install: `/admin/install.php`. Once installed, that page requires login and a typed
+confirmation before it will re-seed.
 
-MySQL credentials are in `admin/bootstrap.php` (`bluelotus` on `localhost:3306`, user `root`).
+### Database credentials
 
-**Default login:** `admin` / `admin123` (change under Account)
+Copy `admin/config.local.example.php` to `admin/config.local.php` and edit it. That file is
+git-ignored. Environment variables (`CMS_DB_HOST`, `CMS_DB_NAME`, `CMS_DB_USER`, `CMS_DB_PASS`)
+are also honoured. Defaults fall back to `bluelotus` on `localhost:3306` as `root`.
 
-## What you can manage in CMS
+Change the admin password immediately after install — the dashboard shows a warning banner until
+you do.
+
+## URLs
+
+| Page | URL |
+|------|-----|
+| Home | `/` |
+| Catalog | `/products` |
+| Category | `/products/<category-id>` |
+| Product | `/product/<slug>` |
+| Blog index | `/blog` |
+| Article | `/blog/<slug>` |
+| FAQ | `/faq` |
+| About / Contact / Privacy | `/about`, `/contact`, `/privacy-policy` |
+| Sitemap / robots | `/sitemap.xml`, `/robots.txt` (both generated from the database) |
+
+Old `.html` and query-string URLs (`/product.html?slug=…`) 301-redirect to the new paths.
+
+## SEO
+
+Everything below is generated per page from CMS content — nothing is hardcoded:
+
+- **Meta** — title, description, keywords, canonical, robots, Open Graph, Twitter Card.
+- **Structured data** — `LocalBusiness` + `WebSite` on every page, plus `Product` (with `Offer`,
+  brand, SKU, GTIN/MPN, availability, condition, price), `FAQPage`, `BlogPosting`, `ItemList`,
+  and `BreadcrumbList` where relevant.
+- **Sitemap** — every product, category, and post, with `lastmod` from the record's `updated_at`.
+  Anything flagged *Hide from search engines* is excluded and served `noindex`.
+- **Pagination** — `rel="prev"` / `rel="next"` and self-referencing canonicals.
+
+Per-item SEO lives on each edit screen (Products, Categories, Blog) under **Search & social**,
+with a live Google-result preview and length warnings.
+
+## What you can manage in the CMS
 
 | Section | Controls |
 |---------|----------|
-| Products | Full product catalog (slug, category, copy, tags, features, images) |
-| Services | Service tabs on Services / Home |
-| Categories | Product categories + category page content (intro, buyers, use cases, FAQs) |
-| Blog | Post list on Blog / Home |
-| Testimonials | Home client feedback cards |
-| Leadership | About page founders & leadership |
-| Stats | Homepage / About counters |
-| Clients | Homepage marquee names |
-| Company | Name, tagline, logos, founded year |
-| Contact | Phones, emails, WhatsApp, address, hours, map |
-| Social | Facebook, LinkedIn, Instagram, YouTube |
-| SEO | Domain, default title, description, keywords |
+| Products | Catalog, images, ordering, and full per-product SEO + Product schema |
+| Categories | Category pages, use cases, FAQs (published as FAQPage), per-category SEO |
+| Services | Service tabs on the homepage |
+| Blog | Posts with article body, cover image, and per-post SEO + Article schema |
+| FAQ | Site-wide questions, published to `/faq` as FAQPage structured data |
+| Testimonials · Leadership · Stats · Clients | Homepage and About content |
+| Company · Contact · Social · SEO | Site-wide defaults |
 | Account | Change admin password |
 
-Edits publish through `config/site.config.php` and sync `config/site.config.js`.
+Saving publishes immediately through `config/site.config.php`, keeping `config/site.config.js`
+in sync as a fallback.
 
 ## Structure
 
 ```
 saroj/
-├── *.html                 Public pages
-├── admin/                 PHP CMS
-├── config/site.config.php Live config from database
-├── config/site.config.js  Synced fallback
-└── assets/                CSS, JS, images
+├── index.php products.php category.php product.php   Public pages (server-rendered)
+├── blog.php blog-single.php faq.php about.php …
+├── sitemap.php robots.php 404.php
+├── .htaccess                Clean URLs, 301s, security headers, caching
+├── admin/                   PHP CMS
+│   ├── lib/seo.php          Page shell, meta, structured data
+│   ├── lib/seo_fields.php   Shared per-item SEO panel
+│   ├── lib/security.php     Sessions, headers, login throttling
+│   └── config.local.php     DB credentials (git-ignored)
+└── assets/                  CSS, JS, images, uploads
 ```
+
+## Security
+
+- Login throttling (8 failures per IP per 15 min), CSRF on every form, hardened session cookies.
+- Admin sends `X-Frame-Options: DENY` plus a Content-Security-Policy; no inline event handlers.
+- Uploads are validated by image type, stored under random filenames, and served from a directory
+  where script execution is disabled.
+- `admin/data/` and `admin/config.local.php` are blocked at the web server.

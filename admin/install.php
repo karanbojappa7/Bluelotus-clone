@@ -1,24 +1,33 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
+cms_security_headers(true);
 
-if (db_ready() && current_user()) {
-    redirect('index.php');
+$installed = db_ready();
+if ($installed && !current_user()) {
+    flash('error', 'Sign in before re-seeding the CMS.');
+    redirect('login.php');
 }
 
 $error = '';
-$done = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
-    try {
-        seed_from_json();
-        export_site_config_js();
-        $done = true;
-        flash('ok', 'CMS installed. Sign in with admin / admin123 and change the password.');
-        redirect('login.php');
-    } catch (Throwable $e) {
-        $error = $e->getMessage();
+    if ($installed && post('confirm') !== 'RESEED') {
+        $error = 'Type RESEED to confirm. This replaces all catalog content with seed.json.';
+    } else {
+        try {
+            seed_from_json();
+            export_site_config_js();
+            if ($installed) {
+                flash('ok', 'Catalog re-seeded from seed.json.');
+                redirect('index.php');
+            }
+            flash('ok', 'CMS installed. Sign in with admin / admin123, then change the password immediately.');
+            redirect('login.php');
+        } catch (Throwable $e) {
+            $error = 'Install failed. Check the database connection and seed.json.';
+        }
     }
 }
 ?>
@@ -37,14 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($error): ?>
       <div class="flash flash--error"><?= e($error) ?></div>
     <?php endif; ?>
-    <?php if (db_ready()): ?>
-      <div class="install-note">Tables already exist. Re-running install will re-seed catalog content from seed.json (admin user is kept).</div>
+    <?php if ($installed): ?>
+      <div class="install-note">Tables already exist. Re-seeding <strong>permanently replaces</strong> every product, service, category, and leadership entry with the contents of seed.json. Your admin login is kept.</div>
     <?php endif; ?>
     <form method="post">
       <?= csrf_field() ?>
-      <button class="btn" type="submit">Install / Re-seed</button>
+      <?php if ($installed): ?>
+        <label>Type <code>RESEED</code> to confirm
+          <input type="text" name="confirm" required autocomplete="off" placeholder="RESEED">
+        </label>
+      <?php endif; ?>
+      <button class="btn<?= $installed ? ' btn-danger' : '' ?>" type="submit"><?= $installed ? 'Re-seed Catalog' : 'Install CMS' ?></button>
     </form>
-    <p style="margin-top:1rem"><a href="login.php">Back to login</a></p>
+    <p style="margin-top:1rem"><a href="<?= $installed ? 'index.php' : 'login.php' ?>"><?= $installed ? 'Back to dashboard' : 'Back to login' ?></a></p>
   </div>
 </body>
 </html>

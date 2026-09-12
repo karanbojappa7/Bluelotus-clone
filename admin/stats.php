@@ -86,7 +86,7 @@ admin_header('Stats Counters', 'stats');
           <td><?= $i + 1 ?></td>
           <td><strong><?= e(($stat['value'] ?? '') . ($stat['suffix'] ?? '')) ?></strong> — <?= e($stat['label'] ?? '') ?></td>
           <td>
-            <form method="post" onsubmit="return confirm('Remove this stat?');">
+            <form method="post" data-confirm="Remove this stat?">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="index" value="<?= $i ?>">

@@ -61,6 +61,50 @@ function setting_delete_item(string $key, int $index): void
     save_setting($key, array_values($list));
 }
 
+function default_faqs(): array
+{
+    $contact = is_array(setting('contact', [])) ? setting('contact', []) : [];
+    $phone = (string) ($contact['phones'][0]['number'] ?? '');
+    $quote = $phone !== ''
+        ? 'Call ' . $phone . ', email us, or send the form on the contact page. We typically respond within one business day.'
+        : 'Email us or send the form on the contact page. We typically respond within one business day.';
+
+    return [
+        ['q' => 'Which areas do you supply?', 'a' => 'We supply and install across India from our base in Berhampur, Odisha — including industrial sites, campuses, highways, and government projects.'],
+        ['q' => 'Do you only sell products, or do you install as well?', 'a' => 'Both. We supply certified equipment and handle installation, commissioning, and maintenance with our own crews.'],
+        ['q' => 'Can I place a bulk or government order?', 'a' => 'Yes. We handle wholesale and project orders with staged delivery. Share your quantity and timeline on the contact page for a scoped quote.'],
+        ['q' => 'Are your products certified?', 'a' => 'Product lines are checked against applicable IS, ISO, IRC, and OEM standards before they enter the catalog.'],
+        ['q' => 'How do I request a quote?', 'a' => $quote],
+        ['q' => 'Do you offer after-sales and emergency support?', 'a' => 'Yes. Maintenance contracts, refills, and 24/7 breakdown response are available for installed systems.'],
+    ];
+}
+
+function site_faqs(): array
+{
+    $stored = setting('faqs', null);
+    if (!is_array($stored) || !$stored) {
+        return default_faqs();
+    }
+    $out = [];
+    foreach ($stored as $item) {
+        $q = trim((string) ($item['q'] ?? ''));
+        $a = trim((string) ($item['a'] ?? ''));
+        if ($q !== '' && $a !== '') {
+            $out[] = ['q' => $q, 'a' => $a];
+        }
+    }
+    return $out ?: default_faqs();
+}
+
+function faqs_to_text(array $faqs): string
+{
+    $blocks = [];
+    foreach ($faqs as $faq) {
+        $blocks[] = $faq['q'] . "\n" . $faq['a'];
+    }
+    return implode("\n\n", $blocks);
+}
+
 function parse_labeled_lines(string $text): array
 {
     $out = [];
@@ -85,6 +129,13 @@ function map_category(array $row): array
         'buyers' => $row['buyers'],
         'useCases' => json_list($row['use_cases']),
         'faqs' => json_list($row['faqs']),
+        'metaTitle' => (string) ($row['meta_title'] ?? ''),
+        'metaDescription' => (string) ($row['meta_description'] ?? ''),
+        'metaKeywords' => (string) ($row['meta_keywords'] ?? ''),
+        'canonical' => (string) ($row['canonical'] ?? ''),
+        'ogImage' => (string) ($row['og_image'] ?? ''),
+        'noindex' => (int) ($row['noindex'] ?? 0) === 1,
+        'updatedAt' => (string) ($row['updated_at'] ?? ''),
     ];
 }
 
@@ -99,6 +150,21 @@ function map_product(array $row): array
         'tags' => json_list($row['tags']),
         'features' => json_list($row['features']),
         'images' => json_list($row['images']),
+        'metaTitle' => (string) ($row['meta_title'] ?? ''),
+        'metaDescription' => (string) ($row['meta_description'] ?? ''),
+        'metaKeywords' => (string) ($row['meta_keywords'] ?? ''),
+        'canonical' => (string) ($row['canonical'] ?? ''),
+        'ogImage' => (string) ($row['og_image'] ?? ''),
+        'noindex' => (int) ($row['noindex'] ?? 0) === 1,
+        'brand' => (string) ($row['brand'] ?? ''),
+        'sku' => (string) ($row['sku'] ?? ''),
+        'gtin' => (string) ($row['gtin'] ?? ''),
+        'mpn' => (string) ($row['mpn'] ?? ''),
+        'condition' => (string) ($row['item_condition'] ?? ''),
+        'availability' => (string) ($row['availability'] ?? ''),
+        'price' => (string) ($row['price'] ?? ''),
+        'currency' => (string) ($row['currency'] ?? ''),
+        'updatedAt' => (string) ($row['updated_at'] ?? ''),
     ];
 }
 
@@ -127,14 +193,56 @@ function get_category(string $id): ?array
     return $row ? map_category($row) : null;
 }
 
-function all_products_admin(?string $category = null): array
+function all_products_admin(?string $category = null, ?string $search = null): array
 {
-    if ($category) {
-        $stmt = db()->prepare('SELECT * FROM products WHERE category = ? ORDER BY sort_order ASC, name ASC');
-        $stmt->execute([$category]);
-        return $stmt->fetchAll();
+    $where = [];
+    $args = [];
+
+    if ($category !== null && $category !== '') {
+        $where[] = 'category = ?';
+        $args[] = $category;
     }
-    return db()->query('SELECT * FROM products ORDER BY sort_order ASC, name ASC')->fetchAll();
+    if ($search !== null && trim($search) !== '') {
+        $like = '%' . str_replace(['%', '_'], ['\%', '\_'], trim($search)) . '%';
+        $where[] = '(name LIKE ? OR slug LIKE ? OR short LIKE ? OR tags LIKE ?)';
+        array_push($args, $like, $like, $like, $like);
+    }
+
+    $sql = 'SELECT * FROM products';
+    if ($where) {
+        $sql .= ' WHERE ' . implode(' AND ', $where);
+    }
+    $sql .= ' ORDER BY sort_order ASC, name ASC';
+
+    $stmt = db()->prepare($sql);
+    $stmt->execute($args);
+    return $stmt->fetchAll();
+}
+
+function move_product(int $id, int $direction): bool
+{
+    $rows = db()->query('SELECT id FROM products ORDER BY sort_order ASC, name ASC')->fetchAll();
+    $ids = array_map('intval', array_column($rows, 'id'));
+    $index = array_search($id, $ids, true);
+    if ($index === false) {
+        return false;
+    }
+    $target = $index + $direction;
+    if ($target < 0 || $target >= count($ids)) {
+        return false;
+    }
+
+    $moved = array_splice($ids, $index, 1);
+    array_splice($ids, $target, 0, $moved);
+
+    $pdo = db();
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare('UPDATE products SET sort_order = ? WHERE id = ?');
+    foreach ($ids as $position => $rowId) {
+        $stmt->execute([$position, $rowId]);
+    }
+    $pdo->commit();
+    return true;
 }
 
 function all_products(?string $category = null): array
@@ -264,6 +372,7 @@ function build_site_config(): array
         'testimonials' => setting('testimonials', []),
         'blog' => setting('blog', []),
         'clients' => setting('clients', []),
+        'faqs' => site_faqs(),
     ];
 }
 

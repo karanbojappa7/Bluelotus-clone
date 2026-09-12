@@ -43,7 +43,7 @@ admin_header('Leadership', 'leadership');
           <td class="muted"><?= e(truncate($item['expertise'], 80)) ?></td>
           <td class="actions">
             <a class="btn btn-secondary btn-sm" href="leadership-form.php?id=<?= (int) $item['id'] ?>">Edit</a>
-            <form method="post" onsubmit="return confirm('Delete this entry?');">
+            <form method="post" data-confirm="Delete this leadership entry? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="id" value="<?= (int) $item['id'] ?>">
