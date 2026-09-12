@@ -4,6 +4,7 @@ require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../lib/ui/layout.php';
 require_once __DIR__ . '/../lib/seo/seo_fields.php';
 require_login();
+migrate();
 
 $id = isset($_GET['id']) ? (string) $_GET['id'] : '';
 $existing = $id !== '' ? get_category($id) : null;
@@ -17,6 +18,7 @@ $category = [
     'headline' => $existing['headline'] ?? '',
     'intro' => $existing['intro'] ?? '',
     'buyers' => $existing['buyers'] ?? '',
+    'image' => $existing['image'] ?? '',
     'useCases' => format_blocks($existing['useCases'] ?? [], 'title', 'text'),
     'faqs' => format_blocks($existing['faqs'] ?? [], 'q', 'a'),
     'metaTitle' => $existing['metaTitle'] ?? '',
@@ -29,6 +31,7 @@ $category = [
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
+    $keepImage = $category['image'];
     $category['name'] = post('name');
     $category['id'] = post('id') !== '' ? slugify(post('id')) : slugify(post('name'));
     $category['icon'] = post('icon');
@@ -46,6 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category['noindex'] = isset($_POST['noindex']);
     $now = gmdate('c');
 
+    try {
+        $category['image'] = (string) (save_uploaded_image('image', $keepImage !== '' ? $keepImage : null) ?? '');
+    } catch (Throwable $e) {
+        $errors[] = $e->getMessage();
+    }
+
     if ($category['name'] === '' || $category['id'] === '') {
         $errors[] = 'Name and ID are required.';
     }
@@ -58,23 +67,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($category['id'] !== $existing['id']) {
                     db()->prepare('UPDATE products SET category = ? WHERE category = ?')->execute([$category['id'], $existing['id']]);
                     $stmt = db()->prepare(
-                        'UPDATE categories SET id=?, icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, use_cases=?, faqs=?,
+                        'UPDATE categories SET id=?, icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, image=?, use_cases=?, faqs=?,
                          meta_title=?, meta_description=?, meta_keywords=?, canonical=?, og_image=?, noindex=?, updated_at=? WHERE id=?'
                     );
                     $stmt->execute([
                         $category['id'], $category['icon'], $category['name'], $category['desc'], $category['headline'],
-                        $category['intro'], $category['buyers'], $useCases, $faqs,
+                        $category['intro'], $category['buyers'], $category['image'], $useCases, $faqs,
                         $category['metaTitle'], $category['metaDescription'], $category['metaKeywords'],
                         $category['canonical'], $category['ogImage'], $category['noindex'] ? 1 : 0, $now, $existing['id']
                     ]);
                 } else {
                     $stmt = db()->prepare(
-                        'UPDATE categories SET icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, use_cases=?, faqs=?,
+                        'UPDATE categories SET icon=?, name=?, `desc`=?, headline=?, intro=?, buyers=?, image=?, use_cases=?, faqs=?,
                          meta_title=?, meta_description=?, meta_keywords=?, canonical=?, og_image=?, noindex=?, updated_at=? WHERE id=?'
                     );
                     $stmt->execute([
                         $category['icon'], $category['name'], $category['desc'], $category['headline'],
-                        $category['intro'], $category['buyers'], $useCases, $faqs,
+                        $category['intro'], $category['buyers'], $category['image'], $useCases, $faqs,
                         $category['metaTitle'], $category['metaDescription'], $category['metaKeywords'],
                         $category['canonical'], $category['ogImage'], $category['noindex'] ? 1 : 0, $now, $existing['id']
                     ]);
@@ -83,13 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $sort = (int) db()->query('SELECT COALESCE(MAX(sort_order), -1) + 1 FROM categories')->fetchColumn();
                 $stmt = db()->prepare(
-                    'INSERT INTO categories (id, icon, name, `desc`, headline, intro, buyers, use_cases, faqs, sort_order,
+                    'INSERT INTO categories (id, icon, name, `desc`, headline, intro, buyers, image, use_cases, faqs, sort_order,
                      meta_title, meta_description, meta_keywords, canonical, og_image, noindex, updated_at)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
                 );
                 $stmt->execute([
                     $category['id'], $category['icon'], $category['name'], $category['desc'], $category['headline'],
-                    $category['intro'], $category['buyers'], $useCases, $faqs, $sort,
+                    $category['intro'], $category['buyers'], $category['image'], $useCases, $faqs, $sort,
                     $category['metaTitle'], $category['metaDescription'], $category['metaKeywords'],
                     $category['canonical'], $category['ogImage'], $category['noindex'] ? 1 : 0, $now
                 ]);
@@ -110,7 +119,7 @@ admin_header($existing ? 'Edit Category' : 'Add Category', 'categories', ['Categ
 <?php if ($errors): ?>
   <div class="flash flash--error"><?= e(implode(' ', $errors)) ?></div>
 <?php endif; ?>
-<form method="post" class="form-panel">
+<form method="post" class="form-panel" enctype="multipart/form-data">
   <?= csrf_field() ?>
   <div class="form-grid">
     <label>Name
@@ -125,6 +134,16 @@ admin_header($existing ? 'Edit Category' : 'Add Category', 'categories', ['Categ
     <label class="full">Short description
       <textarea name="desc" rows="2"><?= e($category['desc']) ?></textarea>
     </label>
+    <label class="full">Card background image
+      <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
+      <span class="hint">Shown behind this category on the homepage. Leave empty to keep the current image.</span>
+    </label>
+    <?php if ($category['image'] !== ''): ?>
+      <div class="full file-preview">
+        <img src="<?= e(url_for($category['image'])) ?>" alt="Current category background">
+        <span class="hint">Current background. Choose a new file to replace it.</span>
+      </div>
+    <?php endif; ?>
     <label class="full">Headline
       <input type="text" name="headline" value="<?= e($category['headline']) ?>">
     </label>

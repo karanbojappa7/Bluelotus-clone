@@ -203,18 +203,47 @@
 
       const $submit = $form.find("[type='submit']");
       $submit.prop("disabled", true).attr("data-label", $submit.text()).text("Sending…");
+      $feedback.text("").attr("class", "form-feedback");
 
-      $feedback
-        .text("Thank you. Our team will get back to you within one business day.")
-        .attr("class", "form-feedback is-success")
-        .attr("role", "status");
-      $form[0].reset();
-      $form.find(".is-invalid").removeClass("is-invalid");
-      $form.find(".field-error-msg").remove();
-
-      window.setTimeout(function () {
-        $submit.prop("disabled", false).text($submit.attr("data-label") || "Submit Request");
-      }, 1200);
+      const endpoint = $form.attr("action") || window.SITE_SHELL.url("contact-submit.php");
+      fetch(endpoint, {
+        method: "POST",
+        body: new FormData($form[0]),
+        headers: {
+          Accept: "application/json",
+          "X-Requested-With": "fetch"
+        }
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            return { ok: res.ok && data && data.ok, message: (data && data.message) || "" };
+          });
+        })
+        .then(function (result) {
+          if (!result.ok) {
+            $feedback
+              .text(result.message || "We could not send that just now. Please try again.")
+              .attr("class", "form-feedback is-error")
+              .attr("role", "alert");
+            $submit.prop("disabled", false).text($submit.attr("data-label") || "Submit Request");
+            return;
+          }
+          $feedback
+            .text(result.message || "Thank you. Our team will get back to you within one business day.")
+            .attr("class", "form-feedback is-success")
+            .attr("role", "status");
+          $form[0].reset();
+          $form.find(".is-invalid").removeClass("is-invalid");
+          $form.find(".field-error-msg").remove();
+          $submit.prop("disabled", false).text($submit.attr("data-label") || "Submit Request");
+        })
+        .catch(function () {
+          $feedback
+            .text("We could not send that just now. Please try again.")
+            .attr("class", "form-feedback is-error")
+            .attr("role", "alert");
+          $submit.prop("disabled", false).text($submit.attr("data-label") || "Submit Request");
+        });
     });
   }
 

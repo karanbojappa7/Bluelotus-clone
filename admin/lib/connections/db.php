@@ -56,6 +56,7 @@ function migrate(): void
             buyers TEXT NOT NULL,
             use_cases TEXT NOT NULL,
             faqs TEXT NOT NULL,
+            image VARCHAR(255) NOT NULL DEFAULT "",
             sort_order INT NOT NULL DEFAULT 0
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci',
         'CREATE TABLE IF NOT EXISTS products (
@@ -90,6 +91,20 @@ function migrate(): void
             image VARCHAR(255) NOT NULL DEFAULT "",
             sort_order INT NOT NULL DEFAULT 0
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci',
+        'CREATE TABLE IF NOT EXISTS enquiries (
+            id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(191) NOT NULL,
+            company VARCHAR(191) NOT NULL DEFAULT "",
+            email VARCHAR(191) NOT NULL DEFAULT "",
+            phone VARCHAR(80) NOT NULL DEFAULT "",
+            category VARCHAR(191) NOT NULL DEFAULT "",
+            message TEXT NOT NULL,
+            ip VARCHAR(45) NOT NULL DEFAULT "",
+            is_read TINYINT(1) NOT NULL DEFAULT 0,
+            created_at DATETIME NOT NULL,
+            INDEX idx_enquiries_created (created_at),
+            INDEX idx_enquiries_read (is_read)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci',
     ];
 
     foreach ($statements as $sql) {
@@ -105,6 +120,8 @@ function migrate(): void
         ensure_column($table, 'noindex', 'TINYINT(1) NOT NULL DEFAULT 0');
         ensure_column($table, 'updated_at', 'VARCHAR(40) NOT NULL DEFAULT ""');
     }
+
+    ensure_column('categories', 'image', 'VARCHAR(255) NOT NULL DEFAULT ""');
 
     ensure_column('products', 'brand', 'VARCHAR(120) NOT NULL DEFAULT ""');
     ensure_column('products', 'sku', 'VARCHAR(120) NOT NULL DEFAULT ""');
@@ -192,7 +209,7 @@ function seed_from_json(): void
         $stmt->execute(['admin', password_hash('admin123', PASSWORD_DEFAULT), gmdate('c')]);
     }
 
-    $settingKeys = ['company', 'contact', 'social', 'seo', 'stats', 'testimonials', 'blog', 'clients'];
+    $settingKeys = ['company', 'contact', 'social', 'seo', 'stats', 'testimonials', 'blog', 'clients', 'hero'];
     $setStmt = $pdo->prepare(
         'INSERT INTO settings (`key`, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?'
     );

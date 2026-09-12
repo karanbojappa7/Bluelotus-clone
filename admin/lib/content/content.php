@@ -51,6 +51,19 @@ function setting_save_item(string $key, ?int $index, array $item): int
     return $index;
 }
 
+function setting_move_item(string $key, int $index, int $direction): void
+{
+    $list = setting_list($key);
+    $target = $index + $direction;
+    if ($index < 0 || $index >= count($list) || $target < 0 || $target >= count($list)) {
+        return;
+    }
+    $swap = $list[$index];
+    $list[$index] = $list[$target];
+    $list[$target] = $swap;
+    save_setting($key, array_values($list));
+}
+
 function setting_delete_item(string $key, int $index): void
 {
     $list = setting_list($key);
@@ -59,6 +72,118 @@ function setting_delete_item(string $key, int $index): void
     }
     array_splice($list, $index, 1);
     save_setting($key, array_values($list));
+}
+
+function default_hero_slides(): array
+{
+    return [
+        [
+            'eyebrow' => 'Certified Safety Solutions · Berhampur',
+            'title' => 'Protection engineered for every worksite, every day.',
+            'highlight' => 'every worksite,',
+            'subtitle' => 'We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.',
+            'image' => 'assets/img/hero.jpg',
+            'navLabel' => 'Protect',
+            'buttonLabel' => 'Request a Site Audit',
+            'buttonUrl' => 'contact',
+            'button2Label' => 'Browse Product Range',
+            'button2Url' => 'products',
+        ],
+        [
+            'eyebrow' => 'Fire Safety',
+            'title' => 'Contain fire before it reaches people.',
+            'highlight' => 'before',
+            'subtitle' => 'Extinguishers, hydrants, and detection specified for Indian sites — installed and maintained by our own crews.',
+            'image' => 'assets/img/products.jpg',
+            'navLabel' => 'Fire',
+            'buttonLabel' => 'Learn More',
+            'buttonUrl' => 'products/fire-safety',
+            'button2Label' => '',
+            'button2Url' => '',
+        ],
+        [
+            'eyebrow' => 'Road & Traffic Safety',
+            'title' => 'Keep every lane and work zone under control.',
+            'highlight' => 'work zone',
+            'subtitle' => 'Barricades, cones, signage, and crash protection built for highways, yards, and temporary site approaches.',
+            'image' => 'assets/img/about.jpg',
+            'navLabel' => 'Road',
+            'buttonLabel' => 'Learn More',
+            'buttonUrl' => 'products/road-traffic-safety',
+            'button2Label' => '',
+            'button2Url' => '',
+        ],
+        [
+            'eyebrow' => 'End-to-end Support',
+            'title' => 'Audit, install, and stay accountable.',
+            'highlight' => 'stay accountable.',
+            'subtitle' => 'Consultancy, installation, and 24/7 maintenance — one team past the invoice, not a chain of vendors.',
+            'image' => 'assets/img/blog-1.jpg',
+            'navLabel' => 'Service',
+            'buttonLabel' => 'Learn More',
+            'buttonUrl' => 'faq',
+            'button2Label' => '',
+            'button2Url' => '',
+        ],
+    ];
+}
+
+function hero_slides(): array
+{
+    $stored = setting_list('hero');
+    if ($stored) {
+        $out = [];
+        foreach ($stored as $slide) {
+            if (!is_array($slide)) {
+                continue;
+            }
+            $title = trim((string) ($slide['title'] ?? ''));
+            if ($title === '') {
+                continue;
+            }
+            $out[] = $slide;
+        }
+        if ($out) {
+            return $out;
+        }
+    }
+    return default_hero_slides();
+}
+
+function hero_title_html(array $slide): string
+{
+    $title = trim((string) ($slide['title'] ?? ''));
+    $highlight = trim((string) ($slide['highlight'] ?? ''));
+    if ($highlight === '') {
+        return e($title);
+    }
+    $pos = stripos($title, $highlight);
+    if ($pos === false) {
+        return e($title) . ' <em>' . e($highlight) . '</em>';
+    }
+    $len = strlen($highlight);
+    return e(substr($title, 0, $pos)) . '<em>' . e(substr($title, $pos, $len)) . '</em>' . e(substr($title, $pos + $len));
+}
+
+function hero_link(string $path, string $fallback = 'contact'): string
+{
+    $path = trim($path);
+    if ($path === '') {
+        $path = $fallback;
+    }
+    if (preg_match('#^https?://#i', $path) === 1) {
+        return $path;
+    }
+    return url_for(ltrim($path, '/'));
+}
+
+function hero_image_url(array $slide): string
+{
+    $image = trim((string) ($slide['image'] ?? ''));
+    if ($image === '') {
+        $image = 'assets/img/hero.jpg';
+    }
+    return url_for($image);
 }
 
 function default_faqs(): array
@@ -127,6 +252,7 @@ function map_category(array $row): array
         'headline' => $row['headline'],
         'intro' => $row['intro'],
         'buyers' => $row['buyers'],
+        'image' => (string) ($row['image'] ?? ''),
         'useCases' => json_list($row['use_cases']),
         'faqs' => json_list($row['faqs']),
         'metaTitle' => (string) ($row['meta_title'] ?? ''),
@@ -181,12 +307,20 @@ function map_service(array $row): array
 
 function all_categories(): array
 {
+    if (!db_ready()) {
+        return [];
+    }
+    migrate();
     $rows = db()->query('SELECT * FROM categories ORDER BY sort_order ASC, name ASC')->fetchAll();
     return array_map('map_category', $rows);
 }
 
 function get_category(string $id): ?array
 {
+    if (!db_ready()) {
+        return null;
+    }
+    migrate();
     $stmt = db()->prepare('SELECT * FROM categories WHERE id = ?');
     $stmt->execute([$id]);
     $row = $stmt->fetch();
@@ -373,6 +507,7 @@ function build_site_config(): array
         'blog' => setting('blog', []),
         'clients' => setting('clients', []),
         'faqs' => site_faqs(),
+        'hero' => hero_slides(),
     ];
 }
 
@@ -396,5 +531,109 @@ function counts(): array
         'leadership' => count(all_leadership()),
         'clients' => count(setting_list('clients')),
         'stats' => count(setting_list('stats')),
+        'hero' => count(setting_list('hero')),
+        'enquiries' => enquiry_count(),
+        'enquiriesUnread' => enquiry_unread_count(),
     ];
+}
+
+function enquiry_count(): int
+{
+    if (!db_ready()) {
+        return 0;
+    }
+    migrate();
+    try {
+        return (int) db()->query('SELECT COUNT(*) FROM enquiries')->fetchColumn();
+    } catch (Throwable $e) {
+        return 0;
+    }
+}
+
+function enquiry_unread_count(): int
+{
+    if (!db_ready()) {
+        return 0;
+    }
+    migrate();
+    try {
+        return (int) db()->query('SELECT COUNT(*) FROM enquiries WHERE is_read = 0')->fetchColumn();
+    } catch (Throwable $e) {
+        return 0;
+    }
+}
+
+function recent_enquiries(int $limit = 8): array
+{
+    if (!db_ready()) {
+        return [];
+    }
+    migrate();
+    try {
+        $limit = max(1, min(50, $limit));
+        return db()->query('SELECT * FROM enquiries ORDER BY created_at DESC, id DESC LIMIT ' . $limit)->fetchAll() ?: [];
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+function all_enquiries(): array
+{
+    if (!db_ready()) {
+        return [];
+    }
+    migrate();
+    try {
+        return db()->query('SELECT * FROM enquiries ORDER BY created_at DESC, id DESC')->fetchAll() ?: [];
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+function get_enquiry(int $id): ?array
+{
+    if ($id < 1 || !db_ready()) {
+        return null;
+    }
+    migrate();
+    $stmt = db()->prepare('SELECT * FROM enquiries WHERE id = ?');
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+    return $row ?: null;
+}
+
+function mark_enquiry_read(int $id): void
+{
+    db()->prepare('UPDATE enquiries SET is_read = 1 WHERE id = ?')->execute([$id]);
+}
+
+function delete_enquiry(int $id): void
+{
+    db()->prepare('DELETE FROM enquiries WHERE id = ?')->execute([$id]);
+}
+
+function enquiry_ip_limited(string $ip): bool
+{
+    $stmt = db()->prepare('SELECT COUNT(*) FROM enquiries WHERE ip = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)');
+    $stmt->execute([$ip]);
+    return (int) $stmt->fetchColumn() >= 8;
+}
+
+function save_enquiry(array $data): int
+{
+    migrate();
+    $stmt = db()->prepare(
+        'INSERT INTO enquiries (name, company, email, phone, category, message, ip, is_read, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW())'
+    );
+    $stmt->execute([
+        $data['name'],
+        $data['company'],
+        $data['email'],
+        $data['phone'],
+        $data['category'],
+        $data['message'],
+        $data['ip'],
+    ]);
+    return (int) db()->lastInsertId();
 }

@@ -2,6 +2,11 @@
 declare(strict_types=1);
 require_once __DIR__ . '/admin/bootstrap.php';
 
+$categories = db_ready() ? all_categories() : [];
+$services = db_ready() ? all_services() : [];
+$sent = isset($_GET['sent']);
+$sendError = isset($_GET['error']);
+
 page_head([
     'title' => 'Contact Us',
     'description' => 'Call, email, or message ' . brand_name() . ' in Berhampur, Odisha for certified safety equipment supply, installation, and bulk project quotes.',
@@ -28,7 +33,16 @@ page_head([
       <div class="tile tile--static" data-reveal>
         <span class="eyebrow">Send a Message</span>
         <h2 class="section-title mb-4">Request a quote or audit</h2>
-        <form id="quote-form" data-validate novalidate>
+        <?php if ($sent): ?>
+          <p class="form-feedback is-success" role="status">Thank you. Our team will get back to you within one business day.</p>
+        <?php elseif ($sendError): ?>
+          <p class="form-feedback is-error" role="alert">We could not send that just now. Please try again or call us.</p>
+        <?php endif; ?>
+        <form id="quote-form" method="post" action="<?= e(url_for('contact-submit.php')) ?>" data-validate novalidate>
+          <?= csrf_field() ?>
+          <div class="hp" aria-hidden="true">
+            <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
           <div class="form-grid">
             <div>
               <label class="form-label" for="fullName">Full Name</label>
@@ -49,12 +63,13 @@ page_head([
             <div class="full">
               <label class="form-label" for="category">Category of Interest</label>
               <select class="form-control" id="category" name="category">
-                <option>Fire Safety</option>
-                <option>Road & Traffic Safety</option>
-                <option>Industrial Safety</option>
-                <option>Warehouse Safety</option>
-                <option>Construction Safety</option>
-                <option>Other / Not Sure</option>
+                <?php foreach ($categories as $cat): ?>
+                  <option value="<?= e($cat['name']) ?>"><?= e($cat['name']) ?></option>
+                <?php endforeach; ?>
+                <?php foreach ($services as $service): ?>
+                  <option value="<?= e($service['name']) ?>"><?= e($service['name']) ?> (service)</option>
+                <?php endforeach; ?>
+                <option value="Other / Not Sure">Other / Not Sure</option>
               </select>
             </div>
             <div class="full">

@@ -53,7 +53,7 @@ page_head(seo_overrides($category) + [
     'next' => $page < $pages ? $basePath . '?page=' . ($page + 1) : null,
 ]);
 ?>
-<section class="page-header">
+<section class="page-header"<?= $category['image'] !== '' ? ' style="--page-header-image:url(\'' . e(url_for($category['image'])) . '\')"' : '' ?>>
   <div class="container">
     <span class="eyebrow eyebrow--light">Product Category</span>
     <h1 class="page-title"><?= e($category['name']) ?></h1>

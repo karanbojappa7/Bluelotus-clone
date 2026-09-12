@@ -288,6 +288,7 @@ button {
   display: flex;
   align-items: center;
   isolation: isolate;
+  overflow: visible;
   background: transparent;
   box-shadow: 0 0 0 transparent;
   transition: box-shadow 0.7s ease;
@@ -843,7 +844,7 @@ button {
   color: var(--paper);
   background:
     linear-gradient(115deg, rgba(15, 20, 25, 0.94) 0%, rgba(15, 20, 25, 0.8) 50%, rgba(26, 61, 92, 0.7) 100%),
-    url("../img/hero.jpg") center / cover no-repeat;
+    var(--page-header-image, url("../img/hero.jpg")) center / cover no-repeat;
 }
 
 .breadcrumb-row {
@@ -931,6 +932,77 @@ button {
 .tile-link svg {
   width: 14px;
   height: 14px;
+}
+
+.tile--photo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #f7f7f5;
+  background: var(--ink-soft);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.tile-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transform: scale(1.04);
+  transition: transform var(--med) var(--ease);
+}
+
+.tile-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 20, 25, 0.45) 0%, rgba(15, 20, 25, 0.92) 72%);
+}
+
+.tile-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+.tile.tile--photo h3 {
+  color: #ffffff;
+}
+
+.tile.tile--photo p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.tile--photo .icon-wrap {
+  background: rgba(247, 247, 245, 0.16);
+  color: var(--amber);
+}
+
+.tile--photo:hover {
+  border-color: var(--amber);
+}
+
+.tile--photo:hover .tile-media {
+  transform: scale(1.08);
+}
+
+.tile--photo:hover .icon-wrap {
+  background: rgba(15, 20, 25, 0.55);
+  color: var(--amber);
+}
+
+.tile.tile--photo .tile-link {
+  color: var(--amber);
+  text-shadow: none;
 }
 
 .feature-row {
@@ -1498,6 +1570,14 @@ button {
   grid-column: 1 / -1;
 }
 
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .contact-card {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1751,7 +1831,14 @@ body.is-in-hero .back-to-top {
   .nav-links {
     flex-direction: row;
     align-items: center;
+    align-self: stretch;
     gap: var(--space-4);
+  }
+
+  .has-dropdown {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
   }
 
   .nav-link {
@@ -1796,30 +1883,48 @@ body.is-in-hero .back-to-top {
   .dropdown-panel {
     display: block;
     position: absolute;
-    top: calc(100% + 14px);
+    top: 100%;
     left: 0;
+    z-index: 20;
     min-width: 240px;
-    padding: var(--space-2);
+    margin: 0;
+    padding: 12px var(--space-2) var(--space-2);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+  }
+
+  .dropdown-panel::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
     background: var(--ink-soft);
     border: 1px solid var(--ink-line);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
     pointer-events: none;
-    transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s ease;
   }
 
   .has-dropdown:hover .dropdown-panel,
   .has-dropdown:focus-within .dropdown-panel {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: none;
     pointer-events: auto;
   }
 
   .dropdown-item {
+    position: relative;
+    z-index: 1;
     color: var(--paper);
     padding: 0.65rem 0.75rem;
   }

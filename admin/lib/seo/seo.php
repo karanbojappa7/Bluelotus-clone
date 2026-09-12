@@ -47,7 +47,8 @@ function seo_base_path(): string
     }
     $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? '/'));
     $pos = strpos($script, '/admin/');
-    $dir = $pos !== false ? substr($script, 0, $pos) : rtrim(dirname($script), '/');
+    $dir = $pos !== false ? substr($script, 0, $pos) : dirname($script);
+    $dir = rtrim(str_replace('\\', '/', (string) $dir), '/');
     $base = ($dir === '' || $dir === '/' || $dir === '.') ? '' : $dir;
     return $base;
 }

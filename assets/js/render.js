@@ -99,18 +99,42 @@
     $mount.html(list.map(window.SITE_SHELL.productCard).join(""));
   }
 
+  function categoryCardImage(c, index) {
+    if (c.image) return siteUrl(c.image);
+    if (c.ogImage) return siteUrl(c.ogImage);
+    const product = (CFG.products || []).find(function (p) {
+      return p.category === c.id && p.images && p.images.length;
+    });
+    if (product) return siteUrl(product.images[0]);
+    const fallbacks = [
+      "assets/img/hero.jpg",
+      "assets/img/products.jpg",
+      "assets/img/about.jpg",
+      "assets/img/blog-1.jpg",
+      "assets/img/blog-4.jpg",
+      "assets/img/blog-2.jpg",
+      "assets/img/blog-3.jpg",
+      "assets/img/og-cover.jpg"
+    ];
+    return siteUrl(fallbacks[index % fallbacks.length]);
+  }
+
   function buildCategories(limit) {
     const all = CFG.categories || [];
     const list = limit ? all.slice(0, Number(limit)) : all;
     fill(
       "[data-render='categories']",
       list
-        .map(function (c) {
-          return `<a class="tile" id="${esc(c.id)}" href="${categoryHref(c.id)}" data-reveal>
-            <div class="icon-wrap">${icon(c.icon)}</div>
-            <h3>${esc(c.name)}</h3>
-            <p>${esc(c.desc)}</p>
-            <span class="tile-link">View Range ${icon("arrow")}</span>
+        .map(function (c, index) {
+          const image = categoryCardImage(c, index).replace(/'/g, "%27");
+          return `<a class="tile tile--photo" id="${esc(c.id)}" href="${categoryHref(c.id)}" data-reveal>
+            <span class="tile-media" style="background-image:url('${esc(image)}')"></span>
+            <span class="tile-copy">
+              <span class="icon-wrap">${icon(c.icon)}</span>
+              <h3>${esc(c.name)}</h3>
+              <p>${esc(c.desc)}</p>
+              <span class="tile-link">View Range ${icon("arrow")}</span>
+            </span>
           </a>`;
         })
         .join("")
@@ -135,6 +159,10 @@
     const $panels = $("[data-render='service-panels']");
     if (!$tabs.length || !$panels.length) return;
     const services = CFG.services || [];
+    if (!services.length) {
+      $("#services").hide();
+      return;
+    }
     $tabs.html(
       services
         .map(function (s, i) {

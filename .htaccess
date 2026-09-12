@@ -30,7 +30,7 @@ DirectoryIndex index.php index.html
   RewriteRule ^category\.html$ %{ENV:BASE}products [R=301,L]
   RewriteRule ^blog-single\.html$ %{ENV:BASE}blog [R=301,L]
   RewriteCond %{ENV:REDIRECT_STATUS} ^$
-  RewriteRule ^services(\.(html|php))?/?$ %{ENV:BASE}faq [R=301,L]
+  RewriteRule ^services(\.(html|php))?/?$ %{ENV:BASE}#services [R=301,NE,L]
 
   RewriteCond %{ENV:REDIRECT_STATUS} ^$
   RewriteRule ^(about|products|blog|contact|faq|privacy-policy)\.(html|php)$ %{ENV:BASE}$1 [R=301,L]

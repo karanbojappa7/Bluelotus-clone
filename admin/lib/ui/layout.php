@@ -6,6 +6,7 @@ function admin_nav_groups(): array
     return [
         'Overview' => [
             ['id' => 'dashboard', 'href' => 'index.php', 'label' => 'Dashboard'],
+            ['id' => 'enquiries', 'href' => 'enquiries/index.php', 'label' => 'Enquiries'],
         ],
         'Catalog' => [
             ['id' => 'products', 'href' => 'products/index.php', 'label' => 'Products'],
@@ -18,6 +19,7 @@ function admin_nav_groups(): array
             ['id' => 'testimonials', 'href' => 'testimonials/index.php', 'label' => 'Testimonials'],
             ['id' => 'leadership', 'href' => 'leadership/index.php', 'label' => 'Leadership'],
             ['id' => 'stats', 'href' => 'stats.php', 'label' => 'Stats'],
+            ['id' => 'hero', 'href' => 'hero/index.php', 'label' => 'Homepage banner'],
             ['id' => 'clients', 'href' => 'clients.php', 'label' => 'Clients'],
         ],
         'Settings' => [

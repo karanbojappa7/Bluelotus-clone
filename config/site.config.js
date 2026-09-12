@@ -102,6 +102,7 @@ window.SITE_CONFIG = {
             "headline": "Road & Traffic Safety Equipment Suppliers in Odisha & India",
             "intro": "Effective traffic management is the foundation of site and road safety. Bluelotus Infrasafety supplies and installs high-performance road and traffic safety equipment — from reflective road studs and crash barriers to bollards, speed breakers, and intelligent transportation systems — engineered to minimize risk, control traffic flow, and meet Indian safety compliance standards (IRC / MoRTH specifications).",
             "buyers": "Municipal & infrastructure contractors needing bulk highway signage, median barriers, and road marking for public roads. Facility & industrial site managers needing bollards, wheel stoppers, and convex mirrors for parking lots and factory yards. Apartment complexes & gated communities needing speed breakers, delineator posts, and pedestrian safety for internal roads. Every product ships with installation support, bulk pricing for government and corporate orders, and a free site-safety consultation.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Highways & Public Roads",
@@ -158,6 +159,7 @@ window.SITE_CONFIG = {
             "headline": "Warehouse & Dock Safety Systems",
             "intro": "Protect people, racks, and inventory with industrial-grade warehouse safety equipment — from column guards and dock bumpers to aisle mirrors and floor marking systems.",
             "buyers": "Warehouse operators, 3PL parks, and manufacturing stores looking for durable impact protection and clear pedestrian/vehicle segregation.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Rack & Column Protection",
@@ -198,6 +200,7 @@ window.SITE_CONFIG = {
             "headline": "Fire Safety Equipment & System Support",
             "intro": "From portable extinguishers to hydrant accessories and detection gear, we supply fire-safety lines backed by installation and maintenance support.",
             "buyers": "Factories, campuses, hospitals, and commercial buildings that need compliant fire readiness.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Portable Extinguishers",
@@ -234,6 +237,7 @@ window.SITE_CONFIG = {
             "headline": "Industrial PPE & Fall Protection",
             "intro": "Equip high-risk plants with certified PPE, gas detection, and fall-arrest systems selected for Indian industrial conditions.",
             "buyers": "Manufacturing, oil & gas, cement, and heavy engineering sites.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Personal Protective Equipment",
@@ -270,6 +274,7 @@ window.SITE_CONFIG = {
             "headline": "Logistics Yard & Fleet Safety",
             "intro": "Keep yards and fleets moving safely with load-securing gear, traffic signals, and perimeter control for depots and distribution hubs.",
             "buyers": "Fleet operators, depots, and logistics parks.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Yard Traffic Control",
@@ -302,6 +307,7 @@ window.SITE_CONFIG = {
             "headline": "Construction Site Safety Gear",
             "intro": "Protect active sites with scaffolding accessories, PPE, temporary barriers, and perimeter control sized for Indian project conditions.",
             "buyers": "Contractors, EPC firms, and site safety officers.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Site Perimeter",
@@ -334,6 +340,7 @@ window.SITE_CONFIG = {
             "headline": "Home & Residential Safety",
             "intro": "Practical safety kits for homes and societies — smoke detection, first aid, and basic fire readiness.",
             "buyers": "Homeowners, RWAs, and facility managers of residential campuses.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Fire Awareness",
@@ -366,6 +373,7 @@ window.SITE_CONFIG = {
             "headline": "Water & Pool Safety Equipment",
             "intro": "Life-saving and flood-control products for pools, campuses, and waterfront sites.",
             "buyers": "Hotels, clubs, campuses, and municipal waterfront projects.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Pool & Waterfront",
@@ -398,6 +406,7 @@ window.SITE_CONFIG = {
             "headline": "Tree Work & Canopy Protection",
             "intro": "Gear for arborists and site teams managing canopy risk around roads and campuses.",
             "buyers": "Municipal horticulture teams and private campus facilities.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Rigging & Climbing",
@@ -430,6 +439,7 @@ window.SITE_CONFIG = {
             "headline": "Hi-Vis Apparel & Safety Wearables",
             "intro": "High-visibility clothing and wearable PPE that keep workers seen and accounted for on busy sites.",
             "buyers": "Construction, logistics, and industrial employers needing visible, durable workwear.",
+            "image": "",
             "useCases": [
                 {
                     "title": "Hi-Vis Clothing",
@@ -1883,12 +1893,12 @@ window.SITE_CONFIG = {
             "id": "consultancy",
             "name": "Consultancy",
             "icon": "consult",
-            "summary": "Site audits and compliance planning from certified safety engineers.",
+            "summary": "Safety Consultancy & Site Assessment",
             "points": [
-                "On-site risk and hazard assessment",
-                "Regulatory compliance mapping",
-                "Custom safety system design",
-                "Vendor and product specification support"
+                "Site Risk & Hazard Assessment: Review of relevant site conditions, hazards and safety requirements to help identify appropriate safety measures.",
+                "Safety Compliance Mapping: Support in understanding applicable safety requirements, standards and documentation relevant to the project.",
+                "Safety System & Product Planning: Recommendations for suitable fire, road, industrial and workplace safety products based on the application.",
+                "Product Specification Support: Assistance with technical specifications, quantities, product selection and procurement requirements."
             ]
         },
         {
@@ -1999,6 +2009,60 @@ window.SITE_CONFIG = {
         {
             "q": "Do you offer after-sales and emergency support?",
             "a": "Yes. Maintenance contracts, refills, and 24/7 breakdown response are available for installed systems."
+        },
+        {
+            "q": "test?",
+            "a": "yes you can add"
+        }
+    ],
+    "hero": [
+        {
+            "eyebrow": "Certified Safety Solutions · Berhampur",
+            "title": "Protection engineered for every worksite, every day.",
+            "highlight": "every worksite,",
+            "subtitle": "We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.",
+            "image": "assets/img/hero.jpg",
+            "navLabel": "Protect",
+            "buttonLabel": "Request a Site Audit",
+            "buttonUrl": "contact",
+            "button2Label": "Browse Product Range",
+            "button2Url": "products"
+        },
+        {
+            "eyebrow": "Fire Safety",
+            "title": "Contain fire before it reaches people.",
+            "highlight": "before",
+            "subtitle": "Extinguishers, hydrants, and detection specified for Indian sites — installed and maintained by our own crews.",
+            "image": "assets/img/products.jpg",
+            "navLabel": "Fire",
+            "buttonLabel": "Learn More",
+            "buttonUrl": "products/fire-safety",
+            "button2Label": "",
+            "button2Url": ""
+        },
+        {
+            "eyebrow": "Road & Traffic Safety",
+            "title": "Keep every lane and work zone under control.",
+            "highlight": "work zone",
+            "subtitle": "Barricades, cones, signage, and crash protection built for highways, yards, and temporary site approaches.",
+            "image": "assets/img/about.jpg",
+            "navLabel": "Road",
+            "buttonLabel": "Learn More",
+            "buttonUrl": "products/road-traffic-safety",
+            "button2Label": "",
+            "button2Url": ""
+        },
+        {
+            "eyebrow": "End-to-end Support",
+            "title": "Audit, install, and stay accountable.",
+            "highlight": "stay accountable.",
+            "subtitle": "Consultancy, installation, and 24/7 maintenance — one team past the invoice, not a chain of vendors.",
+            "image": "assets/img/blog-1.jpg",
+            "navLabel": "Service",
+            "buttonLabel": "Learn More",
+            "buttonUrl": "faq",
+            "button2Label": "",
+            "button2Url": ""
         }
     ]
 };

@@ -33,6 +33,7 @@ admin_header('Categories', 'categories');
   <table>
     <thead>
       <tr>
+        <th></th>
         <th>Name</th>
         <th>ID</th>
         <th>Description</th>
@@ -42,6 +43,11 @@ admin_header('Categories', 'categories');
     <tbody>
       <?php foreach ($categories as $cat): ?>
         <tr>
+          <td>
+            <?php if ($cat['image'] !== ''): ?>
+              <img src="<?= e(url_for($cat['image'])) ?>" alt="" width="48" height="36" style="object-fit:cover;border-radius:4px;display:block">
+            <?php endif; ?>
+          </td>
           <td><strong><?= e($cat['name']) ?></strong></td>
           <td><span class="badge"><?= e($cat['id']) ?></span></td>
           <td class="muted"><?= e(truncate($cat['desc'])) ?></td>

@@ -10,61 +10,54 @@ page_head([
     'bodyAttr' => 'data-blog-limit="4" data-products-limit="12"',
 ]);
 ?>
+<?php
+$heroSlides = hero_slides();
+?>
 <section class="hero-carousel" id="heroCarousel">
   <div class="hero-carousel-pin">
     <div class="hero-slides">
-      <article class="hero-slide is-active" data-hero-index="0">
-        <div class="hero-slide-media" style="background-image:url('assets/img/hero.jpg')"></div>
+      <?php foreach ($heroSlides as $i => $slide): ?>
+      <article class="hero-slide<?= $i === 0 ? ' is-active' : '' ?>" data-hero-index="<?= $i ?>">
+        <div class="hero-slide-media" style="background-image:url('<?= e(hero_image_url($slide)) ?>')"></div>
         <div class="container hero-slide-copy">
-          <span class="eyebrow eyebrow--light">Certified Safety Solutions · Berhampur</span>
-          <h1 class="hero-title">Protection engineered for <em>every worksite,</em> every day.</h1>
-          <p class="hero-sub">We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.</p>
+          <?php if (trim((string) ($slide['eyebrow'] ?? '')) !== ''): ?>
+            <span class="eyebrow eyebrow--light"><?= e((string) $slide['eyebrow']) ?></span>
+          <?php endif; ?>
+          <h1 class="hero-title"><?= hero_title_html($slide) ?></h1>
+          <?php if (trim((string) ($slide['subtitle'] ?? '')) !== ''): ?>
+            <p class="hero-sub"><?= e((string) $slide['subtitle']) ?></p>
+          <?php endif; ?>
+          <?php
+          $btn1 = trim((string) ($slide['buttonLabel'] ?? ''));
+          $btn2 = trim((string) ($slide['button2Label'] ?? ''));
+          ?>
+          <?php if ($btn1 !== '' || $btn2 !== ''): ?>
           <div class="hero-actions">
-            <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary">Request a Site Audit <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
-            <a href="<?= e(url_for('products')) ?>" class="btn btn-ghost">Browse Product Range</a>
+            <?php if ($btn1 !== ''): ?>
+              <a href="<?= e(hero_link((string) ($slide['buttonUrl'] ?? ''), 'contact')) ?>" class="btn btn-primary"><?= e($btn1) ?> <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
+            <?php endif; ?>
+            <?php if ($btn2 !== ''): ?>
+              <a href="<?= e(hero_link((string) ($slide['button2Url'] ?? ''), 'products')) ?>" class="btn btn-ghost"><?= e($btn2) ?></a>
+            <?php endif; ?>
           </div>
+          <?php endif; ?>
         </div>
       </article>
-      <article class="hero-slide" data-hero-index="1">
-        <div class="hero-slide-media" style="background-image:url('assets/img/products.jpg')"></div>
-        <div class="container hero-slide-copy">
-          <span class="eyebrow eyebrow--light">Fire Safety</span>
-          <h1 class="hero-title">Contain fire <em>before</em> it reaches people.</h1>
-          <p class="hero-sub">Extinguishers, hydrants, and detection specified for Indian sites — installed and maintained by our own crews.</p>
-          <div class="hero-actions">
-            <a href="<?= e(category_path('fire-safety')) ?>" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
-          </div>
-        </div>
-      </article>
-      <article class="hero-slide" data-hero-index="2">
-        <div class="hero-slide-media" style="background-image:url('assets/img/about.jpg')"></div>
-        <div class="container hero-slide-copy">
-          <span class="eyebrow eyebrow--light">Road &amp; Traffic Safety</span>
-          <h1 class="hero-title">Keep every lane and <em>work zone</em> under control.</h1>
-          <p class="hero-sub">Barricades, cones, signage, and crash protection built for highways, yards, and temporary site approaches.</p>
-          <div class="hero-actions">
-            <a href="<?= e(category_path('road-traffic-safety')) ?>" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
-          </div>
-        </div>
-      </article>
-      <article class="hero-slide" data-hero-index="3">
-        <div class="hero-slide-media" style="background-image:url('assets/img/blog-1.jpg')"></div>
-        <div class="container hero-slide-copy">
-          <span class="eyebrow eyebrow--light">End-to-end Support</span>
-          <h1 class="hero-title">Audit, install, and <em>stay accountable.</em></h1>
-          <p class="hero-sub">Consultancy, installation, and 24/7 maintenance — one team past the invoice, not a chain of vendors.</p>
-          <div class="hero-actions">
-            <a href="<?= e(url_for('faq')) ?>" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
-          </div>
-        </div>
-      </article>
+      <?php endforeach; ?>
     </div>
+    <?php if (count($heroSlides) > 1): ?>
     <nav class="hero-carousel-nav" aria-label="Hero topics">
-      <button type="button" class="is-active" data-hero-goto="0"><span>Protect</span></button>
-      <button type="button" data-hero-goto="1"><span>Fire</span></button>
-      <button type="button" data-hero-goto="2"><span>Road</span></button>
-      <button type="button" data-hero-goto="3"><span>Service</span></button>
+      <?php foreach ($heroSlides as $i => $slide): ?>
+        <button type="button" class="<?= $i === 0 ? 'is-active' : '' ?>" data-hero-goto="<?= $i ?>"><span><?php
+          $nav = trim((string) ($slide['navLabel'] ?? ''));
+          if ($nav === '') {
+              $nav = trim((string) ($slide['eyebrow'] ?? ''));
+          }
+          echo e($nav !== '' ? $nav : ('Slide ' . ($i + 1)));
+        ?></span></button>
+      <?php endforeach; ?>
     </nav>
+    <?php endif; ?>
     <button type="button" class="hero-scroll-cue" data-hero-next>Scroll</button>
   </div>
 </section>
@@ -87,6 +80,22 @@ page_head([
     <div class="grid grid-3" data-render="categories"></div>
     <div class="text-center mt-5" data-reveal>
       <a href="<?= e(url_for('products')) ?>" class="btn btn-outline">View All Products <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-head">
+      <div data-reveal>
+        <span class="eyebrow">What We Do</span>
+        <h2 class="section-title">Supply is the start. Service is the contract.</h2>
+      </div>
+      <p class="section-sub" data-reveal>Consultancy, installation, and maintenance from the same crew that specified the equipment — so accountability does not stop at delivery.</p>
+    </div>
+    <div data-reveal>
+      <div class="service-tabs" data-render="service-tabs"></div>
+      <div data-render="service-panels"></div>
     </div>
   </div>
 </section>
