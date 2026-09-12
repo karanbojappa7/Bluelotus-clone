@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 
 $index = isset($_GET['index']) ? (int) $_GET['index'] : -1;
@@ -21,15 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     if ($item['name'] === '' || $item['quote'] === '') {
         flash('error', 'Name and quote are required.');
-        redirect('testimonial-form.php' . ($index >= 0 ? '?index=' . $index : ''));
+        redirect(admin_url('testimonials/form.php') . ($index >= 0 ? '?index=' . $index : ''));
     }
     setting_save_item('testimonials', $existing ? $index : null, $item);
     export_site_config_js();
     flash('ok', 'Testimonial saved.');
-    redirect('testimonials.php');
+    redirect(admin_url('testimonials/index.php'));
 }
 
-admin_header($existing ? 'Edit Testimonial' : 'Add Testimonial', 'testimonials');
+admin_header($existing ? 'Edit Testimonial' : 'Add Testimonial', 'testimonials', ['Testimonials' => 'testimonials/index.php']);
 ?>
 <form method="post" class="form-panel">
   <?= csrf_field() ?>
@@ -46,7 +46,7 @@ admin_header($existing ? 'Edit Testimonial' : 'Add Testimonial', 'testimonials')
   </div>
   <div class="form-actions">
     <button class="btn" type="submit">Save</button>
-    <a class="btn btn-secondary" href="testimonials.php">Cancel</a>
+    <a class="btn btn-secondary" href="<?= e(admin_url('testimonials/index.php')) ?>">Cancel</a>
   </div>
 </form>
 <?php admin_footer(); ?>

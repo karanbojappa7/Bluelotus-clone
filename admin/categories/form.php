@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
-require_once __DIR__ . '/lib/seo_fields.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
+require_once __DIR__ . '/../lib/seo/seo_fields.php';
 require_login();
 
 $id = isset($_GET['id']) ? (string) $_GET['id'] : '';
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 flash('ok', 'Category created.');
             }
             export_site_config_js();
-            redirect('categories.php');
+            redirect(admin_url('categories/index.php'));
         } catch (PDOException $e) {
             $errors[] = (str_contains($e->getMessage(), 'UNIQUE') || str_contains($e->getMessage(), 'Duplicate'))
                 ? 'Category ID already exists.'
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-admin_header($existing ? 'Edit Category' : 'Add Category', 'categories');
+admin_header($existing ? 'Edit Category' : 'Add Category', 'categories', ['Categories' => 'categories/index.php']);
 ?>
 <?php if ($errors): ?>
   <div class="flash flash--error"><?= e(implode(' ', $errors)) ?></div>
@@ -153,7 +153,10 @@ admin_header($existing ? 'Edit Category' : 'Add Category', 'categories');
 
   <div class="form-actions">
     <button class="btn" type="submit">Save Category</button>
-    <a class="btn btn-secondary" href="categories.php">Cancel</a>
+    <a class="btn btn-secondary" href="<?= e(admin_url('categories/index.php')) ?>">Cancel</a>
+    <?php if ($existing): ?>
+      <a class="btn btn-secondary" href="<?= e(url_for(category_slug_path($category['id']))) ?>" target="_blank" rel="noopener">Preview &#8599;</a>
+    <?php endif; ?>
   </div>
 </form>
 <?php admin_footer(); ?>

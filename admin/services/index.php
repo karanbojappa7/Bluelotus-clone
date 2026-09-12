@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && post('action') === 'delete') {
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && post('action') === 'delete') {
     $stmt->execute([$id]);
     export_site_config_js();
     flash('ok', 'Service deleted.');
-    redirect('services.php');
+    redirect(admin_url('services/index.php'));
 }
 
 $services = all_services();
@@ -19,7 +19,7 @@ admin_header('Services', 'services');
 ?>
 <div class="toolbar">
   <p><?= count($services) ?> services</p>
-  <a class="btn" href="service-form.php">Add Service</a>
+  <a class="btn" href="<?= e(admin_url('services/form.php')) ?>">Add Service</a>
 </div>
 <div class="table-wrap">
   <table>
@@ -41,7 +41,7 @@ admin_header('Services', 'services');
           <td><span class="badge"><?= e($s['id']) ?></span></td>
           <td class="muted"><?= e(truncate($s['summary'], 100)) ?></td>
           <td class="actions">
-            <a class="btn btn-secondary btn-sm" href="service-form.php?id=<?= e(urlencode($s['id'])) ?>">Edit</a>
+            <a class="btn btn-secondary btn-sm" href="<?= e(admin_url('services/form.php')) ?>?id=<?= e(urlencode($s['id'])) ?>">Edit</a>
             <form method="post" data-confirm="Delete this service? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">

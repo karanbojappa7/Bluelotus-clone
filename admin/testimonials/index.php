@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && post('action') === 'delete') {
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && post('action') === 'delete') {
     setting_delete_item('testimonials', (int) post('index'));
     export_site_config_js();
     flash('ok', 'Testimonial deleted.');
-    redirect('testimonials.php');
+    redirect(admin_url('testimonials/index.php'));
 }
 
 $all = setting_list('testimonials');
@@ -21,7 +21,7 @@ admin_header('Testimonials', 'testimonials');
 ?>
 <div class="toolbar">
   <p>Showing <?= (int) $pager['from'] ?>–<?= (int) $pager['to'] ?> of <?= (int) $pager['total'] ?></p>
-  <a class="btn" href="testimonial-form.php">Add Testimonial</a>
+  <a class="btn" href="<?= e(admin_url('testimonials/form.php')) ?>">Add Testimonial</a>
 </div>
 <div class="table-wrap">
   <table>
@@ -35,7 +35,7 @@ admin_header('Testimonials', 'testimonials');
           <td><?= e($item['role'] ?? '') ?></td>
           <td class="muted"><?= e(truncate($item['quote'] ?? '', 100)) ?></td>
           <td class="actions">
-            <a class="btn btn-secondary btn-sm" href="testimonial-form.php?index=<?= $realIndex ?>">Edit</a>
+            <a class="btn btn-secondary btn-sm" href="<?= e(admin_url('testimonials/form.php')) ?>?index=<?= $realIndex ?>">Edit</a>
             <form method="post" data-confirm="Delete this testimonial? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
@@ -48,5 +48,5 @@ admin_header('Testimonials', 'testimonials');
     </tbody>
   </table>
 </div>
-<?= render_pagination($pager, 'testimonials.php') ?>
+<?= render_pagination($pager, admin_url('testimonials/index.php')) ?>
 <?php admin_footer(); ?>

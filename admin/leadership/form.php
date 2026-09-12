@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 migrate();
 
@@ -57,11 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         export_site_config_js();
         flash('ok', 'Leadership entry saved.');
-        redirect('leadership.php');
+        redirect(admin_url('leadership/index.php'));
     }
 }
 
-admin_header($existing ? 'Edit Leadership' : 'Add Leadership', 'leadership');
+admin_header($existing ? 'Edit Leadership' : 'Add Leadership', 'leadership', ['Leadership' => 'leadership/index.php']);
 ?>
 <?php if ($error): ?>
   <div class="flash flash--error"><?= e($error) ?></div>
@@ -93,14 +93,14 @@ admin_header($existing ? 'Edit Leadership' : 'Add Leadership', 'leadership');
     </label>
     <?php if ($item['image'] !== ''): ?>
       <div class="full file-preview">
-        <img src="../<?= e($item['image']) ?>" alt="Current photo">
+        <img src="<?= e(url_for($item['image'])) ?>" alt="Current photo">
         <span class="hint">Current photo. Choose a new file to replace it.</span>
       </div>
     <?php endif; ?>
   </div>
   <div class="form-actions">
     <button class="btn" type="submit">Save</button>
-    <a class="btn btn-secondary" href="leadership.php">Cancel</a>
+    <a class="btn btn-secondary" href="<?= e(admin_url('leadership/index.php')) ?>">Cancel</a>
   </div>
 </form>
 <?php admin_footer(); ?>

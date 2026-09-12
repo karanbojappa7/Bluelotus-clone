@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 
 $filter = isset($_GET['category']) ? (string) $_GET['category'] : '';
@@ -10,7 +10,7 @@ $search = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
 function products_url(string $filter, string $search): string
 {
     $query = array_filter(['category' => $filter, 'q' => $search], static fn ($v) => $v !== '');
-    return 'products.php' . ($query ? '?' . http_build_query($query) : '');
+    return admin_url('products/index.php') . ($query ? '?' . http_build_query($query) : '');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -61,7 +61,7 @@ admin_header('Products', 'products');
     </select>
     <button class="btn btn-secondary" type="submit">Search</button>
   </form>
-  <a class="btn" href="product-form.php">Add Product</a>
+  <a class="btn" href="<?= e(admin_url('products/form.php')) ?>">Add Product</a>
 </div>
 
 <?php if (!$products): ?>
@@ -69,11 +69,11 @@ admin_header('Products', 'products');
     <?php if ($isFiltered): ?>
       <strong>No products match your search.</strong>
       <span>Try a different term, or clear the filters to see all <?= $totalProducts ?> products.</span>
-      <a class="btn btn-secondary" href="products.php">Clear filters</a>
+      <a class="btn btn-secondary" href="<?= e(admin_url('products/index.php')) ?>">Clear filters</a>
     <?php else: ?>
       <strong>No products yet.</strong>
       <span>Add your first product to publish it on the site.</span>
-      <a class="btn" href="product-form.php">Add Product</a>
+      <a class="btn" href="<?= e(admin_url('products/form.php')) ?>">Add Product</a>
     <?php endif; ?>
   </div>
 <?php else: ?>
@@ -114,7 +114,7 @@ admin_header('Products', 'products');
             </td>
             <td data-label="Product">
               <?php if ($thumb !== ''): ?>
-                <img class="table-thumb" src="../<?= e($thumb) ?>" alt="" loading="lazy">
+                <img class="table-thumb" src="<?= e(url_for($thumb)) ?>" alt="" loading="lazy">
               <?php endif; ?>
               <strong><?= e($p['name']) ?></strong>
               <div class="muted"><?= e(truncate($p['short'])) ?></div>
@@ -122,8 +122,8 @@ admin_header('Products', 'products');
             <td data-label="Slug"><span class="badge"><?= e($p['slug']) ?></span></td>
             <td data-label="Category"><?= e($catNames[$p['category']] ?? $p['category']) ?></td>
             <td class="actions" data-label="Actions">
-              <a class="btn btn-secondary btn-sm" href="product-form.php?id=<?= (int) $p['id'] ?>">Edit</a>
-              <a class="btn btn-secondary btn-sm" href="../product/<?= e(rawurlencode($p['slug'])) ?>" target="_blank" rel="noopener">View</a>
+              <a class="btn btn-secondary btn-sm" href="<?= e(admin_url('products/form.php')) ?>?id=<?= (int) $p['id'] ?>">Edit</a>
+              <a class="btn btn-secondary btn-sm" href="<?= e(url_for(product_slug_path((string) $p['slug']))) ?>" target="_blank" rel="noopener">View</a>
               <form method="post" data-confirm="Delete &quot;<?= e($p['name']) ?>&quot;? This cannot be undone.">
                 <?= csrf_field() ?>
                 <input type="hidden" name="action" value="delete">
@@ -136,6 +136,6 @@ admin_header('Products', 'products');
       </tbody>
     </table>
   </div>
-  <?= render_pagination($pager, 'products.php') ?>
+  <?= render_pagination($pager, admin_url('products/index.php')) ?>
 <?php endif; ?>
 <?php admin_footer(); ?>

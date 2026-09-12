@@ -6,6 +6,21 @@ function e(?string $value): string
     return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function admin_base(): string
+{
+    $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+    $pos = strpos($script, '/admin/');
+    if ($pos !== false) {
+        return substr($script, 0, $pos) . '/admin';
+    }
+    return rtrim(str_replace('\\', '/', dirname($script)), '/');
+}
+
+function admin_url(string $path = ''): string
+{
+    return admin_base() . '/' . ltrim($path, '/');
+}
+
 function redirect(string $path): void
 {
     header('Location: ' . $path);

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 
 $faqs = site_faqs();
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         save_setting('faqs', $parsed);
         export_site_config_js();
         flash('ok', count($parsed) . ' FAQ' . (count($parsed) === 1 ? '' : 's') . ' saved.');
-        redirect('faqs.php');
+        redirect(admin_url('faqs/index.php'));
     }
 }
 
@@ -46,7 +46,7 @@ admin_header('FAQ', 'faqs');
   </label>
   <div class="form-actions">
     <button class="btn" type="submit">Save FAQs</button>
-    <a class="btn btn-secondary" href="../faq" target="_blank" rel="noopener">Preview &#8599;</a>
+    <a class="btn btn-secondary" href="<?= e(url_for('faq')) ?>" target="_blank" rel="noopener">Preview &#8599;</a>
   </div>
 </form>
 <?php admin_footer(); ?>

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/lib/ui/layout.php';
 require_login();
 
 $seo = setting('seo', []);
@@ -100,7 +100,7 @@ admin_header('SEO', 'seo');
 
   <div class="form-actions">
     <button class="btn" type="submit">Save SEO</button>
-    <a class="btn btn-secondary" href="../sitemap.xml" target="_blank" rel="noopener">View Sitemap &#8599;</a>
+    <a class="btn btn-secondary" href="<?= e(url_for('sitemap.xml')) ?>" target="_blank" rel="noopener">View Sitemap &#8599;</a>
   </div>
 </form>
 <?php admin_footer(); ?>

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 
 $id = isset($_GET['id']) ? (string) $_GET['id'] : '';
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 flash('ok', 'Service created.');
             }
             export_site_config_js();
-            redirect('services.php');
+            redirect(admin_url('services/index.php'));
         } catch (PDOException $e) {
             $errors[] = (str_contains($e->getMessage(), 'UNIQUE') || str_contains($e->getMessage(), 'Duplicate'))
                 ? 'Service ID already exists.'
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-admin_header($existing ? 'Edit Service' : 'Add Service', 'services');
+admin_header($existing ? 'Edit Service' : 'Add Service', 'services', ['Services' => 'services/index.php']);
 ?>
 <?php if ($errors): ?>
   <div class="flash flash--error"><?= e(implode(' ', $errors)) ?></div>
@@ -68,7 +68,7 @@ admin_header($existing ? 'Edit Service' : 'Add Service', 'services');
       <input type="text" name="name" required value="<?= e($service['name']) ?>">
     </label>
     <label>ID
-      <input type="text" name="id" value="<?= e($service['id']) ?>" <?= $existing ? '' : '' ?>>
+      <input type="text" name="id" value="<?= e($service['id']) ?>">
       <span class="hint">e.g. consultancy</span>
     </label>
     <label>Icon key
@@ -84,7 +84,7 @@ admin_header($existing ? 'Edit Service' : 'Add Service', 'services');
   </div>
   <div class="form-actions">
     <button class="btn" type="submit">Save Service</button>
-    <a class="btn btn-secondary" href="services.php">Cancel</a>
+    <a class="btn btn-secondary" href="<?= e(admin_url('services/index.php')) ?>">Cancel</a>
   </div>
 </form>
 <?php admin_footer(); ?>

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
 require_login();
 migrate();
 
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && post('action') === 'delete') {
     db()->prepare('DELETE FROM leadership WHERE id = ?')->execute([$id]);
     export_site_config_js();
     flash('ok', 'Leadership entry deleted.');
-    redirect('leadership.php');
+    redirect(admin_url('leadership/index.php'));
 }
 
 $all = all_leadership();
@@ -22,7 +22,7 @@ admin_header('Leadership', 'leadership');
 ?>
 <div class="toolbar">
   <p>Showing <?= (int) $pager['from'] ?>–<?= (int) $pager['to'] ?> of <?= (int) $pager['total'] ?></p>
-  <a class="btn" href="leadership-form.php">Add Entry</a>
+  <a class="btn" href="<?= e(admin_url('leadership/form.php')) ?>">Add Entry</a>
 </div>
 <div class="table-wrap">
   <table>
@@ -33,7 +33,7 @@ admin_header('Leadership', 'leadership');
         <tr>
           <td>
             <?php if (!empty($item['image'])): ?>
-              <img class="table-thumb" src="../<?= e($item['image']) ?>" alt="">
+              <img class="table-thumb" src="<?= e(url_for($item['image'])) ?>" alt="">
             <?php else: ?>
               <span class="muted">No photo</span>
             <?php endif; ?>
@@ -42,7 +42,7 @@ admin_header('Leadership', 'leadership');
           <td><?= e($item['designation']) ?></td>
           <td class="muted"><?= e(truncate($item['expertise'], 80)) ?></td>
           <td class="actions">
-            <a class="btn btn-secondary btn-sm" href="leadership-form.php?id=<?= (int) $item['id'] ?>">Edit</a>
+            <a class="btn btn-secondary btn-sm" href="<?= e(admin_url('leadership/form.php')) ?>?id=<?= (int) $item['id'] ?>">Edit</a>
             <form method="post" data-confirm="Delete this leadership entry? This cannot be undone.">
               <?= csrf_field() ?>
               <input type="hidden" name="action" value="delete">
@@ -55,5 +55,5 @@ admin_header('Leadership', 'leadership');
     </tbody>
   </table>
 </div>
-<?= render_pagination($pager, 'leadership.php') ?>
+<?= render_pagination($pager, admin_url('leadership/index.php')) ?>
 <?php admin_footer(); ?>

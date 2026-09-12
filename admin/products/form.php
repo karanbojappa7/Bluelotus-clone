@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
-require_once __DIR__ . '/lib/seo_fields.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
+require_once __DIR__ . '/../lib/seo/seo_fields.php';
 require_login();
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $row = $id ? get_product_row($id) : null;
 if ($id && !$row) {
     flash('error', 'That product no longer exists.');
-    redirect('products.php');
+    redirect(admin_url('products/index.php'));
 }
 $categories = all_categories();
 if (!$categories) {
     flash('error', 'Create a category before adding products.');
-    redirect('categories.php');
+    redirect(admin_url('categories/index.php'));
 }
 
 $errors = [];
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 flash('ok', 'Created “' . $product['name'] . '”.');
             }
             export_site_config_js();
-            redirect('products.php');
+            redirect(admin_url('products/index.php'));
         } catch (PDOException $e) {
             $duplicate = str_contains($e->getMessage(), 'UNIQUE') || str_contains($e->getMessage(), 'Duplicate');
             if ($duplicate) {
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-admin_header($row ? 'Edit Product' : 'Add Product', 'products', ['Products' => 'products.php']);
+admin_header($row ? 'Edit Product' : 'Add Product', 'products', ['Products' => 'products/index.php']);
 ?>
 <?php if ($errors || $notice): ?>
   <div class="flash flash--error" role="alert">
@@ -202,7 +202,7 @@ admin_header($row ? 'Edit Product' : 'Add Product', 'products', ['Products' => '
         <div class="file-preview" style="margin-top:0.5rem">
           <?php foreach ($product['images'] as $src): ?>
             <label class="keep-shot">
-              <img src="../<?= e($src) ?>" alt="" loading="lazy">
+              <img src="<?= e(url_for($src)) ?>" alt="" loading="lazy">
               <span><input type="checkbox" name="keep_images[]" value="<?= e($src) ?>" checked> Keep</span>
             </label>
           <?php endforeach; ?>
@@ -226,9 +226,9 @@ admin_header($row ? 'Edit Product' : 'Add Product', 'products', ['Products' => '
 
   <div class="form-actions">
     <button class="btn" type="submit"><?= $row ? 'Save Changes' : 'Create Product' ?></button>
-    <a class="btn btn-secondary" href="products.php">Cancel</a>
+    <a class="btn btn-secondary" href="<?= e(admin_url('products/index.php')) ?>">Cancel</a>
     <?php if ($row): ?>
-      <a class="btn btn-secondary" href="../product/<?= e(rawurlencode($product['slug'])) ?>" target="_blank" rel="noopener">Preview &#8599;</a>
+      <a class="btn btn-secondary" href="<?= e(url_for(product_slug_path($product['slug']))) ?>" target="_blank" rel="noopener">Preview &#8599;</a>
     <?php endif; ?>
   </div>
 </form>

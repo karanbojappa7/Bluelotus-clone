@@ -8,15 +8,15 @@ function admin_nav_groups(): array
             ['id' => 'dashboard', 'href' => 'index.php', 'label' => 'Dashboard'],
         ],
         'Catalog' => [
-            ['id' => 'products', 'href' => 'products.php', 'label' => 'Products'],
-            ['id' => 'categories', 'href' => 'categories.php', 'label' => 'Categories'],
-            ['id' => 'services', 'href' => 'services.php', 'label' => 'Services'],
-            ['id' => 'blog', 'href' => 'blog.php', 'label' => 'Blog'],
+            ['id' => 'products', 'href' => 'products/index.php', 'label' => 'Products'],
+            ['id' => 'categories', 'href' => 'categories/index.php', 'label' => 'Categories'],
+            ['id' => 'services', 'href' => 'services/index.php', 'label' => 'Services'],
+            ['id' => 'blog', 'href' => 'blog/index.php', 'label' => 'Blog'],
         ],
         'Site content' => [
-            ['id' => 'faqs', 'href' => 'faqs.php', 'label' => 'FAQ'],
-            ['id' => 'testimonials', 'href' => 'testimonials.php', 'label' => 'Testimonials'],
-            ['id' => 'leadership', 'href' => 'leadership.php', 'label' => 'Leadership'],
+            ['id' => 'faqs', 'href' => 'faqs/index.php', 'label' => 'FAQ'],
+            ['id' => 'testimonials', 'href' => 'testimonials/index.php', 'label' => 'Testimonials'],
+            ['id' => 'leadership', 'href' => 'leadership/index.php', 'label' => 'Leadership'],
             ['id' => 'stats', 'href' => 'stats.php', 'label' => 'Stats'],
             ['id' => 'clients', 'href' => 'clients.php', 'label' => 'Clients'],
         ],
@@ -25,6 +25,7 @@ function admin_nav_groups(): array
             ['id' => 'contact', 'href' => 'contact.php', 'label' => 'Contact'],
             ['id' => 'social', 'href' => 'social.php', 'label' => 'Social'],
             ['id' => 'seo', 'href' => 'seo.php', 'label' => 'SEO'],
+            ['id' => 'analytics', 'href' => 'analytics.php', 'label' => 'Analytics'],
             ['id' => 'account', 'href' => 'account.php', 'label' => 'Account'],
         ],
     ];
@@ -45,7 +46,7 @@ function admin_header(string $title, string $active = '', array $crumbs = []): v
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title><?= e($title) ?> | Bluelotus CMS</title>
-<link rel="stylesheet" href="assets/admin.css">
+<link rel="stylesheet" href="<?= e(admin_url('assets/admin.css')) ?>">
 </head>
 <body>
 <a class="skip-link" href="#adminMain">Skip to content</a>
@@ -59,12 +60,12 @@ function admin_header(string $title, string $active = '', array $crumbs = []): v
       <?php foreach ($groups as $groupLabel => $items): ?>
         <p class="nav-group"><?= e($groupLabel) ?></p>
         <?php foreach ($items as $item): ?>
-          <a class="<?= $active === $item['id'] ? 'is-active' : '' ?>" href="<?= e($item['href']) ?>"<?= $active === $item['id'] ? ' aria-current="page"' : '' ?>><?= e($item['label']) ?></a>
+          <a class="<?= $active === $item['id'] ? 'is-active' : '' ?>" href="<?= e(admin_url($item['href'])) ?>"<?= $active === $item['id'] ? ' aria-current="page"' : '' ?>><?= e($item['label']) ?></a>
         <?php endforeach; ?>
       <?php endforeach; ?>
       <p class="nav-group">Shortcuts</p>
-      <a href="../" target="_blank" rel="noopener">View Site ↗</a>
-      <a href="logout.php" class="nav-logout">Log out</a>
+      <a href="<?= e(url_for('')) ?>" target="_blank" rel="noopener">View Site ↗</a>
+      <a href="<?= e(admin_url('logout.php')) ?>" class="nav-logout">Log out</a>
     </nav>
     <?php if ($user): ?>
     <div class="admin-user">Signed in as <strong><?= e($user['username']) ?></strong></div>
@@ -77,7 +78,7 @@ function admin_header(string $title, string $active = '', array $crumbs = []): v
         <?php if ($crumbs): ?>
           <nav class="admin-crumbs" aria-label="Breadcrumb">
             <?php foreach ($crumbs as $label => $href): ?>
-              <a href="<?= e((string) $href) ?>"><?= e((string) $label) ?></a><span aria-hidden="true">/</span>
+              <a href="<?= e(admin_url((string) $href)) ?>"><?= e((string) $label) ?></a><span aria-hidden="true">/</span>
             <?php endforeach; ?>
             <span><?= e($title) ?></span>
           </nav>
@@ -87,7 +88,7 @@ function admin_header(string $title, string $active = '', array $crumbs = []): v
     </header>
     <?php if ($needsPassword): ?>
     <div class="flash flash--warn" role="alert">
-      This account still uses the default password. <a href="account.php">Change it now</a> before the site goes live.
+      This account still uses the default password. <a href="<?= e(admin_url('account.php')) ?>">Change it now</a> before the site goes live.
     </div>
     <?php endif; ?>
     <?php if ($flash): ?>
@@ -104,7 +105,7 @@ function admin_footer(): void
     ?>
   </main>
 </div>
-<script src="assets/admin.js" defer></script>
+<script src="<?= e(admin_url('assets/admin.js')) ?>" defer></script>
 </body>
 </html>
 <?php

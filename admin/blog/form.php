@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/lib/layout.php';
-require_once __DIR__ . '/lib/seo_fields.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../lib/ui/layout.php';
+require_once __DIR__ . '/../lib/seo/seo_fields.php';
 require_login();
 
 $index = isset($_GET['index']) ? (int) $_GET['index'] : -1;
 $existing = $index >= 0 ? setting_get_item('blog', $index) : null;
 if ($index >= 0 && !$existing) {
     flash('error', 'That blog post no longer exists.');
-    redirect('blog.php');
+    redirect(admin_url('blog/index.php'));
 }
 
 $item = [
@@ -86,11 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setting_save_item('blog', $existing ? $index : null, $item);
         export_site_config_js();
         flash('ok', 'Saved “' . $item['title'] . '”.');
-        redirect('blog.php');
+        redirect(admin_url('blog/index.php'));
     }
 }
 
-admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 'blog.php']);
+admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 'blog/index.php']);
 ?>
 <?php if ($errors): ?>
   <div class="flash flash--error" role="alert">
@@ -129,7 +129,7 @@ admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 
     </label>
     <?php if ($item['image'] !== ''): ?>
       <div class="full file-preview">
-        <img src="../<?= e($item['image']) ?>" alt="Current cover image">
+        <img src="<?= e(url_for($item['image'])) ?>" alt="Current cover image">
       </div>
     <?php endif; ?>
   </div>
@@ -148,9 +148,9 @@ admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 
 
   <div class="form-actions">
     <button class="btn" type="submit"><?= $existing ? 'Save Changes' : 'Create Post' ?></button>
-    <a class="btn btn-secondary" href="blog.php">Cancel</a>
+    <a class="btn btn-secondary" href="<?= e(admin_url('blog/index.php')) ?>">Cancel</a>
     <?php if ($existing && $item['slug'] !== ''): ?>
-      <a class="btn btn-secondary" href="../blog/<?= e(rawurlencode($item['slug'])) ?>" target="_blank" rel="noopener">Preview &#8599;</a>
+      <a class="btn btn-secondary" href="<?= e(url_for(post_slug_path($item['slug']))) ?>" target="_blank" rel="noopener">Preview &#8599;</a>
     <?php endif; ?>
   </div>
 </form>
