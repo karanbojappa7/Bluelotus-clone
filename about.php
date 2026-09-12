@@ -1,38 +1,49 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/admin/bootstrap.php';
-$leadersHtml = db_ready() ? render_leadership_cards() : '';
-?>
-<!DOCTYPE html>
-<html lang="en" data-page-title="About Us" data-page-desc="Bluelotus Infrasafety has equipped over 4,200 sites across India with certified fire, road, and industrial safety systems since 2011.">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Us | Bluelotus Infrasafety</title>
-<meta name="description" content="Bluelotus Infrasafety has equipped over 4,200 sites across India with certified fire, road, and industrial safety systems since 2011.">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.bluelotusinfrasafety.com/about.php">
-<meta property="og:type" content="website">
-<meta property="og:title" content="About Us | Bluelotus Infrasafety">
-<meta property="og:description" content="Bluelotus Infrasafety has equipped over 4,200 sites across India since 2011.">
-<meta property="og:image" content="assets/img/og-cover.jpg">
-<link rel="icon" href="assets/img/logo.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/tokens.css">
-<link rel="stylesheet" href="assets/css/site.css">
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div data-site="header"></div>
 
-<main id="main">
+$leadersHtml = db_ready() ? render_leadership_cards() : '';
+$leadership = db_ready() ? all_leadership() : [];
+$crumbs = ['Home' => '/', 'About Us' => null];
+
+$team = [];
+foreach ($leadership as $person) {
+    if (($person['name'] ?? '') === '') {
+        continue;
+    }
+    $team[] = array_filter([
+        '@type' => 'Person',
+        'name' => (string) $person['name'],
+        'jobTitle' => (string) ($person['designation'] ?? ''),
+        'description' => (string) ($person['background'] ?? ''),
+        'image' => $person['image'] !== '' ? seo_image((string) $person['image']) : null,
+        'sameAs' => $person['linkedin'] !== '' ? [(string) $person['linkedin']] : null,
+    ]);
+}
+
+$aboutPage = array_filter([
+    '@type' => 'AboutPage',
+    '@id' => seo_url('about') . '#webpage',
+    'url' => seo_url('about'),
+    'name' => 'About Us',
+    'isPartOf' => ['@id' => seo_url('#website')],
+    'about' => ['@id' => seo_url('#organization')],
+    'mainEntity' => ['@id' => seo_url('#organization')],
+]);
+
+page_head([
+    'title' => 'About Us',
+    'description' => 'Bluelotus Infrasafety has equipped over 4,200 sites across India with certified fire, road, and industrial safety systems since 2011.',
+    'canonical' => 'about',
+    'breadcrumbs' => $crumbs,
+    'schema' => array_values(array_filter([$aboutPage, $team ? ['@type' => 'ItemList', 'name' => 'Leadership', 'itemListElement' => $team] : null])),
+]);
+?>
 <section class="page-header">
   <div class="container">
     <span class="eyebrow eyebrow--light">About Bluelotus</span>
     <h1 class="page-title">Safety systems built by people who install them.</h1>
-    <div class="breadcrumb-row"><a href="<?= e(url_for('')) ?>">Home</a> / <span>About Us</span></div>
+    <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
   </div>
 </section>
 
@@ -46,7 +57,7 @@ $leadersHtml = db_ready() ? render_leadership_cards() : '';
         <p class="section-sub mt-3">We now run supply, installation, and maintenance under one roof across ten safety categories, so a facilities manager deals with one accountable partner instead of six.</p>
       </div>
       <div data-reveal>
-        <img src="assets/img/about.jpg" alt="Bluelotus safety engineers on an industrial site" class="media-frame media-frame--tall" width="900" height="420" loading="lazy">
+        <img src="<?= e(url_for('assets/img/about.jpg')) ?>" alt="Bluelotus safety engineers on an industrial site" class="media-frame media-frame--tall" width="900" height="420" loading="lazy" data-fallback>
       </div>
     </div>
   </div>
@@ -62,17 +73,17 @@ $leadersHtml = db_ready() ? render_leadership_cards() : '';
     </div>
     <div class="grid grid-3">
       <div class="tile" data-reveal>
-        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="assets/img/sprite.svg#icon-consult"></use></svg></div>
+        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-consult"></use></svg></div>
         <h3>Professional</h3>
         <p>Design, execution, commissioning, and maintenance run through the same certified in-house team on every engagement.</p>
       </div>
       <div class="tile" data-reveal>
-        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="assets/img/sprite.svg#icon-shield"></use></svg></div>
+        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-shield"></use></svg></div>
         <h3>Secure</h3>
         <p>Every product line is checked against IS and ISO standards before it enters our catalog, not after a complaint.</p>
       </div>
       <div class="tile" data-reveal>
-        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="assets/img/sprite.svg#icon-award"></use></svg></div>
+        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-award"></use></svg></div>
         <h3>Guaranteed</h3>
         <p>We only recommend products with confirmed OEM after-sales support, so servicing is never a dead end.</p>
       </div>
@@ -102,15 +113,4 @@ $leadersHtml = db_ready() ? render_leadership_cards() : '';
     </div>
   </div>
 </section>
-</main>
-
-<div data-site="footer"></div>
-<div data-site="fabs"></div>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="config/site.config.php"></script>
-<script src="assets/js/shell.js"></script>
-<script src="assets/js/render.js"></script>
-<script src="assets/js/app.js"></script>
-</body>
-</html>
+<?php page_foot(); ?>
