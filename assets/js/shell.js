@@ -1,7 +1,7 @@
 (function ($) {
   const NAV = [
     { href: "index.html", label: "Home" },
-    { href: "about.html", label: "About Us" },
+    { href: "about.php", label: "About Us" },
     { href: "products.html", label: "Products", dropdown: true },
     { href: "services.html", label: "Services" },
     { href: "blog.html", label: "Blog" },
@@ -18,7 +18,11 @@
   }
 
   function isActive(href, page) {
+    if (href === "about.php") return page === "about.php" || page === "about.html";
     if (href === "blog.html") return page === "blog.html" || page === "blog-single.html";
+    if (href === "products.html") {
+      return page === "products.html" || page === "category.html" || page === "product.html";
+    }
     return page === href;
   }
 
@@ -96,7 +100,7 @@
       <div>
         <h5 class="footer-heading">Company</h5>
         <ul class="footer-links">
-          <li><a href="about.html">About Us</a></li>
+          <li><a href="about.php">About Us</a></li>
           <li><a href="products.html">Products</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="blog.html">Blog</a></li>

@@ -1,61 +1,48 @@
 # Bluelotus Infrasafety — Website
 
-Responsive marketing site for a safety equipment supplier. Plain HTML/CSS/JS, no build step.
+Responsive marketing site with a PHP admin CMS. Almost all public content is editable from the admin panel.
+
+## Run locally
+
+```
+php -S localhost:8000
+```
+
+- Site: http://localhost:8000  
+- Admin: http://localhost:8000/admin/  
+- First-time install: http://localhost:8000/admin/install.php  
+
+MySQL credentials are in `admin/bootstrap.php` (`bluelotus` on `localhost:3306`, user `root`).
+
+**Default login:** `admin` / `admin123` (change under Account)
+
+## What you can manage in CMS
+
+| Section | Controls |
+|---------|----------|
+| Products | Full product catalog (slug, category, copy, tags, features, images) |
+| Services | Service tabs on Services / Home |
+| Categories | Product categories + category page content (intro, buyers, use cases, FAQs) |
+| Blog | Post list on Blog / Home |
+| Testimonials | Home client feedback cards |
+| Leadership | About page founders & leadership |
+| Stats | Homepage / About counters |
+| Clients | Homepage marquee names |
+| Company | Name, tagline, logos, founded year |
+| Contact | Phones, emails, WhatsApp, address, hours, map |
+| Social | Facebook, LinkedIn, Instagram, YouTube |
+| SEO | Domain, default title, description, keywords |
+| Account | Change admin password |
+
+Edits publish through `config/site.config.php` and sync `config/site.config.js`.
 
 ## Structure
 
 ```
 saroj/
-├── index.html
-├── about.html
-├── products.html
-├── services.html
-├── contact.html
-├── blog.html
-├── blog-single.html
-├── privacy-policy.html
-├── sitemap.xml
-├── robots.txt
-├── config/
-│   └── site.config.js
-└── assets/
-    ├── css/
-    │   ├── tokens.css
-    │   └── site.css
-    ├── js/
-    │   ├── shell.js
-    │   ├── render.js
-    │   ├── app.js
-    │   └── blog-single.js
-    └── img/
-        ├── sprite.svg
-        ├── logo.png
-        ├── hero.jpg
-        ├── about.jpg
-        ├── products.jpg
-        ├── blog-1.jpg … blog-4.jpg
-        └── og-cover.jpg
+├── *.html                 Public pages
+├── admin/                 PHP CMS
+├── config/site.config.php Live config from database
+├── config/site.config.js  Synced fallback
+└── assets/                CSS, JS, images
 ```
-
-## Content
-
-Company details, categories, services, testimonials, blog posts, and clients live in `config/site.config.js`. Update that file to change site-wide content.
-
-## Scripts
-
-| File | Role |
-|------|------|
-| jQuery 3.7.1 (CDN) | DOM helpers used by all site scripts |
-| `shell.js` | Shared header, footer, floating actions |
-| `render.js` | Binds config into the DOM |
-| `app.js` | Nav, counters, tabs, forms, reveal |
-| `blog-single.js` | Resolves `?post=` on article pages |
-
-
-## Preview
-
-```
-python -m http.server 8000
-```
-
-Open `http://localhost:8000`.

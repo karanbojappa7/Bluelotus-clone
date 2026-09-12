@@ -46,7 +46,7 @@
       "[data-render='nav-categories']",
       CFG.categories
         .map(function (c) {
-          return `<li><a class="dropdown-item" href="products.html#${c.id}">${c.name}</a></li>`;
+          return `<li><a class="dropdown-item" href="category.html?cat=${c.id}">${c.name}</a></li>`;
         })
         .join("")
     );
@@ -58,7 +58,7 @@
       CFG.categories
         .slice(0, 8)
         .map(function (c) {
-          return `<li><a href="products.html#${c.id}">${c.name}</a></li>`;
+          return `<li><a href="category.html?cat=${c.id}">${c.name}</a></li>`;
         })
         .join("")
     );
@@ -78,13 +78,34 @@
     );
   }
 
+  function productCard(p) {
+    const img = (p.images && p.images[0]) || "assets/img/products.jpg";
+    return `<a class="product-card" href="product.html?slug=${p.slug}" data-reveal>
+      <span class="product-card-media">
+        <img src="${img}" alt="${p.name}" width="480" height="320" loading="lazy">
+      </span>
+      <span class="product-card-body">
+        <strong>${p.name}</strong>
+        <em>${p.short}</em>
+        <span class="tile-link">View Product ${icon("arrow")}</span>
+      </span>
+    </a>`;
+  }
+
+  function buildProducts(limit) {
+    const $mount = $("[data-render='products']");
+    if (!$mount.length) return;
+    const list = limit ? (CFG.products || []).slice(0, Number(limit)) : CFG.products || [];
+    fill("[data-render='products']", list.map(productCard).join(""));
+  }
+
   function buildCategories(limit) {
     const list = limit ? CFG.categories.slice(0, Number(limit)) : CFG.categories;
     fill(
       "[data-render='categories']",
       list
         .map(function (c) {
-          return `<a class="tile" id="${c.id}" href="products.html#${c.id}" data-reveal>
+          return `<a class="tile" id="${c.id}" href="category.html?cat=${c.id}" data-reveal>
             <div class="icon-wrap">${icon(c.icon)}</div>
             <h3>${c.name}</h3>
             <p>${c.desc}</p>
@@ -138,6 +159,56 @@
               <span class="role">${t.role}</span>
             </div>
           </div>`;
+        })
+        .join("")
+    );
+  }
+
+  function initials(name) {
+    return String(name || "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(function (word) {
+        return word.charAt(0);
+      })
+      .join("")
+      .toUpperCase();
+  }
+
+  function buildLeadership() {
+    const $mount = $("[data-render='leadership']");
+    if (!$mount.length || $mount.children().length) return;
+    const list = CFG.leadership || [];
+    fill(
+      "[data-render='leadership']",
+      list
+        .map(function (person) {
+          const designation = person.designation || person.role || "";
+          const background = person.background || person.bio || "";
+          const photo = person.image
+            ? `<img src="${person.image}" alt="${person.name}" width="480" height="360" loading="lazy">`
+            : `<span class="leader-fallback" aria-hidden="true">${initials(person.name)}</span>`;
+          const linkedin = person.linkedin
+            ? `<a class="leader-in" href="${person.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn profile for ${person.name}">${icon("linkedin")}</a>`
+            : "";
+          const experience = person.experience
+            ? `<div class="leader-meta"><span>Experience</span><p>${person.experience}</p></div>`
+            : "";
+          const expertise = person.expertise
+            ? `<div class="leader-meta"><span>Area of expertise</span><p>${person.expertise}</p></div>`
+            : "";
+          return `<article class="leader-card" data-reveal>
+            <div class="leader-photo">${photo}</div>
+            <div class="leader-body">
+              <h3>${person.name}</h3>
+              <p class="leader-role">${designation}</p>
+              ${experience}
+              ${expertise}
+              <p class="leader-background">${background}</p>
+              ${linkedin}
+            </div>
+          </article>`;
         })
         .join("")
     );
@@ -197,7 +268,7 @@
       { icon: "phone", title: "Call Us", body: CFG.contact.phones.map(function (p) { return p.number; }).join(" / ") },
       { icon: "mail", title: "Email Us", body: CFG.contact.emails.map(function (e) { return e.address; }).join(" / ") },
       { icon: "pin", title: "Visit Us", body: CFG.contact.address.line1 + ", " + CFG.contact.address.line2 },
-      { icon: "clock", title: "Working Hours", body: "Mon – Sat, 9:00 AM – 7:00 PM" }
+      { icon: "clock", title: "Working Hours", body: CFG.contact.workingHours || "Mon – Sat, 9:00 AM – 7:00 PM" }
     ];
     fill(
       "[data-render='contact-cards']",
@@ -265,8 +336,10 @@
     buildFooterContact();
     buildStats();
     buildCategories($("body").attr("data-categories-limit"));
+    buildProducts($("body").attr("data-products-limit"));
     buildServices();
     buildTestimonials();
+    buildLeadership();
     buildBlog($("body").attr("data-blog-limit"));
     buildClients();
     buildContactCards();

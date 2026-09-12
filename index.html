@@ -20,36 +20,74 @@
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body data-categories-limit="6" data-blog-limit="4">
+<body data-blog-limit="4" data-products-limit="12">
 <a class="skip-link" href="#main">Skip to content</a>
 <div data-site="header"></div>
 
 <main id="main">
 
-<section class="hero">
-  <div class="container hero-main">
-    <div>
-      <span class="eyebrow eyebrow--light">Certified Safety Solutions · Berhampur</span>
-      <h1 class="hero-title mt-3">Protection engineered for <em>every worksite,</em> every day.</h1>
-      <p class="hero-sub">We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.</p>
-      <div class="hero-actions">
-        <a href="contact.html" class="btn btn-primary">Request a Site Audit <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
-        <a href="products.html" class="btn btn-ghost">Browse Product Range</a>
-      </div>
+<section class="hero-carousel" id="heroCarousel">
+  <div class="hero-carousel-pin">
+    <div class="hero-slides">
+      <article class="hero-slide is-active" data-hero-index="0">
+        <div class="hero-slide-media" style="background-image:url('assets/img/hero.jpg')"></div>
+        <div class="container hero-slide-copy">
+          <span class="eyebrow eyebrow--light">Certified Safety Solutions · Berhampur</span>
+          <h1 class="hero-title">Protection engineered for <em>every worksite,</em> every day.</h1>
+          <p class="hero-sub">We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.</p>
+          <div class="hero-actions">
+            <a href="contact.html" class="btn btn-primary">Request a Site Audit <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+            <a href="products.html" class="btn btn-ghost">Browse Product Range</a>
+          </div>
+        </div>
+      </article>
+      <article class="hero-slide" data-hero-index="1">
+        <div class="hero-slide-media" style="background-image:url('assets/img/products.jpg')"></div>
+        <div class="container hero-slide-copy">
+          <span class="eyebrow eyebrow--light">Fire Safety</span>
+          <h1 class="hero-title">Contain fire <em>before</em> it reaches people.</h1>
+          <p class="hero-sub">Extinguishers, hydrants, and detection specified for Indian sites — installed and maintained by our own crews.</p>
+          <div class="hero-actions">
+            <a href="category.html?cat=fire-safety" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+          </div>
+        </div>
+      </article>
+      <article class="hero-slide" data-hero-index="2">
+        <div class="hero-slide-media" style="background-image:url('assets/img/about.jpg')"></div>
+        <div class="container hero-slide-copy">
+          <span class="eyebrow eyebrow--light">Road &amp; Traffic Safety</span>
+          <h1 class="hero-title">Keep every lane and <em>work zone</em> under control.</h1>
+          <p class="hero-sub">Barricades, cones, signage, and crash protection built for highways, yards, and temporary site approaches.</p>
+          <div class="hero-actions">
+            <a href="category.html?cat=road-traffic-safety" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+          </div>
+        </div>
+      </article>
+      <article class="hero-slide" data-hero-index="3">
+        <div class="hero-slide-media" style="background-image:url('assets/img/blog-1.jpg')"></div>
+        <div class="container hero-slide-copy">
+          <span class="eyebrow eyebrow--light">End-to-end Support</span>
+          <h1 class="hero-title">Audit, install, and <em>stay accountable.</em></h1>
+          <p class="hero-sub">Consultancy, installation, and 24/7 maintenance — one team past the invoice, not a chain of vendors.</p>
+          <div class="hero-actions">
+            <a href="services.html" class="btn btn-primary">Learn More <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+          </div>
+        </div>
+      </article>
     </div>
-    <div>
-      <div class="hero-plate">
-        <div class="hero-plate-row"><span class="hero-plate-label">Certified To</span><span class="hero-plate-value">IS / ISO</span></div>
-        <div class="hero-plate-row"><span class="hero-plate-label">Product Lines</span><span class="hero-plate-value">60+</span></div>
-        <div class="hero-plate-row"><span class="hero-plate-label">Sites Equipped</span><span class="hero-plate-value">4,200+</span></div>
-        <div class="hero-plate-row"><span class="hero-plate-label">Emergency Support</span><span class="hero-plate-value">24/7</span></div>
-      </div>
-    </div>
+    <nav class="hero-carousel-nav" aria-label="Hero topics">
+      <button type="button" class="is-active" data-hero-goto="0"><span>Protect</span></button>
+      <button type="button" data-hero-goto="1"><span>Fire</span></button>
+      <button type="button" data-hero-goto="2"><span>Road</span></button>
+      <button type="button" data-hero-goto="3"><span>Service</span></button>
+    </nav>
+    <button type="button" class="hero-scroll-cue" data-hero-next>Scroll</button>
   </div>
-  <div class="hero-stats">
-    <div class="container">
-      <div class="stats-grid" data-render="stats"></div>
-    </div>
+</section>
+
+<section class="hero-stats hero-stats--after">
+  <div class="container">
+    <div class="stats-grid" data-render="stats"></div>
   </div>
 </section>
 
@@ -64,12 +102,25 @@
     </div>
     <div class="grid grid-3" data-render="categories"></div>
     <div class="text-center mt-5" data-reveal>
-      <a href="products.html" class="btn btn-outline">View All Categories <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+      <a href="products.html" class="btn btn-outline">View All Products <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
     </div>
   </div>
 </section>
 
 <section class="section section--dim">
+  <div class="container">
+    <div class="section-head">
+      <div data-reveal>
+        <span class="eyebrow">Product Catalog</span>
+        <h2 class="section-title">Equipment stocked for live sites</h2>
+      </div>
+      <a href="products.html" class="btn btn-outline" data-reveal>Browse Full Range</a>
+    </div>
+    <div class="product-grid" data-render="products"></div>
+  </div>
+</section>
+
+<section class="section">
   <div class="container">
     <div class="grid grid-2 split">
       <div data-reveal>
@@ -159,7 +210,7 @@
 <div data-site="fabs"></div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="config/site.config.js"></script>
+<script src="config/site.config.php"></script>
 <script src="assets/js/shell.js"></script>
 <script src="assets/js/render.js"></script>
 <script src="assets/js/app.js"></script>

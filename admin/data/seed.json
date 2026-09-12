@@ -1,0 +1,1306 @@
+{
+  "company": {
+    "name": "Bluelotus Infrasafety",
+    "shortName": "Bluelotus",
+    "tagline": "Where Protection Meets Innovation",
+    "legalName": "Bluelotus Infrasafety",
+    "foundedYear": 2011,
+    "logo": "assets/img/logo.png",
+    "logoMark": "assets/img/logo-mark.png"
+  },
+  "contact": {
+    "phones": [
+      {
+        "label": "Office",
+        "number": "+91 74833 94208"
+      },
+      {
+        "label": "Sales",
+        "number": "+91 93377 45396"
+      },
+      {
+        "label": "Support",
+        "number": "+91 91487 36860"
+      }
+    ],
+    "emails": [
+      {
+        "label": "General",
+        "address": "info@bluelotusinfrasafety.com"
+      }
+    ],
+    "whatsapp": "+917483394208",
+    "workingHours": "Mon – Sat, 9:00 AM – 7:00 PM",
+    "address": {
+      "line1": "Door No. 1, Mukteswar Apartment, NH16 near Pachamwari Temple Street near Siva Temple",
+      "line2": "Ankuli, Berhampur, Ganjam, Odisha - 760010"
+    },
+    "mapEmbedUrl": "https://maps.google.com/maps?q=Mukteswar%20Apartment%20Ankuli%20Berhampur%20Odisha%20760010&output=embed"
+  },
+  "social": {
+    "facebook": "https://www.facebook.com/bluelotusafety",
+    "linkedin": "https://www.linkedin.com/company/bluelotusafety01",
+    "instagram": "https://www.instagram.com/bluelotusenterprises",
+    "youtube": "https://www.youtube.com/@bluelotusenterprises"
+  },
+  "seo": {
+    "domain": "https://www.bluelotusinfrasafety.com",
+    "defaultTitle": "Safety Equipment Supplier & Services in Berhampur, Odisha",
+    "defaultDescription": "Certified fire, road, and industrial safety equipment supplier in Berhampur, Odisha. End-to-end supply, installation, and maintenance for contractors, industries, and government agencies.",
+    "keywords": "safety equipment supplier berhampur, industrial safety equipment odisha, fire safety products, road safety equipment, PPE supplier india, warehouse safety, construction safety equipment"
+  },
+  "stats": [
+    {
+      "value": "13",
+      "suffix": "+",
+      "label": "Years of Indian Industrial Experience"
+    },
+    {
+      "value": "4200",
+      "suffix": "+",
+      "label": "Sites Equipped"
+    },
+    {
+      "value": "60",
+      "suffix": "+",
+      "label": "Certified Product Lines"
+    },
+    {
+      "value": "24",
+      "suffix": "/7",
+      "label": "Emergency Support"
+    }
+  ],
+  "leadership": [
+    {
+      "name": "Founding Leadership",
+      "designation": "Founder & Directors",
+      "experience": "13+ years",
+      "expertise": "Fire, industrial supply, and site installation",
+      "background": "Built Bluelotus Infrasafety from on-site fire and industrial safety work in Berhampur — leading supply, installation, and maintenance across Indian industrial sites.",
+      "linkedin": "",
+      "image": ""
+    },
+    {
+      "name": "Technical Leadership",
+      "designation": "Engineering & Project Delivery",
+      "experience": "10+ years",
+      "expertise": "Site audits, product specification, commissioning",
+      "background": "Certified engineers who audit sites, specify the right product mix, and stay accountable through commissioning and after-sales support.",
+      "linkedin": "",
+      "image": ""
+    }
+  ],
+  "categories": [
+    {
+      "id": "road-traffic-safety",
+      "icon": "road",
+      "name": "Road & Traffic Safety",
+      "desc": "Barricades, cones, signage and warning systems for public and site roadways.",
+      "headline": "Road & Traffic Safety Equipment Suppliers in Odisha & India",
+      "intro": "Effective traffic management is the foundation of site and road safety. Bluelotus Infrasafety supplies and installs high-performance road and traffic safety equipment — from reflective road studs and crash barriers to bollards, speed breakers, and intelligent transportation systems — engineered to minimize risk, control traffic flow, and meet Indian safety compliance standards (IRC / MoRTH specifications).",
+      "buyers": "Municipal & infrastructure contractors needing bulk highway signage, median barriers, and road marking for public roads. Facility & industrial site managers needing bollards, wheel stoppers, and convex mirrors for parking lots and factory yards. Apartment complexes & gated communities needing speed breakers, delineator posts, and pedestrian safety for internal roads. Every product ships with installation support, bulk pricing for government and corporate orders, and a free site-safety consultation.",
+      "useCases": [
+        {
+          "title": "Highways & Public Roads",
+          "text": "IRC-compliant reflective signage, crash barriers, median barriers, road studs, and road marking built to withstand heavy vehicle impact and monsoon conditions."
+        },
+        {
+          "title": "Apartments & Gated Communities",
+          "text": "Speed breakers, spring posts, convex mirrors for blind-spot corners, and pedestrian delineators sized for internal roads and low-speed zones."
+        },
+        {
+          "title": "Parking Lots & Industrial Yards",
+          "text": "Bollards, wheel stoppers, parking marking, and boom barriers to manage vehicle flow and protect pedestrians and infrastructure."
+        },
+        {
+          "title": "Construction & Temporary Work Zones",
+          "text": "Traffic cones, temporary fencing, barricades, and expandable barriers for short-term site protection and lane closures."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Does Bluelotus provide installation for road safety equipment?",
+          "a": "Yes. Beyond supply, we offer professional installation for speed breakers, road studs, and traffic signage so they are fixed correctly for maximum safety and durability."
+        },
+        {
+          "q": "Can I get bulk road safety equipment for government or construction projects?",
+          "a": "Absolutely. We specialize in large-scale bulk orders for municipal corporations, infrastructure contractors, and facility management firms across India, with competitive wholesale pricing."
+        },
+        {
+          "q": "What standards do your traffic safety products follow?",
+          "a": "Our gear is selected for high reflectivity, impact resistance, and weather durability, meeting standard safety requirements for visibility and longevity in Indian road conditions."
+        },
+        {
+          "q": "How do I choose the right safety gear for my facility?",
+          "a": "It depends on traffic volume, vehicle type, and speed limits. Contact our team for a free site assessment — we will help you select the right signs, barriers, and studs for your risk zones."
+        },
+        {
+          "q": "Do you deliver across India?",
+          "a": "Yes. Based in Berhampur, Odisha, our logistics network supports delivery and project supply for clients throughout India."
+        }
+      ]
+    },
+    {
+      "id": "warehouse-safety",
+      "icon": "warehouse",
+      "name": "Warehouse Safety",
+      "desc": "Rack guards, dock safety, and material handling protection systems.",
+      "headline": "Warehouse & Dock Safety Systems",
+      "intro": "Protect people, racks, and inventory with industrial-grade warehouse safety equipment — from column guards and dock bumpers to aisle mirrors and floor marking systems.",
+      "buyers": "Warehouse operators, 3PL parks, and manufacturing stores looking for durable impact protection and clear pedestrian/vehicle segregation.",
+      "useCases": [
+        {
+          "title": "Rack & Column Protection",
+          "text": "Impact-rated guards and end-of-aisle barriers that absorb forklift strikes."
+        },
+        {
+          "title": "Dock & Loading Bay",
+          "text": "Bumpers, levellers, and edge protection for safer truck turnaround."
+        },
+        {
+          "title": "Pedestrian Segregation",
+          "text": "Floor marking, barriers, and mirrors for blind corners inside warehouses."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Do you install warehouse safety systems?",
+          "a": "Yes — our crews handle layout marking, guard installation, and handover documentation."
+        },
+        {
+          "q": "Can you match existing rack systems?",
+          "a": "We specify guards and barriers to suit common rack footprints and aisle widths."
+        }
+      ]
+    },
+    {
+      "id": "fire-safety",
+      "icon": "fire",
+      "name": "Fire Safety",
+      "desc": "Extinguishers, hydrant systems, alarms and suppression equipment.",
+      "headline": "Fire Safety Equipment & System Support",
+      "intro": "From portable extinguishers to hydrant accessories and detection gear, we supply fire-safety lines backed by installation and maintenance support.",
+      "buyers": "Factories, campuses, hospitals, and commercial buildings that need compliant fire readiness.",
+      "useCases": [
+        {
+          "title": "Portable Extinguishers",
+          "text": "ABC, CO₂, and specialty extinguishers sized for occupancy risk."
+        },
+        {
+          "title": "Hydrant & Hose Gear",
+          "text": "Cabinets, hoses, nozzles, and landing valves for wet/dry risers."
+        },
+        {
+          "title": "Detection & Alarm",
+          "text": "Smoke/heat detectors and call points for early warning."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Do you offer AMC for fire systems?",
+          "a": "Yes. Our maintenance contracts cover inspection, refill, and emergency response."
+        }
+      ]
+    },
+    {
+      "id": "industrial-safety",
+      "icon": "industrial",
+      "name": "Industrial Safety",
+      "desc": "PPE, gas detection, and fall protection for high-risk environments.",
+      "headline": "Industrial PPE & Fall Protection",
+      "intro": "Equip high-risk plants with certified PPE, gas detection, and fall-arrest systems selected for Indian industrial conditions.",
+      "buyers": "Manufacturing, oil & gas, cement, and heavy engineering sites.",
+      "useCases": [
+        {
+          "title": "Personal Protective Equipment",
+          "text": "Helmets, gloves, eye/face protection, and respiratory gear."
+        },
+        {
+          "title": "Fall Protection",
+          "text": "Harnesses, lanyards, and lifelines for work at height."
+        },
+        {
+          "title": "Gas Detection",
+          "text": "Portable and fixed detectors for confined spaces and process areas."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Are products certified?",
+          "a": "We supply lines checked against applicable IS / EN standards before recommendation."
+        }
+      ]
+    },
+    {
+      "id": "logistic-safety",
+      "icon": "logistic",
+      "name": "Logistic Safety",
+      "desc": "Load securing, signal systems and yard safety for fleets and depots.",
+      "headline": "Logistics Yard & Fleet Safety",
+      "intro": "Keep yards and fleets moving safely with load-securing gear, traffic signals, and perimeter control for depots and distribution hubs.",
+      "buyers": "Fleet operators, depots, and logistics parks.",
+      "useCases": [
+        {
+          "title": "Yard Traffic Control",
+          "text": "Cones, mirrors, and barriers for vehicle movement plans."
+        },
+        {
+          "title": "Load Securing",
+          "text": "Straps, edge protectors, and restraint accessories."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Can you equip multi-location depots?",
+          "a": "Yes — we support phased rollouts with inventory tracking across sites."
+        }
+      ]
+    },
+    {
+      "id": "construction-safety",
+      "icon": "construction",
+      "name": "Construction Safety",
+      "desc": "Scaffolding safety, hard hats, harnesses and site perimeter control.",
+      "headline": "Construction Site Safety Gear",
+      "intro": "Protect active sites with scaffolding accessories, PPE, temporary barriers, and perimeter control sized for Indian project conditions.",
+      "buyers": "Contractors, EPC firms, and site safety officers.",
+      "useCases": [
+        {
+          "title": "Site Perimeter",
+          "text": "Barricades, fencing, and warning signage for public interfaces."
+        },
+        {
+          "title": "Worker Protection",
+          "text": "Helmets, harnesses, and hi-vis for crews at height and ground level."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Do you supply project packs?",
+          "a": "We assemble site starter kits with PPE and barricading for rapid mobilization."
+        }
+      ]
+    },
+    {
+      "id": "household-safety",
+      "icon": "household",
+      "name": "Household Safety",
+      "desc": "Smoke detectors, first-aid kits and childproofing for residences.",
+      "headline": "Home & Residential Safety",
+      "intro": "Practical safety kits for homes and societies — smoke detection, first aid, and basic fire readiness.",
+      "buyers": "Homeowners, RWAs, and facility managers of residential campuses.",
+      "useCases": [
+        {
+          "title": "Fire Awareness",
+          "text": "Domestic extinguishers and smoke alarms for flats and villas."
+        },
+        {
+          "title": "First Response",
+          "text": "First-aid kits sized for households and society offices."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Can societies order in bulk?",
+          "a": "Yes — we supply society-wide packs with installation guidance."
+        }
+      ]
+    },
+    {
+      "id": "water-safety",
+      "icon": "water",
+      "name": "Water Safety",
+      "desc": "Life buoys, pool alarms and flood barrier systems.",
+      "headline": "Water & Pool Safety Equipment",
+      "intro": "Life-saving and flood-control products for pools, campuses, and waterfront sites.",
+      "buyers": "Hotels, clubs, campuses, and municipal waterfront projects.",
+      "useCases": [
+        {
+          "title": "Pool & Waterfront",
+          "text": "Life buoys, rings, and rescue accessories."
+        },
+        {
+          "title": "Flood Readiness",
+          "text": "Portable barriers for seasonal inundation risk."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Do you install pool safety gear?",
+          "a": "We supply and can coordinate mounting of rings and cabinets on site."
+        }
+      ]
+    },
+    {
+      "id": "tree-safety",
+      "icon": "tree",
+      "name": "Tree Safety",
+      "desc": "Arborist rigging, canopy protection and site tree-guarding gear.",
+      "headline": "Tree Work & Canopy Protection",
+      "intro": "Gear for arborists and site teams managing canopy risk around roads and campuses.",
+      "buyers": "Municipal horticulture teams and private campus facilities.",
+      "useCases": [
+        {
+          "title": "Rigging & Climbing",
+          "text": "Lines and protective accessories for controlled tree work."
+        },
+        {
+          "title": "Site Guarding",
+          "text": "Tree guards and barriers for young plantations near traffic."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Is training included?",
+          "a": "We can arrange product familiarization for site crews on request."
+        }
+      ]
+    },
+    {
+      "id": "safety-wearable",
+      "icon": "wearable",
+      "name": "Safety Wearable",
+      "desc": "Hi-vis apparel, smart wearables and monitored PPE.",
+      "headline": "Hi-Vis Apparel & Safety Wearables",
+      "intro": "High-visibility clothing and wearable PPE that keep workers seen and accounted for on busy sites.",
+      "buyers": "Construction, logistics, and industrial employers needing visible, durable workwear.",
+      "useCases": [
+        {
+          "title": "Hi-Vis Clothing",
+          "text": "Jackets, vests, and trousers for day/night visibility."
+        },
+        {
+          "title": "Connected Wearables",
+          "text": "Monitored PPE options for higher-risk deployments."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Can you brand apparel?",
+          "a": "Bulk orders can include company ID marking where the product line allows."
+        }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "slug": "spring-post",
+      "category": "road-traffic-safety",
+      "name": "Spring Post",
+      "short": "Flexible PU spring-back delineator posts, 750mm height, self-recovering after vehicle impact.",
+      "description": "Flexible polyurethane spring-back delineator posts designed to rebound after glancing vehicle impact. Ideal for medians, lane guidance, and campus roads where rigid bollards would damage vehicles. Reflective banding improves night visibility.",
+      "tags": [
+        "Spring Post Road Safety",
+        "Flexible Spring Post Delineator",
+        "Reflective Traffic Spring Post",
+        "Road Safety Spring Bollard"
+      ],
+      "features": [
+        "Self-recovering PU body",
+        "Approx. 750mm height class",
+        "Reflective visibility bands",
+        "Surface or base mounting options",
+        "Low maintenance vs rigid posts"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/blog-4.jpg",
+        "assets/img/hero.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "barricades-safety-cones",
+      "category": "road-traffic-safety",
+      "name": "Barricades & Safety Cones",
+      "short": "High-visibility PVC/ABS barricades and cones for lane control and temporary closures.",
+      "description": "Durable traffic barricades and cones with reflective sleeves for day/night visibility. Ideal for road works, events, and industrial yards. Available in standard heights with optional rubber bases for wind stability.",
+      "tags": [
+        "Traffic Barricade",
+        "Safety Cone",
+        "Lane Closure",
+        "Reflective Cone"
+      ],
+      "features": [
+        "High-visibility colours",
+        "Reflective banding options",
+        "Stackable storage",
+        "Suitable for temporary & semi-permanent use"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/hero.jpg",
+        "assets/img/blog-4.jpg"
+      ]
+    },
+    {
+      "slug": "temporary-fencing",
+      "category": "road-traffic-safety",
+      "name": "Temporary Fencing",
+      "short": "Modular temporary fencing panels for site perimeter and crowd control.",
+      "description": "Quick-deploy temporary fencing systems for construction perimeters, events, and restricted zones. Panels connect with clamps and feet for stable freestanding installation.",
+      "tags": [
+        "Temporary Fence",
+        "Site Perimeter",
+        "Crowd Control"
+      ],
+      "features": [
+        "Modular panel system",
+        "Fast install / remove",
+        "Reusable across projects",
+        "Compatible with mesh & solid options"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "road-studs",
+      "category": "road-traffic-safety",
+      "name": "Road Studs",
+      "short": "Reflective road studs for lane marking and hazard guidance in all weather.",
+      "description": "Cat-eye and solar-assist road stud options for highways, curves, and site roads. Built for monsoon resilience and high reflectivity under headlights.",
+      "tags": [
+        "Road Stud",
+        "Cat Eye",
+        "Reflective Stud"
+      ],
+      "features": [
+        "High reflectivity",
+        "Weather-resistant body",
+        "Lane & edge marking use",
+        "Highway & campus suitable"
+      ],
+      "images": [
+        "assets/img/blog-4.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "pedestrian-safety",
+      "category": "road-traffic-safety",
+      "name": "Pedestrian Safety",
+      "short": "Delineators, crossings, and barriers that protect foot traffic from vehicles.",
+      "description": "A coordinated set of pedestrian safety products — from delineators to crossing aids — that separate people from vehicle lanes on campuses and public roads.",
+      "tags": [
+        "Pedestrian Safety",
+        "Footpath Protection"
+      ],
+      "features": [
+        "Clear visual separation",
+        "Campus & public road use",
+        "Pairs with speed control gear"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/blog-2.jpg"
+      ]
+    },
+    {
+      "slug": "road-lighting-visibility",
+      "category": "road-traffic-safety",
+      "name": "Road Lighting & Visibility Products",
+      "short": "Lighting and reflective products that improve night-time road awareness.",
+      "description": "Visibility products that complement signage and studs — improving hazard perception for drivers after dark and in low-light industrial yards.",
+      "tags": [
+        "Road Lighting",
+        "Visibility",
+        "Night Safety"
+      ],
+      "features": [
+        "Night visibility focus",
+        "Pairs with studs & signs",
+        "Industrial yard suitable"
+      ],
+      "images": [
+        "assets/img/hero.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "delineator-posts",
+      "category": "road-traffic-safety",
+      "name": "Delineator Posts",
+      "short": "Fixed and flexible delineators for channelizing traffic and marking edges.",
+      "description": "Delineator posts for edge marking, median guidance, and temporary channelization. Available in flexible and semi-rigid variants with reflective sheeting.",
+      "tags": [
+        "Delineator",
+        "Channelizer",
+        "Edge Marker"
+      ],
+      "features": [
+        "Reflective sheeting",
+        "Flexible / semi-rigid options",
+        "Quick replacement"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/blog-4.jpg"
+      ]
+    },
+    {
+      "slug": "median-barrier",
+      "category": "road-traffic-safety",
+      "name": "Median Barrier",
+      "short": "Median separation barriers for highways and divided campus roads.",
+      "description": "Median barrier solutions that reduce crossover risk and organize opposing traffic streams on highways and large campuses.",
+      "tags": [
+        "Median Barrier",
+        "Divider"
+      ],
+      "features": [
+        "Crossover risk reduction",
+        "Highway & campus use",
+        "Compatible with delineators"
+      ],
+      "images": [
+        "assets/img/hero.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "road-marking",
+      "category": "road-traffic-safety",
+      "name": "Road Marking",
+      "short": "Thermoplastic and paint marking for lanes, edges, and symbols.",
+      "description": "Road marking materials and application support for lane lines, arrows, and symbols on asphalt and concrete surfaces.",
+      "tags": [
+        "Thermoplastic",
+        "Lane Marking"
+      ],
+      "features": [
+        "High visibility pigments",
+        "Lane & symbol marking",
+        "Project application support"
+      ],
+      "images": [
+        "assets/img/blog-4.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "crash-barrier",
+      "category": "road-traffic-safety",
+      "name": "Crash Barrier",
+      "short": "Metal crash barriers for roadside and median impact protection.",
+      "description": "W-beam and related crash barrier systems for roadside hazard protection, supplied with posts and accessories for project installation.",
+      "tags": [
+        "Crash Barrier",
+        "W-Beam",
+        "Guardrail"
+      ],
+      "features": [
+        "Impact energy redirection",
+        "Roadside & median use",
+        "Project hardware kits"
+      ],
+      "images": [
+        "assets/img/hero.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "bollards",
+      "category": "road-traffic-safety",
+      "name": "Bollards",
+      "short": "Fixed and removable bollards for access control and asset protection.",
+      "description": "Steel and flexible bollards for protecting building corners, walkways, and restricted vehicle zones. Removable options support service access.",
+      "tags": [
+        "Bollard",
+        "Access Control"
+      ],
+      "features": [
+        "Fixed & removable types",
+        "Corner & walkway protection",
+        "Powder-coated finishes"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "parking-marking",
+      "category": "road-traffic-safety",
+      "name": "Parking Marking",
+      "short": "Bay marking, numbering, and zone colour coding for parking lots.",
+      "description": "Parking lot marking packages for bays, arrows, disabled spaces, and colour-coded zones in commercial and industrial parks.",
+      "tags": [
+        "Parking Bay",
+        "Lot Marking"
+      ],
+      "features": [
+        "Bay & zone coding",
+        "Durable marking options",
+        "Facility branding support"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/blog-1.jpg"
+      ]
+    },
+    {
+      "slug": "zebra-crossing",
+      "category": "road-traffic-safety",
+      "name": "Zebra Crossing",
+      "short": "High-visibility pedestrian crossing marking and related accessories.",
+      "description": "Zebra crossing marking systems and supporting signage to establish clear pedestrian priority on campus and municipal roads.",
+      "tags": [
+        "Zebra Crossing",
+        "Pedestrian Crossing"
+      ],
+      "features": [
+        "High contrast stripes",
+        "Pairs with signs & studs",
+        "Campus & public roads"
+      ],
+      "images": [
+        "assets/img/blog-4.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "boom-barrier",
+      "category": "road-traffic-safety",
+      "name": "Boom Barrier",
+      "short": "Automated and manual boom barriers for gated entry control.",
+      "description": "Boom barrier systems for gated communities, factories, and parking entries — with boom lengths matched to lane width.",
+      "tags": [
+        "Boom Barrier",
+        "Entry Control"
+      ],
+      "features": [
+        "Manual & automated options",
+        "Lane-width matched booms",
+        "Access control ready"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/hero.jpg"
+      ]
+    },
+    {
+      "slug": "jersey-barrier",
+      "category": "road-traffic-safety",
+      "name": "Jersey Barrier",
+      "short": "Concrete and plastic jersey barriers for separation and work zones.",
+      "description": "Jersey-style barriers in concrete and water-fillable plastic formats for temporary and permanent traffic separation.",
+      "tags": [
+        "Jersey Barrier",
+        "Concrete Barrier"
+      ],
+      "features": [
+        "Concrete & plastic options",
+        "Work-zone separation",
+        "Stack / link designs"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/hero.jpg"
+      ]
+    },
+    {
+      "slug": "roller-barrier",
+      "category": "road-traffic-safety",
+      "name": "Roller Coaster Barrier",
+      "short": "Roller-type impact barriers that absorb and redirect collision energy.",
+      "description": "Roller barrier systems designed to reduce impact severity on curves and high-risk segments by absorbing and redirecting vehicle energy.",
+      "tags": [
+        "Roller Barrier",
+        "Impact Absorption"
+      ],
+      "features": [
+        "Energy absorption",
+        "Curve & ramp use",
+        "High-risk segment focus"
+      ],
+      "images": [
+        "assets/img/hero.jpg",
+        "assets/img/blog-4.jpg"
+      ]
+    },
+    {
+      "slug": "convex-mirror",
+      "category": "road-traffic-safety",
+      "name": "Convex Mirror",
+      "short": "Outdoor convex mirrors for blind corners and driveway exits.",
+      "description": "Weather-resistant convex mirrors that expand driver sight lines at blind junctions, parking exits, and factory aisles.",
+      "tags": [
+        "Convex Mirror",
+        "Blind Spot Mirror"
+      ],
+      "features": [
+        "Wide viewing angle",
+        "Outdoor rated",
+        "Wall / pole mount"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "water-fillable-barrier",
+      "category": "road-traffic-safety",
+      "name": "Water Fillable Barrier",
+      "short": "Portable plastic barriers filled on site for temporary separation.",
+      "description": "Water-fillable barriers that ship empty and gain mass on site — ideal for events, diversions, and short-term lane closures.",
+      "tags": [
+        "Water Barrier",
+        "Portable Barrier"
+      ],
+      "features": [
+        "Ships empty / fills on site",
+        "Interlocking ends",
+        "High visibility colours"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/blog-4.jpg"
+      ]
+    },
+    {
+      "slug": "kerb-marking",
+      "category": "road-traffic-safety",
+      "name": "Kerb Marking",
+      "short": "Reflective kerb paints and markers for edge awareness.",
+      "description": "Kerb marking products that highlight pavement edges for night drivers and campus speed-control zones.",
+      "tags": [
+        "Kerb Paint",
+        "Edge Marking"
+      ],
+      "features": [
+        "Edge visibility",
+        "Night-ready finishes",
+        "Campus & municipal use"
+      ],
+      "images": [
+        "assets/img/blog-4.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "intelligent-transportation-systems",
+      "category": "road-traffic-safety",
+      "name": "Intelligent Transportation Systems",
+      "short": "Signals, sensors, and ITS components for smarter traffic control.",
+      "description": "Intelligent transportation components — from signal accessories to detection aids — that support modern traffic management projects.",
+      "tags": [
+        "ITS",
+        "Traffic Signal",
+        "Smart Traffic"
+      ],
+      "features": [
+        "Signal & sensor support",
+        "Project integration ready",
+        "Municipal & corridor use"
+      ],
+      "images": [
+        "assets/img/hero.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "heavy-duty-barrier",
+      "category": "road-traffic-safety",
+      "name": "Heavy Duty Barrier",
+      "short": "High-mass barriers for high-speed and high-risk corridors.",
+      "description": "Heavy-duty barrier systems specified for higher speed environments and critical asset protection along roads and industrial approaches.",
+      "tags": [
+        "Heavy Duty Barrier",
+        "High Speed"
+      ],
+      "features": [
+        "Higher mass / strength class",
+        "Critical corridor use",
+        "Pairs with crash systems"
+      ],
+      "images": [
+        "assets/img/hero.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "speed-breaker",
+      "category": "road-traffic-safety",
+      "name": "Speed Breaker",
+      "short": "Modular rubber and asphalt speed breakers for speed calming.",
+      "description": "Modular rubber speed breakers and related calming devices for campuses, societies, and industrial roads — with reflective cats-eyes options.",
+      "tags": [
+        "Speed Breaker",
+        "Speed Hump",
+        "Traffic Calming"
+      ],
+      "features": [
+        "Modular rubber sections",
+        "Reflective inserts optional",
+        "Bolt-down install"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/blog-4.jpg"
+      ]
+    },
+    {
+      "slug": "highway-signs",
+      "category": "road-traffic-safety",
+      "name": "Highway Signs",
+      "short": "IRC-style reflective highway and directional signage.",
+      "description": "Retro-reflective highway and directional signs fabricated for Indian road projects, with engineering-grade sheeting options.",
+      "tags": [
+        "Highway Sign",
+        "Directional Sign",
+        "IRC Signage"
+      ],
+      "features": [
+        "Retro-reflective sheeting",
+        "Custom legends",
+        "Pole & gantry ready"
+      ],
+      "images": [
+        "assets/img/blog-4.jpg",
+        "assets/img/hero.jpg"
+      ]
+    },
+    {
+      "slug": "traffic-cones",
+      "category": "road-traffic-safety",
+      "name": "Traffic Cones",
+      "short": "Standard and weighted traffic cones for temporary channelization.",
+      "description": "Traffic cones in multiple heights with reflective sleeves and optional rubber bases for windy or high-speed approaches.",
+      "tags": [
+        "Traffic Cone",
+        "Channelizer Cone"
+      ],
+      "features": [
+        "Multiple heights",
+        "Reflective sleeve",
+        "Weighted base options"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "flexible-median-marker",
+      "category": "road-traffic-safety",
+      "name": "Flexible Median Marker",
+      "short": "Flexible markers that guide traffic along medians and islands.",
+      "description": "Flexible median markers that survive minor impacts while keeping drivers aligned along medians and traffic islands.",
+      "tags": [
+        "Median Marker",
+        "Flexible Marker"
+      ],
+      "features": [
+        "Impact tolerant",
+        "Median & island use",
+        "Reflective options"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/blog-4.jpg"
+      ]
+    },
+    {
+      "slug": "modular-barrier",
+      "category": "road-traffic-safety",
+      "name": "Modular Barrier",
+      "short": "Linkable modular barriers for adaptable work-zone layouts.",
+      "description": "Modular barrier systems that link end-to-end for custom work-zone geometries and easy reconfiguration as the site progresses.",
+      "tags": [
+        "Modular Barrier",
+        "Work Zone"
+      ],
+      "features": [
+        "Linkable modules",
+        "Reconfigurable layout",
+        "High visibility"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "expandable-barrier",
+      "category": "road-traffic-safety",
+      "name": "Expandable Barrier",
+      "short": "Expandable scissor barriers for quick entry closure.",
+      "description": "Expandable / scissor-style barriers for rapid temporary closure of gates, corridors, and event lanes.",
+      "tags": [
+        "Expandable Barrier",
+        "Scissor Barrier"
+      ],
+      "features": [
+        "Rapid expand / collapse",
+        "Gate & corridor use",
+        "Portable storage"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/hero.jpg"
+      ]
+    },
+    {
+      "slug": "traffic-signs",
+      "category": "road-traffic-safety",
+      "name": "Traffic Signs",
+      "short": "Regulatory, warning, and informatory traffic signs.",
+      "description": "Complete range of regulatory, warning, and informatory traffic signs with reflective finishes for municipal and private roads.",
+      "tags": [
+        "Traffic Sign",
+        "Regulatory Sign",
+        "Warning Sign"
+      ],
+      "features": [
+        "Full sign classes",
+        "Reflective finishes",
+        "Custom boards available"
+      ],
+      "images": [
+        "assets/img/blog-4.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "rack-guards",
+      "category": "warehouse-safety",
+      "name": "Rack & Column Guards",
+      "short": "Impact guards that protect rack uprights and building columns.",
+      "description": "Heavy-duty rack and column guards that absorb forklift impact and protect structural uprights in busy warehouses.",
+      "tags": [
+        "Rack Guard",
+        "Column Guard"
+      ],
+      "features": [
+        "Impact absorption",
+        "Bolt-down install",
+        "High visibility colour"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "dock-bumpers",
+      "category": "warehouse-safety",
+      "name": "Dock Bumpers",
+      "short": "Rubber dock bumpers for loading bay edge protection.",
+      "description": "Resilient dock bumpers that cushion truck contact at loading bays and extend dock structure life.",
+      "tags": [
+        "Dock Bumper",
+        "Loading Bay"
+      ],
+      "features": [
+        "High resilience rubber",
+        "Bay edge protection",
+        "Easy replacement"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "fire-extinguishers",
+      "category": "fire-safety",
+      "name": "Fire Extinguishers",
+      "short": "ABC, CO₂ and specialty extinguishers for commercial and industrial sites.",
+      "description": "Portable fire extinguishers selected by risk class, with refill and AMC support available through our service team.",
+      "tags": [
+        "ABC Extinguisher",
+        "CO2 Extinguisher"
+      ],
+      "features": [
+        "Multiple agent types",
+        "Capacity options",
+        "Refill & AMC support"
+      ],
+      "images": [
+        "assets/img/hero.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "hydrant-accessories",
+      "category": "fire-safety",
+      "name": "Hydrant Accessories",
+      "short": "Hose, nozzles, and cabinets for hydrant readiness.",
+      "description": "Hydrant accessories including hoses, nozzles, and cabinets to keep wet/dry riser points operational.",
+      "tags": [
+        "Hydrant Hose",
+        "Fire Cabinet"
+      ],
+      "features": [
+        "Hose & nozzle kits",
+        "Cabinet options",
+        "Inspection friendly"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/hero.jpg"
+      ]
+    },
+    {
+      "slug": "safety-helmets",
+      "category": "industrial-safety",
+      "name": "Safety Helmets",
+      "short": "Industrial safety helmets with ratchet fit and accessory slots.",
+      "description": "IS-compliant industrial helmets for construction and plant use, with accessories for lamps and face shields.",
+      "tags": [
+        "Safety Helmet",
+        "Hard Hat"
+      ],
+      "features": [
+        "Ratchet adjustment",
+        "Accessory slots",
+        "High-visibility colours"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/blog-1.jpg"
+      ]
+    },
+    {
+      "slug": "fall-harness",
+      "category": "industrial-safety",
+      "name": "Fall Protection Harness",
+      "short": "Full-body harnesses and lanyards for work at height.",
+      "description": "Full-body fall-arrest harnesses with compatible lanyards for scaffolding, towers, and elevated maintenance.",
+      "tags": [
+        "Fall Harness",
+        "Lanyard"
+      ],
+      "features": [
+        "Full-body support",
+        "Compatible lanyards",
+        "Inspection points"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "yard-barriers",
+      "category": "logistic-safety",
+      "name": "Yard Traffic Barriers",
+      "short": "Barriers and cones for depot and yard traffic plans.",
+      "description": "Barrier sets tailored for logistics yards to separate trucks, pedestrians, and staging lanes.",
+      "tags": [
+        "Yard Barrier",
+        "Depot Safety"
+      ],
+      "features": [
+        "Yard layout friendly",
+        "High visibility",
+        "Reusable"
+      ],
+      "images": [
+        "assets/img/products.jpg",
+        "assets/img/hero.jpg"
+      ]
+    },
+    {
+      "slug": "site-ppe-kit",
+      "category": "construction-safety",
+      "name": "Site PPE Kit",
+      "short": "Starter PPE packs for construction crews.",
+      "description": "Bundled PPE kits — helmet, vest, gloves, and goggles — for rapid crew onboarding on construction sites.",
+      "tags": [
+        "PPE Kit",
+        "Construction PPE"
+      ],
+      "features": [
+        "Crew starter pack",
+        "Bulk pricing",
+        "Mix-and-match sizes"
+      ],
+      "images": [
+        "assets/img/blog-1.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "home-safety-kit",
+      "category": "household-safety",
+      "name": "Home Safety Kit",
+      "short": "Domestic extinguisher and first-aid combination pack.",
+      "description": "A practical home safety kit combining a domestic extinguisher with a first-aid pouch for flats and villas.",
+      "tags": [
+        "Home Kit",
+        "Domestic Extinguisher"
+      ],
+      "features": [
+        "Home-ready sizing",
+        "First-aid included",
+        "Society bulk packs"
+      ],
+      "images": [
+        "assets/img/blog-2.jpg",
+        "assets/img/products.jpg"
+      ]
+    },
+    {
+      "slug": "life-buoy",
+      "category": "water-safety",
+      "name": "Life Buoy",
+      "short": "Orange life buoys with rope for pools and waterfronts.",
+      "description": "Standard life buoys with throw rope for hotels, clubs, and waterfront campuses.",
+      "tags": [
+        "Life Buoy",
+        "Life Ring"
+      ],
+      "features": [
+        "High visibility orange",
+        "Throw rope",
+        "Cabinet optional"
+      ],
+      "images": [
+        "assets/img/blog-3.jpg",
+        "assets/img/about.jpg"
+      ]
+    },
+    {
+      "slug": "tree-guard",
+      "category": "tree-safety",
+      "name": "Tree Guard",
+      "short": "Protective guards for young trees near roads and campuses.",
+      "description": "Tree guards that shield saplings from vehicles and foot traffic while allowing healthy growth.",
+      "tags": [
+        "Tree Guard",
+        "Sapling Protection"
+      ],
+      "features": [
+        "Vehicle buffer",
+        "Campus & roadside",
+        "Reusable frames"
+      ],
+      "images": [
+        "assets/img/about.jpg",
+        "assets/img/blog-2.jpg"
+      ]
+    },
+    {
+      "slug": "hi-vis-vest",
+      "category": "safety-wearable",
+      "name": "Hi-Vis Vest",
+      "short": "Reflective hi-vis vests for day and night site work.",
+      "description": "Lightweight hi-vis vests with reflective tape for construction, logistics, and traffic marshalling.",
+      "tags": [
+        "Hi-Vis Vest",
+        "Reflective Vest"
+      ],
+      "features": [
+        "Day/night visibility",
+        "Lightweight wear",
+        "Bulk sizes"
+      ],
+      "images": [
+        "assets/img/blog-1.jpg",
+        "assets/img/products.jpg"
+      ]
+    }
+  ],
+  "services": [
+    {
+      "id": "consultancy",
+      "name": "Consultancy",
+      "icon": "consult",
+      "summary": "Site audits and compliance planning from certified safety engineers.",
+      "points": [
+        "On-site risk and hazard assessment",
+        "Regulatory compliance mapping",
+        "Custom safety system design",
+        "Vendor and product specification support"
+      ]
+    },
+    {
+      "id": "maintenance",
+      "name": "Maintenance",
+      "icon": "maintenance",
+      "summary": "Scheduled servicing and emergency response for installed systems.",
+      "points": [
+        "Annual maintenance contracts",
+        "Fire system refilling and testing",
+        "Equipment lifecycle tracking",
+        "24/7 breakdown response"
+      ]
+    },
+    {
+      "id": "resource-management",
+      "name": "Resource Management",
+      "icon": "resource",
+      "summary": "Inventory, training and deployment support across large sites.",
+      "points": [
+        "Bulk inventory management",
+        "On-site staff safety training",
+        "Multi-location rollout logistics",
+        "Asset tagging and reporting"
+      ]
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Ramesh Iyer",
+      "role": "Facilities Head, Peenya Industrial Estate",
+      "quote": "Bluelotus fitted out three of our plants with fire and PPE systems on a single rollout schedule without a single missed deadline."
+    },
+    {
+      "name": "Anita Rao",
+      "role": "Site Safety Officer, Metro Infra Project",
+      "quote": "Their consultancy team caught gaps our own audit missed. The barricading and signage plan they built is now our site standard."
+    },
+    {
+      "name": "Suresh Kumar",
+      "role": "Warehouse Manager, Whitefield Logistics Park",
+      "quote": "Maintenance response is genuinely 24/7. We had a hydrant fault at 2am and had a technician on site before shift change."
+    }
+  ],
+  "blog": [
+    {
+      "slug": "how-to-choose-industrial-safety-wearables-india",
+      "title": "Why Safety Wearables Are Essential in an Industrial Workplace",
+      "date": "2026-02-28",
+      "excerpt": "How connected PPE and hi-vis wearables are changing incident response times on Indian industrial sites.",
+      "image": "assets/img/blog-1.jpg"
+    },
+    {
+      "slug": "household-safety-guide-for-families-and-seniors",
+      "title": "Household Safety for Families & Older Adults: Complete Guide",
+      "date": "2026-02-23",
+      "excerpt": "A practical checklist for fire, fall and gas safety in residential settings.",
+      "image": "assets/img/blog-2.jpg"
+    },
+    {
+      "slug": "complete-industrial-safety-solutions-bulk-supply-installation",
+      "title": "Complete Industrial Safety Solutions with Bulk Supply & Installation",
+      "date": "2026-02-17",
+      "excerpt": "What to expect from a single-vendor rollout across multi-site industrial operations.",
+      "image": "assets/img/blog-3.jpg"
+    },
+    {
+      "slug": "road-safety-solutions-bangalore-traffic-safety-equipment",
+      "title": "Complete Road Safety Solutions in Bangalore: Advanced Traffic Equipment",
+      "date": "2026-02-07",
+      "excerpt": "A look at the barricading and signage standards shaping Bangalore's road safety projects.",
+      "image": "assets/img/blog-4.jpg"
+    }
+  ],
+  "clients": [
+    "Metro Infra",
+    "Peenya Industrial Estate",
+    "Whitefield Logistics",
+    "Karnataka PWD",
+    "Bosch India",
+    "L&T Construction",
+    "Toyota Kirloskar",
+    "BEML",
+    "ABB India",
+    "Titan Engineering"
+  ]
+}

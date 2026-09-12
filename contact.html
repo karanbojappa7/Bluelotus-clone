@@ -42,7 +42,7 @@
       <div class="tile tile--static" data-reveal>
         <span class="eyebrow">Send a Message</span>
         <h2 class="section-title mb-4">Request a quote or audit</h2>
-        <form data-validate novalidate>
+        <form id="quote-form" data-validate novalidate>
           <div class="form-grid">
             <div>
               <label class="form-label" for="fullName">Full Name</label>
@@ -84,10 +84,8 @@
   </div>
 </section>
 
-<section class="section--tight section--dim">
-  <div class="container" data-reveal>
-    <iframe class="map-frame" data-map-embed title="Bluelotus Infrasafety location map" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-  </div>
+<section class="map-section" aria-label="Location map">
+  <iframe class="map-frame" data-map-embed title="Bluelotus Infrasafety location map" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </section>
 </main>
 
@@ -95,7 +93,7 @@
 <div data-site="fabs"></div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="config/site.config.js"></script>
+<script src="config/site.config.php"></script>
 <script src="assets/js/shell.js"></script>
 <script src="assets/js/render.js"></script>
 <script src="assets/js/app.js"></script>

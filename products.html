@@ -33,21 +33,34 @@
 
 <section class="section">
   <div class="container">
-    <div class="grid grid-3" data-render="categories"></div>
+    <div class="catalog-toolbar">
+      <p class="section-sub" id="productCount">Loading catalog…</p>
+      <div class="catalog-filters" id="productFilters"></div>
+    </div>
+    <div class="product-grid" id="productCatalog"></div>
+    <div id="productPagination" class="pagination-wrap"></div>
   </div>
 </section>
 
-<section class="section section--dim">
-  <div class="container">
-    <div class="grid grid-2 split">
-      <div data-reveal>
-        <span class="eyebrow">Bulk & Project Supply</span>
-        <h2 class="section-title">Need equipment for a full site rollout?</h2>
-        <p class="section-sub mt-3">We handle bulk procurement, staged delivery, and on-site installation for multi-building campuses, industrial parks, and government contracts — with a single point of contact for the whole project.</p>
-        <a href="contact.html" class="btn btn-outline mt-4">Request Bulk Quote <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
-      </div>
-      <div data-reveal>
-        <img src="assets/img/products.jpg" alt="Bulk safety equipment ready for site delivery" class="media-frame media-frame--mid" width="900" height="360" loading="lazy">
+<section class="section section--flush">
+  <div class="bulk-quote" data-reveal>
+    <div class="bulk-quote-media">
+      <img src="assets/img/products.jpg" alt="Bulk safety equipment staged for site delivery" width="1100" height="720" loading="lazy">
+      <div class="bulk-quote-media-shade"></div>
+      <span class="bulk-quote-mark">Project Supply</span>
+    </div>
+    <div class="bulk-quote-copy">
+      <span class="eyebrow eyebrow--light">Bulk & Project Supply</span>
+      <h2 class="section-title">Need equipment for a full site rollout?</h2>
+      <p class="bulk-quote-lead">Bulk procurement, staged delivery, and on-site installation for campuses, industrial parks, and government contracts — one accountable partner for the whole project.</p>
+      <ul class="bulk-quote-points">
+        <li>Wholesale pricing for multi-site and govt. orders</li>
+        <li>Staged delivery matched to your install calendar</li>
+        <li>Single point of contact from audit to handover</li>
+      </ul>
+      <div class="bulk-quote-actions">
+        <a href="contact.html" class="btn btn-primary">Request Bulk Quote <svg width="16" height="16" aria-hidden="true"><use href="assets/img/sprite.svg#icon-arrow"></use></svg></a>
+        <a href="contact.html#quote-form" class="btn btn-ghost">Talk to Sales</a>
       </div>
     </div>
   </div>
@@ -70,9 +83,10 @@
 <div data-site="fabs"></div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="config/site.config.js"></script>
+<script src="config/site.config.php"></script>
 <script src="assets/js/shell.js"></script>
 <script src="assets/js/render.js"></script>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/products.js"></script>
 </body>
 </html>
