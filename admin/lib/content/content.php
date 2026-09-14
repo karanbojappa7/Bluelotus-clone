@@ -329,6 +329,7 @@ function get_category(string $id): ?array
 
 function all_products_admin(?string $category = null, ?string $search = null): array
 {
+    migrate();
     $where = [];
     $args = [];
 
@@ -386,6 +387,7 @@ function all_products(?string $category = null): array
 
 function get_product_by_slug(string $slug): ?array
 {
+    migrate();
     $stmt = db()->prepare('SELECT * FROM products WHERE slug = ?');
     $stmt->execute([$slug]);
     $row = $stmt->fetch();
@@ -394,6 +396,7 @@ function get_product_by_slug(string $slug): ?array
 
 function get_product_row(int $id): ?array
 {
+    migrate();
     $stmt = db()->prepare('SELECT * FROM products WHERE id = ?');
     $stmt->execute([$id]);
     $row = $stmt->fetch();
@@ -518,6 +521,10 @@ function export_site_config_js(): void
     $js = "window.SITE_CONFIG = {$json};\n";
     $target = CMS_ROOT . '/config/site.config.js';
     file_put_contents($target, $js);
+    try {
+        export_sitemaps();
+    } catch (Throwable $e) {
+    }
 }
 
 function counts(): array
@@ -636,4 +643,113 @@ function save_enquiry(array $data): int
         $data['ip'],
     ]);
     return (int) db()->lastInsertId();
+}
+
+function article_auto_links(?string $excludePostSlug = null): array
+{
+    $links = [];
+    foreach (all_categories() as $cat) {
+        $name = trim((string) ($cat['name'] ?? ''));
+        if ($name !== '' && (str_contains($name, ' ') || mb_strlen($name) >= 10)) {
+            $links[] = ['label' => $name, 'href' => category_path((string) $cat['id'])];
+        }
+    }
+    foreach (all_products() as $product) {
+        $name = trim((string) ($product['name'] ?? ''));
+        if (mb_strlen($name) >= 8) {
+            $links[] = ['label' => $name, 'href' => product_path((string) $product['slug'])];
+        }
+    }
+    foreach (setting_list('blog') as $item) {
+        $slug = (string) ($item['slug'] ?? '');
+        if ($slug === '' || $slug === $excludePostSlug) {
+            continue;
+        }
+        $title = trim((string) ($item['title'] ?? ''));
+        if (mb_strlen($title) >= 12) {
+            $links[] = ['label' => $title, 'href' => post_path($slug)];
+        }
+    }
+    usort($links, static fn (array $a, array $b): int => mb_strlen($b['label']) <=> mb_strlen($a['label']));
+    return $links;
+}
+
+function related_blog_posts(array $post, array $all, int $limit = 3): array
+{
+    $current = (string) ($post['slug'] ?? '');
+    $bySlug = [];
+    foreach ($all as $candidate) {
+        $slug = (string) ($candidate['slug'] ?? '');
+        if ($slug === '' || $slug === $current) {
+            continue;
+        }
+        $bySlug[$slug] = $candidate;
+    }
+
+    $out = [];
+    foreach (string_list($post['relatedPosts'] ?? []) as $slug) {
+        if (isset($bySlug[$slug])) {
+            $out[] = $bySlug[$slug];
+            unset($bySlug[$slug]);
+        }
+        if (count($out) >= $limit) {
+            return $out;
+        }
+    }
+
+    $hay = mb_strtolower(
+        (string) ($post['title'] ?? '') . ' ' . (string) ($post['excerpt'] ?? '') . ' ' . (string) ($post['body'] ?? '')
+    );
+    $scored = [];
+    foreach ($bySlug as $candidate) {
+        $words = preg_split(
+            '/[^\p{L}\p{N}]+/u',
+            mb_strtolower((string) ($candidate['title'] ?? '') . ' ' . (string) ($candidate['excerpt'] ?? ''))
+        ) ?: [];
+        $score = 0;
+        foreach ($words as $word) {
+            if (mb_strlen($word) < 4) {
+                continue;
+            }
+            if (mb_strpos($hay, $word) !== false) {
+                $score++;
+            }
+        }
+        $scored[] = [$score, $candidate];
+    }
+    usort($scored, static fn (array $a, array $b): int => $b[0] <=> $a[0]);
+    foreach ($scored as $row) {
+        $out[] = $row[1];
+        if (count($out) >= $limit) {
+            break;
+        }
+    }
+    return $out;
+}
+
+function related_blog_products(array $post): array
+{
+    $out = [];
+    foreach (string_list($post['relatedProducts'] ?? []) as $slug) {
+        $product = get_product_by_slug($slug);
+        if ($product) {
+            $out[] = $product;
+        }
+        if (count($out) >= 4) {
+            break;
+        }
+    }
+    return $out;
+}
+
+function related_blog_categories(array $post): array
+{
+    $out = [];
+    foreach (string_list($post['relatedCategories'] ?? []) as $id) {
+        $cat = get_category($id);
+        if ($cat) {
+            $out[] = $cat;
+        }
+    }
+    return $out;
 }

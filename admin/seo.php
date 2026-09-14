@@ -100,7 +100,16 @@ admin_header('SEO', 'seo');
 
   <div class="form-actions">
     <button class="btn" type="submit">Save SEO</button>
-    <a class="btn btn-secondary" href="<?= e(url_for('sitemap.xml')) ?>" target="_blank" rel="noopener">View Sitemap &#8599;</a>
+    <a class="btn btn-secondary" href="<?= e(url_for('robots.txt')) ?>" target="_blank" rel="noopener">robots.txt &#8599;</a>
+    <a class="btn btn-secondary" href="<?= e(url_for('sitemap.xml')) ?>" target="_blank" rel="noopener">Sitemap index &#8599;</a>
   </div>
 </form>
+<p class="hint" style="margin-top:1.25rem">
+  Saving any CMS content rebuilds these files automatically:
+  <a href="<?= e(url_for('sitemap-pages.xml')) ?>" target="_blank" rel="noopener">pages</a>,
+  <a href="<?= e(url_for('sitemap-categories.xml')) ?>" target="_blank" rel="noopener">categories</a>,
+  <a href="<?= e(url_for('sitemap-products.xml')) ?>" target="_blank" rel="noopener">products</a>,
+  <a href="<?= e(url_for('sitemap-posts.xml')) ?>" target="_blank" rel="noopener">posts</a>.
+  Open Graph and canonical URLs always use the site domain above.
+</p>
 <?php admin_footer(); ?>

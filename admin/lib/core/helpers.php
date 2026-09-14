@@ -129,6 +129,37 @@ function post(string $key, string $default = ''): string
     return isset($_POST[$key]) ? trim((string) $_POST[$key]) : $default;
 }
 
+function post_slug_list(string $key): array
+{
+    $raw = $_POST[$key] ?? [];
+    if (!is_array($raw)) {
+        return [];
+    }
+    $out = [];
+    foreach ($raw as $value) {
+        $value = trim((string) $value);
+        if ($value !== '' && preg_match('/^[a-z0-9\-]+$/', $value) === 1) {
+            $out[] = $value;
+        }
+    }
+    return array_values(array_unique($out));
+}
+
+function string_list($value): array
+{
+    if (!is_array($value)) {
+        return [];
+    }
+    $out = [];
+    foreach ($value as $item) {
+        $item = trim((string) $item);
+        if ($item !== '') {
+            $out[] = $item;
+        }
+    }
+    return array_values(array_unique($out));
+}
+
 function csrf_token(): string
 {
     if (empty($_SESSION['csrf'])) {

@@ -377,11 +377,17 @@ textarea { min-height: 110px; resize: vertical; }
 }
 .upload-thumb { margin: 0; display: grid; gap: 0.2rem; justify-items: center; }
 .upload-thumb img {
-  width: 84px;
-  height: 84px;
+  width: 160px;
+  height: 100px;
   object-fit: cover;
   border: 1px solid var(--line);
   border-radius: 4px;
+  background: #f7f9fb;
+  display: block;
+}
+.upload-preview--wide .upload-thumb img {
+  width: min(100%, 420px);
+  height: 210px;
 }
 .upload-thumb figcaption { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
 .upload-thumb.is-oversize img { border-color: var(--danger); outline: 2px solid #f7d7d2; }
@@ -415,6 +421,54 @@ textarea { min-height: 110px; resize: vertical; }
 }
 .row-order button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 .row-order button:disabled { opacity: 0.3; cursor: default; }
+
+.link-insert {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+.link-insert .btn { white-space: nowrap; }
+.link-panel {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fbfcfd;
+}
+.link-panel legend {
+  font-weight: 700;
+  padding: 0 0.35rem;
+}
+.link-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.65rem;
+}
+.link-panel-grid strong {
+  display: block;
+  font-size: 0.82rem;
+  margin-bottom: 0.4rem;
+}
+.link-checks {
+  display: grid;
+  gap: 0.2rem;
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.45rem 0.6rem;
+  background: #fff;
+}
+.link-checks label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  font-weight: 400;
+  font-size: 0.86rem;
+}
+.link-checks input { width: auto; margin-top: 0.2rem; }
 
 .seo-panel {
   margin-top: 1.75rem;
@@ -523,7 +577,7 @@ tr.is-unread strong { font-weight: 700; }
   .admin-nav.is-open nav { display: grid; }
   .admin-user { margin-top: 0; width: 100%; }
   .nav-burger { display: inline-block; }
-  .cards, .form-grid { grid-template-columns: 1fr; }
+  .cards, .form-grid, .link-panel-grid, .link-insert { grid-template-columns: 1fr; }
   .admin-main { padding: 1rem; }
   .toolbar { flex-direction: column; align-items: stretch; }
   .toolbar-search input[type="search"],

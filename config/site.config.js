@@ -64,11 +64,6 @@ window.SITE_CONFIG = {
             "value": "24",
             "suffix": "/7",
             "label": "Emergency Support"
-        },
-        {
-            "value": "13",
-            "suffix": "+",
-            "label": ""
         }
     ],
     "leadership": [
@@ -485,9 +480,7 @@ window.SITE_CONFIG = {
                 "Suitable for temporary & semi-permanent use"
             ],
             "images": [
-                "assets/img/products.jpg",
-                "assets/img/hero.jpg",
-                "assets/img/blog-4.jpg"
+                "assets/img/uploads/f5b1cf4501206a47.jpg"
             ],
             "metaTitle": "",
             "metaDescription": "",
@@ -503,7 +496,7 @@ window.SITE_CONFIG = {
             "availability": "",
             "price": "",
             "currency": "",
-            "updatedAt": ""
+            "updatedAt": "2026-09-12T11:18:48+00:00"
         },
         {
             "slug": "temporary-fencing",
@@ -523,8 +516,7 @@ window.SITE_CONFIG = {
                 "Compatible with mesh & solid options"
             ],
             "images": [
-                "assets/img/products.jpg",
-                "assets/img/about.jpg"
+                "assets/img/products.jpg"
             ],
             "metaTitle": "",
             "metaDescription": "",
@@ -540,7 +532,7 @@ window.SITE_CONFIG = {
             "availability": "",
             "price": "",
             "currency": "",
-            "updatedAt": ""
+            "updatedAt": "2026-09-12T11:19:52+00:00"
         },
         {
             "slug": "spring-post",
@@ -1945,11 +1937,25 @@ window.SITE_CONFIG = {
     ],
     "blog": [
         {
-            "slug": "how-to-choose-industrial-safety-wearables-india",
             "title": "Why Safety Wearables Are Essential in an Industrial Workplace",
+            "slug": "how-to-choose-industrial-safety-wearables-india",
             "date": "2026-02-28",
             "excerpt": "How connected PPE and hi-vis wearables are changing incident response times on Indian industrial sites.",
-            "image": "assets/img/blog-1.jpg"
+            "body": "hvjhgjhsdjhhn",
+            "image": "assets/img/uploads/2ad1c9ecc937b830.jpg",
+            "metaTitle": "",
+            "metaDescription": "",
+            "metaKeywords": "",
+            "canonical": "",
+            "ogImage": "",
+            "noindex": false,
+            "author": "",
+            "schemaType": "",
+            "relatedPosts": [],
+            "relatedProducts": [],
+            "relatedCategories": [
+                "road-traffic-safety"
+            ]
         },
         {
             "slug": "household-safety-guide-for-families-and-seniors",
@@ -2017,21 +2023,9 @@ window.SITE_CONFIG = {
     ],
     "hero": [
         {
-            "eyebrow": "Certified Safety Solutions · Berhampur",
-            "title": "Protection engineered for every worksite, every day.",
-            "highlight": "every worksite,",
-            "subtitle": "We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.",
-            "image": "assets/img/hero.jpg",
-            "navLabel": "Protect",
-            "buttonLabel": "Request a Site Audit",
-            "buttonUrl": "contact",
-            "button2Label": "Browse Product Range",
-            "button2Url": "products"
-        },
-        {
             "eyebrow": "Fire Safety",
-            "title": "Contain fire before it reaches people.",
-            "highlight": "before",
+            "title": "safety",
+            "highlight": "",
             "subtitle": "Extinguishers, hydrants, and detection specified for Indian sites — installed and maintained by our own crews.",
             "image": "assets/img/products.jpg",
             "navLabel": "Fire",
@@ -2041,10 +2035,22 @@ window.SITE_CONFIG = {
             "button2Url": ""
         },
         {
+            "eyebrow": "",
+            "title": "Fire Safety",
+            "highlight": "",
+            "subtitle": "",
+            "image": "assets/img/uploads/13970946f7efacce.png",
+            "navLabel": "Protect",
+            "buttonLabel": "Request a Site Audit",
+            "buttonUrl": "contact",
+            "button2Label": "Browse Product Range",
+            "button2Url": "products"
+        },
+        {
             "eyebrow": "Road & Traffic Safety",
             "title": "Keep every lane and work zone under control.",
-            "highlight": "work zone",
-            "subtitle": "Barricades, cones, signage, and crash protection built for highways, yards, and temporary site approaches.",
+            "highlight": "",
+            "subtitle": "",
             "image": "assets/img/about.jpg",
             "navLabel": "Road",
             "buttonLabel": "Learn More",

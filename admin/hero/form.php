@@ -91,7 +91,7 @@ admin_header($existing ? 'Edit Banner Slide' : 'Add Banner Slide', 'hero', ['Hom
       <textarea name="subtitle" rows="3"><?= e($item['subtitle']) ?></textarea>
     </label>
     <label class="full">Background image
-      <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
+      <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" data-preview="wide">
       <span class="hint">Wide landscape photo works best. Leave empty to keep the current image.</span>
     </label>
     <?php if ($item['image'] !== ''): ?>

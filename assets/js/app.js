@@ -266,7 +266,7 @@
   }
 
   function initCounters() {
-    const $nodes = $("[data-count]");
+    const $nodes = $(".value[data-count]");
     if (!$nodes.length) return;
     const observer = new IntersectionObserver(
       function (entries) {

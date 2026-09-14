@@ -34,6 +34,12 @@ function db_ready(): bool
 
 function migrate(): void
 {
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
     $pdo = db();
     $statements = [
         'CREATE TABLE IF NOT EXISTS users (
@@ -135,23 +141,33 @@ function migrate(): void
     migrate_leadership_from_settings();
 }
 
-function ensure_column(string $table, string $column, string $definition): void
+function table_columns(string $table): array
 {
     static $cache = [];
-    $key = $table . '.' . $column;
-    if (isset($cache[$key])) {
+    if (!preg_match('/^[A-Za-z0-9_]+$/', $table)) {
+        return [];
+    }
+    if (!isset($cache[$table])) {
+        $rows = db()->query('SHOW COLUMNS FROM `' . $table . '`')->fetchAll();
+        $cache[$table] = array_column($rows, 'Field');
+    }
+    return $cache[$table];
+}
+
+function ensure_column(string $table, string $column, string $definition): void
+{
+    static $known = [];
+    if (!preg_match('/^[A-Za-z0-9_]+$/', $table) || !preg_match('/^[A-Za-z0-9_]+$/', $column)) {
         return;
     }
-    $cache[$key] = true;
-    try {
-        $stmt = db()->prepare('SHOW COLUMNS FROM `' . $table . '` LIKE ?');
-        $stmt->execute([$column]);
-        if ($stmt->fetch()) {
-            return;
-        }
-        db()->exec('ALTER TABLE `' . $table . '` ADD COLUMN `' . $column . '` ' . $definition);
-    } catch (Throwable $e) {
+    $key = $table . '.' . $column;
+    if (isset($known[$key])) {
+        return;
     }
+    if (!in_array($column, table_columns($table), true)) {
+        db()->exec('ALTER TABLE `' . $table . '` ADD COLUMN `' . $column . '` ' . $definition);
+    }
+    $known[$key] = true;
 }
 
 function migrate_leadership_from_settings(): void

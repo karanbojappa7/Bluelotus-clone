@@ -1,6 +1,9 @@
 admin/config.local.php
 assets/img/uploads/*
 !assets/img/uploads/.htaccess
+/sitemap.xml
+/sitemap-*.xml
+/robots.txt
 *.log
 .DS_Store
 Thumbs.db

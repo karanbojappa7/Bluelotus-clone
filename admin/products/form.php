@@ -4,6 +4,7 @@ require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../lib/ui/layout.php';
 require_once __DIR__ . '/../lib/seo/seo_fields.php';
 require_login();
+migrate();
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $row = $id ? get_product_row($id) : null;

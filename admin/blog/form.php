@@ -27,7 +27,21 @@ $item = [
     'noindex' => !empty($existing['noindex']),
     'author' => $existing['author'] ?? '',
     'schemaType' => $existing['schemaType'] ?? '',
+    'relatedPosts' => string_list($existing['relatedPosts'] ?? []),
+    'relatedProducts' => string_list($existing['relatedProducts'] ?? []),
+    'relatedCategories' => string_list($existing['relatedCategories'] ?? []),
 ];
+$otherPosts = [];
+foreach (setting_list('blog') as $i => $other) {
+    if ($existing && $i === $index) {
+        continue;
+    }
+    if (($other['slug'] ?? '') !== '') {
+        $otherPosts[] = $other;
+    }
+}
+$linkProducts = all_products();
+$linkCategories = all_categories();
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -48,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'noindex' => isset($_POST['noindex']),
         'author' => post('author'),
         'schemaType' => post('schemaType'),
+        'relatedPosts' => post_slug_list('relatedPosts'),
+        'relatedProducts' => post_slug_list('relatedProducts'),
+        'relatedCategories' => post_slug_list('relatedCategories'),
     ];
 
     try {
@@ -118,10 +135,88 @@ admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 
       <?= field_msg($errors, 'excerpt') ?>
     </label>
     <label class="<?= field_class($errors, 'body', true) ?>">Article body
-      <textarea name="body" rows="14"><?= e($item['body']) ?></textarea>
-      <span class="hint">One paragraph per block, separated by a blank line. A line ending in a colon becomes a subheading.</span>
+      <textarea name="body" id="blogBody" rows="14"><?= e($item['body']) ?></textarea>
+      <span class="hint">One paragraph per block, separated by a blank line. A line ending in a colon becomes a subheading. Link with <code>[visible text](/products/fire-safety)</code> or use Insert below.</span>
       <?= field_msg($errors, 'body') ?>
     </label>
+    <div class="full link-insert">
+      <label>Insert internal link
+        <select id="blogLinkTarget">
+          <option value="">Choose a page, category, product, or post</option>
+          <optgroup label="Pages">
+            <option value="page:products" data-label="products">All products</option>
+            <option value="page:about" data-label="About us">About us</option>
+            <option value="page:contact" data-label="contact">Contact</option>
+            <option value="page:faq" data-label="FAQs">FAQs</option>
+            <option value="page:blog" data-label="blog">Blog</option>
+          </optgroup>
+          <?php if ($linkCategories): ?>
+            <optgroup label="Categories">
+              <?php foreach ($linkCategories as $cat): ?>
+                <option value="category:<?= e($cat['id']) ?>" data-label="<?= e($cat['name']) ?>"><?= e($cat['name']) ?></option>
+              <?php endforeach; ?>
+            </optgroup>
+          <?php endif; ?>
+          <?php if ($linkProducts): ?>
+            <optgroup label="Products">
+              <?php foreach ($linkProducts as $product): ?>
+                <option value="product:<?= e($product['slug']) ?>" data-label="<?= e($product['name']) ?>"><?= e($product['name']) ?></option>
+              <?php endforeach; ?>
+            </optgroup>
+          <?php endif; ?>
+          <?php if ($otherPosts): ?>
+            <optgroup label="Other posts">
+              <?php foreach ($otherPosts as $other): ?>
+                <option value="blog:<?= e($other['slug']) ?>" data-label="<?= e($other['title'] ?? '') ?>"><?= e($other['title'] ?? '') ?></option>
+              <?php endforeach; ?>
+            </optgroup>
+          <?php endif; ?>
+        </select>
+      </label>
+      <button type="button" class="btn btn-secondary" data-insert-blog-link>Insert at cursor</button>
+    </div>
+    <fieldset class="full link-panel">
+      <legend>Related links</legend>
+      <p class="hint">Shown beside the article. First mentions of product, category, and post names in the body are also linked automatically.</p>
+      <div class="link-panel-grid">
+        <div>
+          <strong>Related posts</strong>
+          <div class="link-checks">
+            <?php if (!$otherPosts): ?>
+              <span class="muted">Add another post first.</span>
+            <?php endif; ?>
+            <?php foreach ($otherPosts as $other): ?>
+              <label>
+                <input type="checkbox" name="relatedPosts[]" value="<?= e($other['slug']) ?>" <?= in_array($other['slug'], $item['relatedPosts'], true) ? 'checked' : '' ?>>
+                <?= e($other['title'] ?? $other['slug']) ?>
+              </label>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <div>
+          <strong>Related categories</strong>
+          <div class="link-checks">
+            <?php foreach ($linkCategories as $cat): ?>
+              <label>
+                <input type="checkbox" name="relatedCategories[]" value="<?= e($cat['id']) ?>" <?= in_array($cat['id'], $item['relatedCategories'], true) ? 'checked' : '' ?>>
+                <?= e($cat['name']) ?>
+              </label>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <div>
+          <strong>Related products</strong>
+          <div class="link-checks">
+            <?php foreach ($linkProducts as $product): ?>
+              <label>
+                <input type="checkbox" name="relatedProducts[]" value="<?= e($product['slug']) ?>" <?= in_array($product['slug'], $item['relatedProducts'], true) ? 'checked' : '' ?>>
+                <?= e($product['name']) ?>
+              </label>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+    </fieldset>
     <label class="<?= field_class($errors, 'image', true) ?>">Cover image
       <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
       <span class="hint">Leave empty to keep the current photo. Used as the social share image.</span>

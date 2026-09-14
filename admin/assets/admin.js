@@ -122,33 +122,47 @@
 
   function initImagePreview() {
     document.querySelectorAll("form.form-panel input[type='file']").forEach(function (input) {
+      if (!/image\//.test(input.getAttribute("accept") || "image/")) return;
+
       const box = document.createElement("div");
       box.className = "upload-preview";
+      if (input.dataset.preview === "wide") {
+        box.classList.add("upload-preview--wide");
+      }
       input.parentElement.appendChild(box);
+
+      const label = input.closest("label");
+      const saved =
+        (label && label.nextElementSibling && label.nextElementSibling.classList.contains("file-preview")
+          ? label.nextElementSibling
+          : label && label.querySelector(".file-preview")) || null;
 
       input.addEventListener("change", function () {
         box.innerHTML = "";
         const files = Array.prototype.slice.call(input.files || []);
+        if (saved) saved.hidden = files.length > 0;
+
         const tooBig = files.filter(function (f) {
           return f.size > 5 * 1024 * 1024;
         });
 
         files.forEach(function (file) {
-          if (!file.type.startsWith("image/")) return;
+          if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp|gif)$/i.test(file.name)) return;
           const figure = document.createElement("figure");
           figure.className = "upload-thumb";
           const img = document.createElement("img");
-          img.alt = "";
-          img.src = URL.createObjectURL(file);
-          img.addEventListener("load", function () {
-            URL.revokeObjectURL(img.src);
-          });
+          img.alt = file.name || "Selected image";
           const cap = document.createElement("figcaption");
-          cap.textContent = (file.size / 1024 / 1024).toFixed(1) + " MB";
+          cap.textContent = file.name + " · " + (file.size / 1024 / 1024).toFixed(1) + " MB";
           if (file.size > 5 * 1024 * 1024) figure.classList.add("is-oversize");
           figure.appendChild(img);
           figure.appendChild(cap);
           box.appendChild(figure);
+          const reader = new FileReader();
+          reader.onload = function () {
+            img.src = String(reader.result || "");
+          };
+          reader.readAsDataURL(file);
         });
 
         if (tooBig.length) {
@@ -156,7 +170,7 @@
           warn.className = "upload-warning";
           warn.textContent =
             tooBig.length === 1
-              ? "One image is over the 5 MB limit and will be rejected."
+              ? "This image is over the 5 MB limit and will be rejected."
               : tooBig.length + " images are over the 5 MB limit and will be rejected.";
           box.appendChild(warn);
         }
@@ -278,6 +292,30 @@
     });
   }
 
+  function initBlogLinkInsert() {
+    const button = document.querySelector("[data-insert-blog-link]");
+    const select = document.getElementById("blogLinkTarget");
+    const textarea = document.getElementById("blogBody");
+    if (!button || !select || !textarea) return;
+
+    button.addEventListener("click", function () {
+      const option = select.options[select.selectedIndex];
+      const value = option ? option.value : "";
+      if (!value) {
+        select.focus();
+        return;
+      }
+      const selected = textarea.value.slice(textarea.selectionStart, textarea.selectionEnd);
+      const label = selected.trim() !== "" ? selected : (option.getAttribute("data-label") || option.textContent || "read more");
+      const snippet = "[" + label + "](" + value + ")";
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      textarea.setRangeText(snippet, start, end, "end");
+      textarea.focus();
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  }
+
   ready(function () {
     initConfirms();
     initAutoSubmit();
@@ -289,5 +327,6 @@
     initCounters();
     initSerpPreview();
     initTableFilter();
+    initBlogLinkInsert();
   });
 })();

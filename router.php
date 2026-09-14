@@ -25,6 +25,21 @@ if (preg_match('#config\\.local\\.php$#i', $uri) === 1) {
     return true;
 }
 
+if ($uri === '/robots.txt') {
+    dispatch('/robots.php');
+    return true;
+}
+if ($uri === '/sitemap.xml') {
+    $_GET['map'] = 'index';
+    dispatch('/sitemap.php');
+    return true;
+}
+if (preg_match('#^/sitemap-(pages|products|categories|posts)\\.xml$#', $uri, $m) === 1) {
+    $_GET['map'] = $m[1];
+    dispatch('/sitemap.php');
+    return true;
+}
+
 $file = __DIR__ . str_replace('/', DIRECTORY_SEPARATOR, $uri);
 if ($uri !== '/' && is_file($file)) {
     return false;
@@ -48,15 +63,6 @@ if ($uri === '/' || $uri === '') {
 
 if (preg_match('#^/services(\.(html|php))?/?$#', $uri) === 1) {
     header('Location: /#services', true, 301);
-    return true;
-}
-
-if ($uri === '/sitemap.xml') {
-    dispatch('/sitemap.php');
-    return true;
-}
-if ($uri === '/robots.txt') {
-    dispatch('/robots.php');
     return true;
 }
 

@@ -48,7 +48,7 @@ function cms_security_headers(bool $admin = false): void
     if ($admin) {
         header('Cache-Control: no-store, no-cache, must-revalidate, private');
         header(
-            "Content-Security-Policy: default-src 'self'; img-src 'self' data:; "
+            "Content-Security-Policy: default-src 'self'; img-src 'self' data: blob:; "
             . "style-src 'self' 'unsafe-inline'; script-src 'self'; "
             . "form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
         );

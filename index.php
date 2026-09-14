@@ -32,14 +32,14 @@ $heroSlides = hero_slides();
           $btn2 = trim((string) ($slide['button2Label'] ?? ''));
           ?>
           <?php if ($btn1 !== '' || $btn2 !== ''): ?>
-          <div class="hero-actions">
+          <!-- <div class="hero-actions">
             <?php if ($btn1 !== ''): ?>
               <a href="<?= e(hero_link((string) ($slide['buttonUrl'] ?? ''), 'contact')) ?>" class="btn btn-primary"><?= e($btn1) ?> <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-arrow')) ?>"></use></svg></a>
             <?php endif; ?>
             <?php if ($btn2 !== ''): ?>
               <a href="<?= e(hero_link((string) ($slide['button2Url'] ?? ''), 'products')) ?>" class="btn btn-ghost"><?= e($btn2) ?></a>
             <?php endif; ?>
-          </div>
+          </div> -->
           <?php endif; ?>
         </div>
       </article>
@@ -62,11 +62,29 @@ $heroSlides = hero_slides();
   </div>
 </section>
 
+<?php
+$homeStats = setting_list('stats');
+$statCount = count($homeStats);
+$statCols = min(max($statCount, 1), 4);
+?>
+<?php if ($statCount): ?>
 <section class="hero-stats hero-stats--after">
   <div class="container">
-    <div class="stats-grid" data-render="stats"></div>
+    <div class="stats-grid" data-stat-count="<?= (int) $statCount ?>" style="--stat-count: <?= (int) $statCols ?>">
+      <?php foreach ($homeStats as $stat): ?>
+        <?php
+        $statValue = (string) ($stat['value'] ?? '');
+        $statSuffix = (string) ($stat['suffix'] ?? '');
+        ?>
+        <div class="stat-plate">
+          <div class="value" data-count="<?= e($statValue) ?>" data-suffix="<?= e($statSuffix) ?>">0<?= e($statSuffix) ?></div>
+          <div class="label"><?= e((string) ($stat['label'] ?? '')) ?></div>
+        </div>
+      <?php endforeach; ?>
+    </div>
   </div>
 </section>
+<?php endif; ?>
 
 <section class="section">
   <div class="container">

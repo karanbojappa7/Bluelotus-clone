@@ -24,15 +24,9 @@ if (!$post) {
     ]);
 }
 
-$related = [];
-foreach ($posts as $candidate) {
-    if (($candidate['slug'] ?? '') !== $post['slug']) {
-        $related[] = $candidate;
-    }
-    if (count($related) >= 3) {
-        break;
-    }
-}
+$related = related_blog_posts($post, $posts);
+$relatedProducts = related_blog_products($post);
+$relatedCategories = related_blog_categories($post);
 
 $crumbs = ['Home' => '/', 'Blog' => 'blog', (string) $post['title'] => null];
 $published = (string) ($post['date'] ?? '');
@@ -70,7 +64,17 @@ page_head(seo_overrides($post) + [
       <?php if (!empty($post['excerpt'])): ?>
         <p class="article-lead mt-4"><?= e((string) $post['excerpt']) ?></p>
       <?php endif; ?>
-      <div class="article-body mt-4"><?= render_article_body((string) ($post['body'] ?? '')) ?></div>
+      <div class="article-body mt-4"><?= render_article_body((string) ($post['body'] ?? ''), ['excludeSlug' => (string) ($post['slug'] ?? '')]) ?></div>
+      <?php if ($relatedProducts): ?>
+        <div class="article-related mt-5">
+          <h2>Related equipment</h2>
+          <div class="grid grid-2 mt-4">
+            <?php foreach ($relatedProducts as $product): ?>
+              <?= render_product_card($product) ?>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php endif; ?>
     </article>
     <aside class="catalog-side">
       <div class="side-card side-card--accent">
@@ -79,6 +83,16 @@ page_head(seo_overrides($post) + [
         <p class="mt-2">We scope compliance gaps and recommend a product mix within a week.</p>
         <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Book an Audit</a>
       </div>
+      <?php if ($relatedCategories): ?>
+      <div class="side-card mt-4">
+        <span class="eyebrow">Shop by category</span>
+        <ul class="side-links mt-3">
+          <?php foreach ($relatedCategories as $cat): ?>
+            <li><a href="<?= e(category_path((string) $cat['id'])) ?>"><?= e((string) $cat['name']) ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <?php endif; ?>
       <?php if ($related): ?>
       <div class="side-card mt-4">
         <span class="eyebrow">More Articles</span>

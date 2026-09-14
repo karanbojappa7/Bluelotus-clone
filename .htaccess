@@ -35,7 +35,8 @@ DirectoryIndex index.php index.html
   RewriteCond %{ENV:REDIRECT_STATUS} ^$
   RewriteRule ^(about|products|blog|contact|faq|privacy-policy)\.(html|php)$ %{ENV:BASE}$1 [R=301,L]
 
-  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^sitemap\.xml$ sitemap.php?map=index [L,QSA]
+  RewriteRule ^sitemap-(pages|products|categories|posts)\.xml$ sitemap.php?map=$1 [L,QSA]
   RewriteRule ^robots\.txt$ robots.php [L]
 
   RewriteCond %{REQUEST_FILENAME} -f [OR]

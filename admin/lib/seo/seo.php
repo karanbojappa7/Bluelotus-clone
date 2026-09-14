@@ -46,6 +46,10 @@ function seo_base_path(): string
         return $base;
     }
     $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? '/'));
+    if (preg_match('#^[A-Za-z]:/#', $script) === 1) {
+        $base = '';
+        return $base;
+    }
     $pos = strpos($script, '/admin/');
     $dir = $pos !== false ? substr($script, 0, $pos) : dirname($script);
     $dir = rtrim(str_replace('\\', '/', (string) $dir), '/');
@@ -448,6 +452,18 @@ function analytics_body(): string
         . '" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>';
 }
 
+function page_absolute_url(array $page): string
+{
+    $explicit = trim((string) ($page['canonicalUrl'] ?? ''));
+    if ($explicit !== '') {
+        if (preg_match('#^https?://#i', $explicit) === 1) {
+            return $explicit;
+        }
+        return seo_url(ltrim($explicit, '/'));
+    }
+    return seo_url(ltrim((string) ($page['canonical'] ?? ''), '/'));
+}
+
 function page_head(array $page): void
 {
     $seo = seo_settings();
@@ -460,9 +476,7 @@ function page_head(array $page): void
 
     $description = meta_text($page['description'] ?? '', 158, (string) ($seo['defaultDescription'] ?? ''));
     $keywords = trim((string) ($page['keywords'] ?? ($seo['keywords'] ?? '')));
-    $canonical = !empty($page['canonicalUrl'])
-        ? (string) $page['canonicalUrl']
-        : seo_url(ltrim((string) ($page['canonical'] ?? ''), '/'));
+    $canonical = page_absolute_url($page);
     $image = seo_image($page['image'] ?? null);
     $robots = (string) ($page['robots'] ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     $type = (string) ($page['type'] ?? 'website');
@@ -516,6 +530,7 @@ function page_head(array $page): void
 <meta property="og:url" content="<?= e($canonical) ?>">
 <meta property="og:image" content="<?= e($image) ?>">
 <meta property="og:image:alt" content="<?= e($rawTitle !== '' ? $rawTitle : $brand) ?>">
+<meta name="twitter:url" content="<?= e($canonical) ?>">
 <?php if ($type === 'article' && !empty($page['publishedTime'])): ?>
 <meta property="article:published_time" content="<?= e((string) $page['publishedTime']) ?>">
 <meta property="article:modified_time" content="<?= e((string) ($page['modifiedTime'] ?? $page['publishedTime'])) ?>">
@@ -568,12 +583,107 @@ function page_foot(array $opts = []): void
 <?php
 }
 
-function render_article_body(string $body): string
+function internal_href(string $raw): ?string
+{
+    $raw = trim($raw);
+    if ($raw === '' || preg_match('#^(javascript|data|vbscript):#i', $raw) === 1) {
+        return null;
+    }
+    if (preg_match('/^(product|category|blog|page):([a-z0-9\-\/]+)$/i', $raw, $m) === 1) {
+        $id = $m[2];
+        return match (strtolower($m[1])) {
+            'product' => product_path($id),
+            'category' => category_path($id),
+            'blog' => post_path($id),
+            'page' => url_for($id),
+        };
+    }
+    if (preg_match('#^https?://#i', $raw) === 1) {
+        return $raw;
+    }
+    if (str_starts_with($raw, '/') || preg_match('#^(blog|product|products|about|contact|faq|privacy-policy)(/|$)#', $raw) === 1) {
+        return url_for(ltrim($raw, '/'));
+    }
+    return null;
+}
+
+function article_auto_link_plain(string $plain, array $auto, array &$used): string
+{
+    if ($plain === '') {
+        return '';
+    }
+    $best = null;
+    $bestPos = null;
+    $bestLen = 0;
+    foreach ($auto as $link) {
+        if (isset($used[$link['href']])) {
+            continue;
+        }
+        $label = (string) $link['label'];
+        $len = mb_strlen($label);
+        if ($len < 4) {
+            continue;
+        }
+        $pos = mb_stripos($plain, $label);
+        if ($pos === false) {
+            continue;
+        }
+        $before = $pos > 0 ? mb_substr($plain, $pos - 1, 1) : '';
+        $after = mb_substr($plain, $pos + $len, 1);
+        if ($before !== '' && preg_match('/[\p{L}\p{N}]/u', $before) === 1) {
+            continue;
+        }
+        if ($after !== '' && preg_match('/[\p{L}\p{N}]/u', $after) === 1) {
+            continue;
+        }
+        if ($bestPos === null || $pos < $bestPos || ($pos === $bestPos && $len > $bestLen)) {
+            $best = $link;
+            $bestPos = $pos;
+            $bestLen = $len;
+        }
+    }
+    if ($best === null || $bestPos === null) {
+        return e($plain);
+    }
+    $matched = mb_substr($plain, $bestPos, $bestLen);
+    $used[$best['href']] = true;
+    return article_auto_link_plain(mb_substr($plain, 0, $bestPos), $auto, $used)
+        . '<a href="' . e((string) $best['href']) . '">' . e($matched) . '</a>'
+        . article_auto_link_plain(mb_substr($plain, $bestPos + $bestLen), $auto, $used);
+}
+
+function render_article_inline(string $text, array $auto, array &$used): string
+{
+    $pattern = '/\[([^\]]+)\]\(([^)\s]+)\)/';
+    $out = '';
+    $offset = 0;
+    if (preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE)) {
+        foreach ($matches[0] as $i => $full) {
+            $start = (int) $full[1];
+            $out .= article_auto_link_plain(substr($text, $offset, $start - $offset), $auto, $used);
+            $href = internal_href((string) $matches[2][$i][0]);
+            $label = (string) $matches[1][$i][0];
+            if ($href) {
+                $rel = preg_match('#^https?://#i', $href) === 1 ? ' rel="noopener"' : '';
+                $out .= '<a href="' . e($href) . '"' . $rel . '>' . e($label) . '</a>';
+                $used[$href] = true;
+            } else {
+                $out .= e($full[0]);
+            }
+            $offset = $start + strlen($full[0]);
+        }
+    }
+    return $out . article_auto_link_plain(substr($text, $offset), $auto, $used);
+}
+
+function render_article_body(string $body, array $opts = []): string
 {
     $body = trim($body);
     if ($body === '') {
         return '';
     }
+    $auto = $opts['autoLinks'] ?? article_auto_links($opts['excludeSlug'] ?? null);
+    $used = [];
     $blocks = preg_split('/\R{2,}/', $body) ?: [];
     $html = '';
     foreach ($blocks as $block) {
@@ -585,7 +695,7 @@ function render_article_body(string $body): string
             $html .= '<h2>' . e(rtrim($block, ':')) . '</h2>';
             continue;
         }
-        $html .= '<p>' . nl2br(e($block)) . '</p>';
+        $html .= '<p>' . nl2br(render_article_inline($block, $auto, $used)) . '</p>';
     }
     return $html;
 }
@@ -696,3 +806,5 @@ function render_breadcrumbs(array $crumbs): string
     }
     return implode(' / ', $parts);
 }
+
+require_once __DIR__ . '/sitemaps.php';

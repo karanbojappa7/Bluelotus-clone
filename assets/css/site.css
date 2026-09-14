@@ -671,10 +671,16 @@ button {
 }
 
 .stats-grid {
+  --stat-count: 4;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--stat-count), minmax(0, 1fr));
+  justify-content: center;
   gap: var(--space-4);
   width: 100%;
+}
+
+.stats-grid[data-stat-count="1"] {
+  grid-template-columns: minmax(0, 20rem);
 }
 
 .stat-plate {
@@ -1635,6 +1641,28 @@ button {
   margin-top: var(--space-3);
 }
 
+.article-body h2 {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-3);
+  color: var(--ink);
+  font-size: 1.35rem;
+}
+
+.article-body a {
+  color: var(--orange);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.article-body a:hover {
+  color: var(--ink);
+}
+
+.article-related h2 {
+  color: var(--ink);
+  font-size: 1.35rem;
+}
+
 .prose-wrap {
   max-width: 760px;
 }
@@ -1961,7 +1989,11 @@ body.is-in-hero .back-to-top {
   }
 
   .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  }
+
+  .stats-grid[data-stat-count="1"] {
+    grid-template-columns: minmax(0, 20rem);
   }
 
   .product-grid {

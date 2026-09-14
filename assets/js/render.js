@@ -73,18 +73,26 @@
   }
 
   function buildStats() {
-    fill(
-      "[data-render='stats']",
-      (CFG.stats || [])
-        .map(function (s) {
-          const suffix = esc(s.suffix);
-          return `<div class="stat-plate">
+    const stats = CFG.stats || [];
+    const $mounts = $("[data-render='stats']");
+    if (!$mounts.length) return;
+    const html = stats
+      .map(function (s) {
+        const suffix = esc(s.suffix);
+        return `<div class="stat-plate">
             <div class="value" data-count="${esc(s.value)}" data-suffix="${suffix}">0${suffix}</div>
             <div class="label">${esc(s.label)}</div>
           </div>`;
-        })
-        .join("")
-    );
+      })
+      .join("");
+    const cols = Math.min(Math.max(stats.length, 1), 4);
+    $mounts.each(function () {
+      this.dataset.statCount = String(stats.length);
+      this.style.setProperty("--stat-count", String(cols));
+      this.innerHTML = html;
+      const section = this.closest(".hero-stats");
+      if (section) section.hidden = !stats.length;
+    });
   }
 
   function buildProducts(limit) {
@@ -336,24 +344,6 @@
     );
   }
 
-  function setMeta() {
-    const $html = $("html");
-    const seo = CFG.seo || {};
-    const title = $html.attr("data-page-title");
-    const desc = $html.attr("data-page-desc") || seo.defaultDescription;
-    document.title = title ? title + " | " + CFG.company.name : CFG.company.name + " | " + seo.defaultTitle;
-    $("meta[name='description']").attr("content", desc);
-    $("meta[name='keywords']").attr("content", seo.keywords);
-    const pageFile = location.pathname.split("/").pop() || "";
-    $("link[rel='canonical']").attr("href", seo.domain + "/" + pageFile);
-    $("meta[property='og:title']").attr("content", document.title);
-    $("meta[property='og:description']").attr("content", desc);
-    if (!$("meta[property='og:image']").length) {
-      $("head").append('<meta property="og:image">');
-    }
-    $("meta[property='og:image']").attr("content", seo.domain + "/assets/img/og-cover.jpg");
-  }
-
   function injectSchema() {
     const contact = CFG.contact || {};
     const addr = contact.address || {};
@@ -382,7 +372,6 @@
   }
 
   function init() {
-    setMeta();
     injectSchema();
     applyTextBindings();
     applyAttrBindings("href", "href");
