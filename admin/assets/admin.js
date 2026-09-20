@@ -316,6 +316,40 @@
     });
   }
 
+  function initMapRows() {
+    const list = document.querySelector("[data-map-rows]");
+    const add = document.querySelector("[data-map-add]");
+    const tpl = document.querySelector("[data-map-row-template]");
+    if (!list || !add || !(tpl instanceof HTMLTemplateElement)) return;
+
+    function refreshLabels() {
+      list.querySelectorAll("[data-map-row]").forEach(function (row, i) {
+        const label = row.querySelector(".map-row-head span");
+        if (label) label.textContent = "Location " + (i + 1);
+      });
+    }
+
+    add.addEventListener("click", function () {
+      list.appendChild(tpl.content.cloneNode(true));
+      refreshLabels();
+    });
+
+    list.addEventListener("click", function (e) {
+      const btn = e.target.closest("[data-map-remove]");
+      if (!btn) return;
+      const row = btn.closest("[data-map-row]");
+      if (!row) return;
+      if (list.querySelectorAll("[data-map-row]").length > 1) {
+        row.remove();
+      } else {
+        row.querySelectorAll("input, textarea").forEach(function (field) {
+          field.value = "";
+        });
+      }
+      refreshLabels();
+    });
+  }
+
   ready(function () {
     initConfirms();
     initAutoSubmit();
@@ -328,5 +362,6 @@
     initSerpPreview();
     initTableFilter();
     initBlogLinkInsert();
+    initMapRows();
   });
 })();

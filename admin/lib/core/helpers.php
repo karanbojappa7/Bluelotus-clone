@@ -179,10 +179,37 @@ function maps_embed_src(?string $url): string
     if ($url === '') {
         return '';
     }
+    if (preg_match('#src=["\'](https://[^"\']+)["\']#i', $url, $m) === 1) {
+        $url = html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+    $url = trim($url);
     if (preg_match('#^https://(www\.)?(google\.com/maps/embed|maps\.google\.com/)#i', $url) !== 1) {
         return '';
     }
     return $url;
+}
+
+function contact_maps_from_legacy(array $contact): array
+{
+    $slots = [
+        ['label' => 'mapLabel', 'url' => 'mapEmbedUrl'],
+        ['label' => 'mapLabel2', 'url' => 'mapEmbedUrl2'],
+        ['label' => 'mapLabel3', 'url' => 'mapEmbedUrl3'],
+        ['label' => 'mapLabel4', 'url' => 'mapEmbedUrl4'],
+    ];
+    $out = [];
+    foreach ($slots as $i => $slot) {
+        $src = maps_embed_src((string) ($contact[$slot['url']] ?? ''));
+        if ($src === '') {
+            continue;
+        }
+        $label = trim((string) ($contact[$slot['label']] ?? ''));
+        $out[] = [
+            'label' => $label !== '' ? $label : ('Location ' . (count($out) + 1)),
+            'url' => $src,
+        ];
+    }
+    return $out;
 }
 
 function contact_maps(?array $contact = null): array
@@ -190,25 +217,55 @@ function contact_maps(?array $contact = null): array
     if ($contact === null) {
         $contact = is_array(setting('contact', [])) ? setting('contact', []) : [];
     }
-    $slots = [
-        ['label' => 'mapLabel', 'url' => 'mapEmbedUrl', 'fallback' => 'Bangalore Head Office'],
-        ['label' => 'mapLabel2', 'url' => 'mapEmbedUrl2', 'fallback' => 'Bhubaneswar'],
-        ['label' => 'mapLabel3', 'url' => 'mapEmbedUrl3', 'fallback' => 'Brahmapur'],
-        ['label' => 'mapLabel4', 'url' => 'mapEmbedUrl4', 'fallback' => 'Paradeep'],
-    ];
-    $out = [];
-    foreach ($slots as $slot) {
-        $src = maps_embed_src((string) ($contact[$slot['url']] ?? ''));
-        if ($src === '') {
-            continue;
+    $rows = [];
+    $stored = $contact['maps'] ?? null;
+    if (is_array($stored) && $stored) {
+        foreach ($stored as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $src = maps_embed_src((string) ($row['url'] ?? $row['src'] ?? ''));
+            if ($src === '') {
+                continue;
+            }
+            $label = trim((string) ($row['label'] ?? ''));
+            $rows[] = [
+                'label' => $label !== '' ? $label : ('Location ' . (count($rows) + 1)),
+                'src' => $src,
+            ];
         }
-        $label = trim((string) ($contact[$slot['label']] ?? ''));
-        $out[] = [
-            'label' => $label !== '' ? $label : $slot['fallback'],
-            'src' => $src,
-        ];
     }
-    return $out;
+    if (!$rows) {
+        foreach (contact_maps_from_legacy($contact) as $row) {
+            $rows[] = [
+                'label' => $row['label'],
+                'src' => $row['url'],
+            ];
+        }
+    }
+    return $rows;
+}
+
+function contact_map_editor_rows(array $contact): array
+{
+    $stored = $contact['maps'] ?? null;
+    if (is_array($stored) && $stored) {
+        $out = [];
+        foreach ($stored as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $out[] = [
+                'label' => (string) ($row['label'] ?? ''),
+                'url' => (string) ($row['url'] ?? $row['src'] ?? ''),
+            ];
+        }
+        if ($out) {
+            return $out;
+        }
+    }
+    $legacy = contact_maps_from_legacy($contact);
+    return $legacy ?: [['label' => '', 'url' => '']];
 }
 
 function quote_captcha_issue(): array

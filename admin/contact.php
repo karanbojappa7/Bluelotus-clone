@@ -5,6 +5,9 @@ require_once __DIR__ . '/lib/ui/layout.php';
 require_login();
 
 $contact = setting('contact', []);
+if (!is_array($contact)) {
+    $contact = [];
+}
 $phonesText = '';
 foreach (($contact['phones'] ?? []) as $p) {
     $phonesText .= ($p['label'] ?? '') . ' | ' . ($p['number'] ?? '') . "\n";
@@ -13,6 +16,7 @@ $emailsText = '';
 foreach (($contact['emails'] ?? []) as $e) {
     $emailsText .= ($e['label'] ?? '') . ' | ' . ($e['address'] ?? '') . "\n";
 }
+$mapRows = contact_map_editor_rows($contact);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
@@ -24,6 +28,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach (parse_labeled_lines(post('emails')) as $parts) {
         $emails[] = ['label' => $parts[0], 'address' => $parts[1]];
     }
+    $maps = [];
+    $labels = $_POST['map_label'] ?? [];
+    $urls = $_POST['map_url'] ?? [];
+    if (is_array($labels) && is_array($urls)) {
+        $count = max(count($labels), count($urls));
+        for ($i = 0; $i < $count; $i++) {
+            $label = trim((string) ($labels[$i] ?? ''));
+            $url = maps_embed_src((string) ($urls[$i] ?? ''));
+            if ($label === '' && $url === '') {
+                continue;
+            }
+            $maps[] = [
+                'label' => $label !== '' ? $label : ('Location ' . (count($maps) + 1)),
+                'url' => $url,
+            ];
+        }
+    }
     $contact = [
         'phones' => $phones,
         'emails' => $emails,
@@ -33,14 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'line1' => post('address1'),
             'line2' => post('address2'),
         ],
-        'mapEmbedUrl' => post('mapEmbedUrl'),
-        'mapLabel' => post('mapLabel'),
-        'mapEmbedUrl2' => post('mapEmbedUrl2'),
-        'mapLabel2' => post('mapLabel2'),
-        'mapEmbedUrl3' => post('mapEmbedUrl3'),
-        'mapLabel3' => post('mapLabel3'),
-        'mapEmbedUrl4' => post('mapEmbedUrl4'),
-        'mapLabel4' => post('mapLabel4'),
+        'maps' => $maps,
+        'mapLabel' => $maps[0]['label'] ?? '',
+        'mapEmbedUrl' => $maps[0]['url'] ?? '',
+        'mapLabel2' => $maps[1]['label'] ?? '',
+        'mapEmbedUrl2' => $maps[1]['url'] ?? '',
+        'mapLabel3' => $maps[2]['label'] ?? '',
+        'mapEmbedUrl3' => $maps[2]['url'] ?? '',
+        'mapLabel4' => $maps[3]['label'] ?? '',
+        'mapEmbedUrl4' => $maps[3]['url'] ?? '',
     ];
     save_setting('contact', $contact);
     export_site_config_js();
@@ -72,34 +94,46 @@ admin_header('Contact', 'contact');
     <label class="full">Address line 2
       <input type="text" name="address2" value="<?= e($contact['address']['line2'] ?? '') ?>">
     </label>
-    <label>Map 1 label
-      <input type="text" name="mapLabel" value="<?= e($contact['mapLabel'] ?? '') ?>" placeholder="Bangalore Head Office">
-    </label>
-    <label class="full">Google Maps embed URL (map 1)
-      <textarea name="mapEmbedUrl" rows="2"><?= e($contact['mapEmbedUrl'] ?? '') ?></textarea>
-    </label>
-    <label>Map 2 label
-      <input type="text" name="mapLabel2" value="<?= e($contact['mapLabel2'] ?? '') ?>" placeholder="Bhubaneswar">
-    </label>
-    <label class="full">Google Maps embed URL (map 2)
-      <textarea name="mapEmbedUrl2" rows="2"><?= e($contact['mapEmbedUrl2'] ?? '') ?></textarea>
-    </label>
-    <label>Map 3 label
-      <input type="text" name="mapLabel3" value="<?= e($contact['mapLabel3'] ?? '') ?>" placeholder="Brahmapur">
-    </label>
-    <label class="full">Google Maps embed URL (map 3)
-      <textarea name="mapEmbedUrl3" rows="2"><?= e($contact['mapEmbedUrl3'] ?? '') ?></textarea>
-    </label>
-    <label>Map 4 label
-      <input type="text" name="mapLabel4" value="<?= e($contact['mapLabel4'] ?? '') ?>" placeholder="Paradeep">
-    </label>
-    <label class="full">Google Maps embed URL (map 4)
-      <textarea name="mapEmbedUrl4" rows="2"><?= e($contact['mapEmbedUrl4'] ?? '') ?></textarea>
-      <span class="hint">Paradeep can stay as a placeholder until the exact pin is provided.</span>
-    </label>
+    <div class="full">
+      <div class="map-rows-head">
+        <strong>Locations / maps</strong>
+        <span class="hint">Add as many offices as you need. Paste the Google Maps embed URL, or the full iframe.</span>
+      </div>
+      <div class="map-rows" data-map-rows>
+        <?php foreach ($mapRows as $i => $row): ?>
+          <div class="map-row" data-map-row>
+            <div class="map-row-head">
+              <span>Location <?= $i + 1 ?></span>
+              <button type="button" class="btn btn-secondary btn-sm" data-map-remove>Remove</button>
+            </div>
+            <label>Tab label
+              <input type="text" name="map_label[]" value="<?= e((string) ($row['label'] ?? '')) ?>" placeholder="Bangalore Head Office">
+            </label>
+            <label>Google Maps embed URL
+              <textarea name="map_url[]" rows="2" placeholder="https://www.google.com/maps/embed?pb=…"><?= e((string) ($row['url'] ?? '')) ?></textarea>
+            </label>
+          </div>
+        <?php endforeach; ?>
+      </div>
+      <button type="button" class="btn btn-secondary mt-2" data-map-add>Add location</button>
+    </div>
   </div>
   <div class="form-actions">
     <button class="btn" type="submit">Save Contact</button>
   </div>
 </form>
+<template data-map-row-template>
+  <div class="map-row" data-map-row>
+    <div class="map-row-head">
+      <span>New location</span>
+      <button type="button" class="btn btn-secondary btn-sm" data-map-remove>Remove</button>
+    </div>
+    <label>Tab label
+      <input type="text" name="map_label[]" value="" placeholder="City or office name">
+    </label>
+    <label>Google Maps embed URL
+      <textarea name="map_url[]" rows="2" placeholder="https://www.google.com/maps/embed?pb=…"></textarea>
+    </label>
+  </div>
+</template>
 <?php admin_footer(); ?>
