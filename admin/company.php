@@ -57,11 +57,11 @@ admin_header('Company', 'company');
     </label>
     <label>Logo
       <input type="file" name="logo" accept="image/jpeg,image/png,image/webp,image/gif">
-      <span class="hint">Choose a logo image from your computer.</span>
+      <span class="hint">Choose a logo image from your computer. Recommended 400 × 120 px.</span>
     </label>
     <label>Logo mark
       <input type="file" name="logoMark" accept="image/jpeg,image/png,image/webp,image/gif">
-      <span class="hint">Small square mark used in the header.</span>
+      <span class="hint">Small square mark used in the header. Recommended 200 × 200 px.</span>
     </label>
     <?php if (!empty($company['logo']) || !empty($company['logoMark'])): ?>
       <div class="full file-preview">

@@ -72,7 +72,7 @@ admin_header('SEO', 'seo');
     </label>
     <label class="full">Default social share image
       <input type="file" name="ogImage" accept="image/jpeg,image/png,image/webp">
-      <span class="hint">Shown when a page without its own image is shared on WhatsApp, LinkedIn, or Facebook. Recommended 1200×630.</span>
+      <span class="hint">Shown when a page without its own image is shared on WhatsApp, LinkedIn, or Facebook. Recommended 1200 × 630 px.</span>
     </label>
     <?php if (!empty($seo['ogImage'])): ?>
       <div class="full file-preview">

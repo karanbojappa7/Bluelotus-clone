@@ -200,16 +200,33 @@
     $tabs.attr("role", "tablist");
   }
 
+  function logoBackground(value) {
+    const raw = String(value || "#ffffff").trim();
+    return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(raw) ? raw : "#ffffff";
+  }
+
   function buildTestimonials() {
     fill(
       "[data-render='testimonials']",
       (CFG.testimonials || [])
         .map(function (t) {
-          return `<div class="testimonial-card" data-reveal>
-            <p class="testimonial-quote">${esc(t.quote)}</p>
-            <div class="testimonial-author">
-              <span class="name">${esc(t.name)}</span>
-              <span class="role">${esc(t.role)}</span>
+          const photo = t.image
+            ? `<div class="testimonial-media"><img src="${esc(siteUrl(t.image))}" alt="${esc(t.name)}" width="640" height="400" loading="lazy" data-fallback></div>`
+            : "";
+          const logo = t.logo
+            ? `<span class="testimonial-logo" style="background:${esc(logoBackground(t.logoBackground))}"><img src="${esc(siteUrl(t.logo))}" alt=""></span>`
+            : "";
+          return `<div class="testimonial-card${t.image ? " testimonial-card--photo" : ""}" data-reveal>
+            ${photo}
+            <div class="testimonial-body">
+              <p class="testimonial-quote">${esc(t.quote)}</p>
+              <div class="testimonial-footer">
+                <div class="testimonial-author">
+                  <span class="name">${esc(t.name)}</span>
+                  <span class="role">${esc(t.role)}</span>
+                </div>
+                ${logo}
+              </div>
             </div>
           </div>`;
         })

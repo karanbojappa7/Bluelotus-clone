@@ -27,4 +27,4 @@ page_head([
     ) ?>
   </div>
 </section>
-<?php page_foot(); ?>
+<?php page_foot(['skipQuoteModal' => true]); ?>

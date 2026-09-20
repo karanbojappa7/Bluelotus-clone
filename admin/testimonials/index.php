@@ -25,12 +25,19 @@ admin_header('Testimonials', 'testimonials');
 </div>
 <div class="table-wrap">
   <table>
-    <thead><tr><th>Name</th><th>Role</th><th>Quote</th><th></th></tr></thead>
+    <thead><tr><th></th><th>Name</th><th>Role</th><th>Quote</th><th></th></tr></thead>
     <tbody>
-      <?php if (!$list): ?><tr><td colspan="4" class="muted">No testimonials yet.</td></tr><?php endif; ?>
+      <?php if (!$list): ?><tr><td colspan="5" class="muted">No testimonials yet.</td></tr><?php endif; ?>
       <?php foreach ($list as $i => $item): ?>
         <?php $realIndex = $offset + $i; ?>
         <tr>
+          <td>
+            <?php if (!empty($item['image'])): ?>
+              <img class="table-thumb" src="<?= e(url_for((string) $item['image'])) ?>" alt="">
+            <?php else: ?>
+              <span class="muted">—</span>
+            <?php endif; ?>
+          </td>
           <td><strong><?= e($item['name'] ?? '') ?></strong></td>
           <td><?= e($item['role'] ?? '') ?></td>
           <td class="muted"><?= e(truncate($item['quote'] ?? '', 100)) ?></td>

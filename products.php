@@ -77,17 +77,17 @@ page_head([
     'next' => $page < $pages ? 'products?' . http_build_query($extra + ['page' => $page + 1]) : null,
 ]);
 ?>
-<section class="page-header">
+<section class="section section--catalog">
   <div class="container">
-    <span class="eyebrow eyebrow--light">Full Catalog</span>
-    <h1 class="page-title"><?= $isSearch ? 'Search: ' . e($query) : e(count($categories) . ' certified safety categories, one vendor.') ?></h1>
-    <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="catalog-toolbar">
+    <div class="catalog-intro">
+      <div>
+        <div class="product-crumbs"><?= render_breadcrumbs($crumbs) ?></div>
+        <span class="eyebrow">Full Catalog</span>
+        <h1 class="catalog-title"><?= $isSearch ? 'Search: ' . e($query) : 'Certified safety equipment, one vendor.' ?></h1>
+        <?php if (!$isSearch): ?>
+          <p class="catalog-intro-lead">Browse fire, road, industrial, warehouse, and construction ranges &mdash; ready for site supply and bulk orders.</p>
+        <?php endif; ?>
+      </div>
       <form class="catalog-search" id="productSearchForm" role="search" method="get" action="<?= e(url_for('products')) ?>">
         <svg class="catalog-search-icon" width="18" height="18" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-search"></use></svg>
         <input type="search" id="productSearchInput" name="q" value="<?= e($query) ?>" autocomplete="off"
@@ -97,13 +97,9 @@ page_head([
         <?php endif; ?>
         <button type="button" class="catalog-search-clear" id="productSearchClear" aria-label="Clear search">&times;</button>
       </form>
-      <p class="section-sub" id="productCount">
-        <?php if (!$total): ?>
-          <?= $isSearch ? 'No results for “' . e($query) . '”.' : 'No products in this category yet.' ?>
-        <?php else: ?>
-          Showing <?= $offset + 1 ?>–<?= min($offset + CATALOG_PER_PAGE, $total) ?> of <?= $total ?> product<?= $total === 1 ? '' : 's' ?><?= $isSearch ? ' matching “' . e($query) . '”' : '' ?>
-        <?php endif; ?>
-      </p>
+    </div>
+
+    <div class="catalog-toolbar">
       <div class="catalog-filters" id="productFilters">
         <a class="filter-chip<?= $catFilter === '' ? ' is-active' : '' ?>" href="<?= e(url_for('products') . ($query !== '' ? '?q=' . rawurlencode($query) : '')) ?>">All products</a>
         <?php foreach ($categories as $cat): ?>
@@ -111,6 +107,13 @@ page_head([
              href="<?= e(category_path($cat['id']) . ($query !== '' ? '?q=' . rawurlencode($query) : '')) ?>"><?= e($cat['name']) ?></a>
         <?php endforeach; ?>
       </div>
+      <p class="catalog-count" id="productCount">
+        <?php if (!$total): ?>
+          <?= $isSearch ? 'No results for “' . e($query) . '”.' : 'No products in this category yet.' ?>
+        <?php else: ?>
+          Showing <?= $offset + 1 ?>–<?= min($offset + CATALOG_PER_PAGE, $total) ?> of <?= $total ?> product<?= $total === 1 ? '' : 's' ?><?= $isSearch ? ' matching “' . e($query) . '”' : '' ?>
+        <?php endif; ?>
+      </p>
     </div>
 
     <?php if ($products): ?>
@@ -132,6 +135,24 @@ page_head([
     <?php endif; ?>
   </div>
 </section>
+
+<?php if (!$isSearch && $categories): ?>
+<section class="section section--dim">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Other Categories</span>
+        <h2 class="section-title">Explore more safety ranges</h2>
+      </div>
+    </div>
+    <div class="grid grid-3 other-cat-grid">
+      <?php foreach ($categories as $cat): ?>
+        <?= render_category_tile($cat) ?>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
 
 <section class="section section--flush">
   <div class="bulk-quote">

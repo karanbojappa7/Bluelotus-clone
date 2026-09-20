@@ -4,6 +4,8 @@ require_once __DIR__ . '/admin/bootstrap.php';
 
 $categories = db_ready() ? all_categories() : [];
 $services = db_ready() ? all_services() : [];
+$contact = db_ready() ? (setting('contact', []) ?: []) : [];
+$maps = contact_maps($contact);
 $sent = isset($_GET['sent']);
 $sendError = isset($_GET['error']);
 
@@ -85,7 +87,30 @@ page_head([
   </div>
 </section>
 
-<section class="map-section" aria-label="Location map">
-  <iframe class="map-frame" data-map-embed title="Bluelotus Infrasafety location map" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<?php if ($maps): ?>
+<section class="map-picker" data-map-picker aria-label="Location maps">
+  <?php if (count($maps) > 1): ?>
+  <div class="map-tabs-wrap">
+    <div class="container">
+      <nav class="map-tabs" role="tablist" aria-label="Choose a location">
+        <?php foreach ($maps as $i => $map): ?>
+          <button type="button" role="tab" id="map-tab-<?= $i ?>" data-map-tab="<?= $i ?>"
+                  class="<?= $i === 0 ? 'is-active' : '' ?>"
+                  aria-selected="<?= $i === 0 ? 'true' : 'false' ?>"
+                  aria-controls="map-panel-<?= $i ?>"><?= e($map['label']) ?></button>
+        <?php endforeach; ?>
+      </nav>
+    </div>
+  </div>
+  <?php endif; ?>
+  <div class="map-stage">
+    <?php foreach ($maps as $i => $map): ?>
+      <iframe class="map-frame<?= $i === 0 ? ' is-active' : '' ?>" id="map-panel-<?= $i ?>"
+              title="<?= e($map['label']) ?>" src="<?= e($map['src']) ?>"
+              allowfullscreen="" loading="<?= $i === 0 ? 'eager' : 'lazy' ?>"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <?php endforeach; ?>
+  </div>
 </section>
-<?php page_foot(); ?>
+<?php endif; ?>
+<?php page_foot(['skipQuoteModal' => true]); ?>

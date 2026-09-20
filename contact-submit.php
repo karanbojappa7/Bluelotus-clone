@@ -25,6 +25,13 @@ function enquiry_reply(bool $ok, string $message, int $status = 200): void
     redirect(url_for('contact') . '?error=1');
 }
 
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && isset($_GET['captcha'])) {
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Cache-Control: no-store');
+    echo json_encode(quote_captcha_issue(), JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     enquiry_reply(false, 'Please submit the contact form.', 405);
 }
@@ -58,9 +65,18 @@ $email = post('email');
 $phone = post('phone');
 $category = post('category');
 $message = post('message');
+$source = post('source');
+$isQuotePopup = $source === 'quote-popup';
 
-if ($name === '' || $email === '' || $phone === '' || $message === '') {
-    enquiry_reply(false, 'Please fill in your name, email, phone, and message.', 422);
+if ($isQuotePopup && !quote_captcha_ok(post('captcha'))) {
+    enquiry_reply(false, 'Please solve the security check and try again.', 422);
+}
+
+if ($name === '' || $email === '' || $phone === '') {
+    enquiry_reply(false, 'Please fill in your name, email, and phone.', 422);
+}
+if ($isQuotePopup && ($company === '' || $category === '')) {
+    enquiry_reply(false, 'Please add your company and primary safety need.', 422);
 }
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     enquiry_reply(false, 'Enter a valid email address.', 422);
@@ -68,8 +84,21 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 if (strlen(preg_replace('/[^\d]/', '', $phone) ?? '') < 10) {
     enquiry_reply(false, 'Enter a phone number with at least 10 digits.', 422);
 }
-if (strlen($message) < 10) {
+if (!$isQuotePopup && $message === '') {
+    enquiry_reply(false, 'Please fill in your name, email, phone, and message.', 422);
+}
+if (!$isQuotePopup && strlen($message) < 10) {
     enquiry_reply(false, 'Tell us a little more — at least 10 characters.', 422);
+}
+if ($isQuotePopup) {
+    $parts = ['Bulk quote / project estimate request.'];
+    if ($category !== '') {
+        $parts[] = 'Primary safety need: ' . $category;
+    }
+    if ($message !== '') {
+        $parts[] = $message;
+    }
+    $message = implode("\n\n", $parts);
 }
 
 try {

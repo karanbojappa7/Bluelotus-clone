@@ -77,8 +77,8 @@ admin_header($existing ? 'Edit Banner Slide' : 'Add Banner Slide', 'hero', ['Hom
       <input type="text" name="eyebrow" value="<?= e($item['eyebrow']) ?>" placeholder="Fire Safety">
     </label>
     <label>Nav label
-      <input type="text" name="navLabel" value="<?= e($item['navLabel']) ?>" placeholder="Fire">
-      <span class="hint">Short tab name under the banner (e.g. Protect, Fire, Road)</span>
+      <input type="text" name="navLabel" value="<?= e($item['navLabel']) ?>" placeholder="Supply">
+      <span class="hint">Short tab name under the banner (e.g. Supply, Install, Maintain)</span>
     </label>
     <label class="full">Title
       <input type="text" name="title" required value="<?= e($item['title']) ?>">
@@ -92,7 +92,7 @@ admin_header($existing ? 'Edit Banner Slide' : 'Add Banner Slide', 'hero', ['Hom
     </label>
     <label class="full">Background image
       <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" data-preview="wide">
-      <span class="hint">Wide landscape photo works best. Leave empty to keep the current image.</span>
+      <span class="hint">Wide landscape photo. Recommended 1920 × 1080 px (16:9). Leave empty to keep the current image.</span>
     </label>
     <?php if ($item['image'] !== ''): ?>
       <div class="full file-preview">

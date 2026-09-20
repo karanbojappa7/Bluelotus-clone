@@ -61,7 +61,56 @@ page_head(seo_overrides($category) + [
   </div>
 </section>
 
+<section class="section section--dim">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">This Category</span>
+        <h2 class="section-title"><?= e($category['name']) ?> products</h2>
+      </div>
+      <p class="section-sub">
+        <?= $total
+            ? 'Showing ' . ($offset + 1) . '–' . min($offset + CATEGORY_PER_PAGE, $total) . ' of ' . $total . ' products'
+            : '0 products available' ?>
+      </p>
+    </div>
+    <?php if ($products): ?>
+      <div class="product-grid">
+        <?php foreach ($products as $product): ?>
+          <?= render_product_card($product) ?>
+        <?php endforeach; ?>
+      </div>
+      <?= render_public_pagination($page, $pages, $basePath) ?>
+    <?php else: ?>
+      <?= render_empty_state(
+          'Nothing listed here yet.',
+          "We stock far more than we list. Tell us what you need and we'll source it.",
+          [['label' => 'Ask our team', 'href' => 'contact', 'primary' => true]]
+      ) ?>
+    <?php endif; ?>
+  </div>
+</section>
+
+<?php if ($others): ?>
 <section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Other Categories</span>
+        <h2 class="section-title">Explore more safety ranges</h2>
+      </div>
+      <a href="<?= e(url_for('products')) ?>" class="btn btn-outline">View all products</a>
+    </div>
+    <div class="grid grid-3 other-cat-grid">
+      <?php foreach ($others as $other): ?>
+        <?= render_category_tile($other) ?>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<section class="section section--dim">
   <div class="container catalog-layout">
     <article class="catalog-copy">
       <h2 class="section-title"><?= e($category['headline'] ?: $category['name']) ?></h2>
@@ -96,51 +145,19 @@ page_head(seo_overrides($category) + [
         <span class="eyebrow">Need Help Choosing?</span>
         <h2 class="mt-2">Free site safety consult</h2>
         <p class="mt-2">Tell us your site type, volume, and timeline &mdash; we'll recommend a product mix.</p>
+        <div class="product-quote-contact mt-3">
+          <p class="product-quote-row">
+            <?= contact_icon('phone') ?>
+            <span><?= render_phone_links() ?></span>
+          </p>
+        </div>
         <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Talk to Our Team</a>
         <?php if ($whatsapp !== ''): ?>
         <a href="https://wa.me/<?= e($whatsapp) ?>?text=<?= e(rawurlencode('Hello, I would like product details for the ' . $category['name'] . ' category.')) ?>"
            class="btn btn-wa mt-2" target="_blank" rel="noopener">Enquire on WhatsApp</a>
         <?php endif; ?>
       </div>
-      <div class="side-card mt-4">
-        <span class="eyebrow">Other Categories</span>
-        <ul class="side-links mt-3">
-          <?php foreach ($others as $other): ?>
-            <li><a href="<?= e(category_path($other['id'])) ?>"><?= e($other['name']) ?></a></li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
     </aside>
-  </div>
-</section>
-
-<section class="section section--dim">
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <span class="eyebrow">Product Range</span>
-        <h2 class="section-title"><?= e($category['name']) ?> products</h2>
-      </div>
-      <p class="section-sub">
-        <?= $total
-            ? 'Showing ' . ($offset + 1) . '–' . min($offset + CATEGORY_PER_PAGE, $total) . ' of ' . $total . ' products'
-            : '0 products available' ?>
-      </p>
-    </div>
-    <?php if ($products): ?>
-      <div class="product-grid">
-        <?php foreach ($products as $product): ?>
-          <?= render_product_card($product) ?>
-        <?php endforeach; ?>
-      </div>
-      <?= render_public_pagination($page, $pages, $basePath) ?>
-    <?php else: ?>
-      <?= render_empty_state(
-          'Nothing listed here yet.',
-          "We stock far more than we list. Tell us what you need and we'll source it.",
-          [['label' => 'Ask our team', 'href' => 'contact', 'primary' => true]]
-      ) ?>
-    <?php endif; ?>
   </div>
 </section>
 
@@ -171,7 +188,7 @@ page_head(seo_overrides($category) + [
       <div class="cta-banner-inner">
         <span class="eyebrow eyebrow--light eyebrow--center">Bulk &amp; Project Supply</span>
         <h2 class="section-title">Ready to equip your site?</h2>
-        <p>Get installation support, wholesale pricing, and a scoped recommendation within 48 hours.</p>
+        <p>Get installation support, wholesale pricing, and a scoped recommendation within 24 hours.</p>
         <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Request a Quote</a>
       </div>
     </div>

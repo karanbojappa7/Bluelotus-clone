@@ -219,7 +219,7 @@ admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 
     </fieldset>
     <label class="<?= field_class($errors, 'image', true) ?>">Cover image
       <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
-      <span class="hint">Leave empty to keep the current photo. Used as the social share image.</span>
+      <span class="hint">Recommended 1600 × 900 px (16:9). Leave empty to keep the current photo. Used as the social share image.</span>
       <?= field_msg($errors, 'image') ?>
     </label>
     <?php if ($item['image'] !== ''): ?>

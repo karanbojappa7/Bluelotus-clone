@@ -129,6 +129,19 @@ function post(string $key, string $default = ''): string
     return isset($_POST[$key]) ? trim((string) $_POST[$key]) : $default;
 }
 
+function sanitize_hex_color(string $value, string $fallback = '#ffffff'): string
+{
+    $value = trim($value);
+    if (preg_match('/^#([0-9a-fA-F]{3})$/', $value, $m) === 1) {
+        $h = $m[1];
+        return '#' . strtolower($h[0] . $h[0] . $h[1] . $h[1] . $h[2] . $h[2]);
+    }
+    if (preg_match('/^#([0-9a-fA-F]{6})$/', $value) === 1) {
+        return strtolower($value);
+    }
+    return $fallback;
+}
+
 function post_slug_list(string $key): array
 {
     $raw = $_POST[$key] ?? [];
@@ -158,6 +171,62 @@ function string_list($value): array
         }
     }
     return array_values(array_unique($out));
+}
+
+function maps_embed_src(?string $url): string
+{
+    $url = trim((string) $url);
+    if ($url === '') {
+        return '';
+    }
+    if (preg_match('#^https://(www\.)?(google\.com/maps/embed|maps\.google\.com/)#i', $url) !== 1) {
+        return '';
+    }
+    return $url;
+}
+
+function contact_maps(?array $contact = null): array
+{
+    if ($contact === null) {
+        $contact = is_array(setting('contact', [])) ? setting('contact', []) : [];
+    }
+    $slots = [
+        ['label' => 'mapLabel', 'url' => 'mapEmbedUrl', 'fallback' => 'Bangalore Head Office'],
+        ['label' => 'mapLabel2', 'url' => 'mapEmbedUrl2', 'fallback' => 'Bhubaneswar'],
+        ['label' => 'mapLabel3', 'url' => 'mapEmbedUrl3', 'fallback' => 'Brahmapur'],
+        ['label' => 'mapLabel4', 'url' => 'mapEmbedUrl4', 'fallback' => 'Paradeep'],
+    ];
+    $out = [];
+    foreach ($slots as $slot) {
+        $src = maps_embed_src((string) ($contact[$slot['url']] ?? ''));
+        if ($src === '') {
+            continue;
+        }
+        $label = trim((string) ($contact[$slot['label']] ?? ''));
+        $out[] = [
+            'label' => $label !== '' ? $label : $slot['fallback'],
+            'src' => $src,
+        ];
+    }
+    return $out;
+}
+
+function quote_captcha_issue(): array
+{
+    $a = random_int(1, 9);
+    $b = random_int(1, 9);
+    $_SESSION['quote_captcha'] = $a + $b;
+    return ['a' => $a, 'b' => $b];
+}
+
+function quote_captcha_ok(string $answer): bool
+{
+    $expected = $_SESSION['quote_captcha'] ?? null;
+    $digits = preg_replace('/\D/', '', $answer) ?? '';
+    if ($expected === null || $digits === '') {
+        return false;
+    }
+    return (int) $digits === (int) $expected;
 }
 
 function csrf_token(): string

@@ -206,7 +206,7 @@ $statCols = min(max($statCount, 1), 4);
       <div class="cta-banner-inner">
         <span class="eyebrow eyebrow--light eyebrow--center">Get Started</span>
         <h2 class="section-title">Ready to safety-proof your site?</h2>
-        <p>Tell us your site type and headcount — we'll come back with a scoped safety plan within 48 hours.</p>
+        <p>Tell us your site type and headcount — we'll come back with a scoped safety plan within 24 hours.</p>
         <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Talk to Our Team</a>
       </div>
     </div>

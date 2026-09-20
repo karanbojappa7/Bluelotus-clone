@@ -29,7 +29,7 @@ page_head([
     'next' => $page < $pages ? 'blog?page=' . ($page + 1) : null,
 ]);
 ?>
-<section class="page-header">
+<section class="page-header page-header--light">
   <div class="container">
     <span class="eyebrow eyebrow--light">Safety Insights</span>
     <h1 class="page-title">Guidance from the people who install it.</h1>

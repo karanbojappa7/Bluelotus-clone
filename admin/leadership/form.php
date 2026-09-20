@@ -89,7 +89,7 @@ admin_header($existing ? 'Edit Leadership' : 'Add Leadership', 'leadership', ['L
     </label>
     <label class="full">Photo
       <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
-      <span class="hint">Choose an image from your computer. It is stored and loaded from the database.</span>
+      <span class="hint">Choose an image from your computer. Recommended 800 × 1000 px (4:5 portrait).</span>
     </label>
     <?php if ($item['image'] !== ''): ?>
       <div class="full file-preview">

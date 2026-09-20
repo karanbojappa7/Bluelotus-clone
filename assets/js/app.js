@@ -121,10 +121,28 @@
   }
 
   function initMap() {
-    const $frame = $("[data-map-embed]");
-    if ($frame.length && window.SITE_CONFIG) {
-      $frame.attr("src", window.SITE_CONFIG.contact.mapEmbedUrl);
+    const root = document.querySelector("[data-map-picker]");
+    if (!root) return;
+    const tabs = root.querySelectorAll("[data-map-tab]");
+    const frames = root.querySelectorAll(".map-frame");
+    if (!tabs.length) return;
+
+    function showMap(index) {
+      tabs.forEach(function (tab, i) {
+        const on = i === index;
+        tab.classList.toggle("is-active", on);
+        tab.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      frames.forEach(function (frame, i) {
+        frame.classList.toggle("is-active", i === index);
+      });
     }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () {
+        showMap(i);
+      });
+    });
   }
 
   function fieldError($field) {
@@ -236,6 +254,13 @@
           $form.find(".is-invalid").removeClass("is-invalid");
           $form.find(".field-error-msg").remove();
           $submit.prop("disabled", false).text($submit.attr("data-label") || "Submit Request");
+          if ($form.is("[data-quote-form]")) {
+            trackQuoteLead($form);
+            const $modal = $form.closest("[data-quote-modal]");
+            $form.attr("hidden", true);
+            $modal.find("[data-quote-success]").removeAttr("hidden");
+            try { sessionStorage.setItem("bluelotusQuoteLead", "done"); } catch (err) {}
+          }
         })
         .catch(function () {
           $feedback
@@ -344,18 +369,21 @@
 
   function initHeroCarousel() {
     const root = document.getElementById("heroCarousel");
-    if (!root) return;
+    if (!root || root.getAttribute("data-hero-bound") === "1") return;
+    root.setAttribute("data-hero-bound", "1");
 
     const slides = root.querySelectorAll(".hero-slide");
     const navButtons = root.querySelectorAll("[data-hero-goto]");
     const total = slides.length;
-    if (!total) return;
+    if (total < 2) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const AUTO_MS = 4000;
     let current = 0;
     let locked = false;
     let wheelAcc = 0;
     let touchY = 0;
+    let timer = 0;
 
     function heroLocked() {
       const rect = root.getBoundingClientRect();
@@ -363,13 +391,8 @@
     }
 
     function setSlide(index) {
-      const next = Math.max(0, Math.min(total - 1, index));
-      current = next;
+      current = ((index % total) + total) % total;
       slides.forEach(function (slide, i) {
-        slide.style.opacity = "";
-        slide.style.transform = "";
-        slide.style.zIndex = "";
-        slide.style.pointerEvents = "";
         slide.classList.toggle("is-active", i === current);
       });
       navButtons.forEach(function (btn) {
@@ -384,14 +407,24 @@
       });
     }
 
+    function stopAuto() {
+      window.clearTimeout(timer);
+      timer = 0;
+    }
+
+    function startAuto() {
+      stopAuto();
+      timer = window.setTimeout(function tick() {
+        if (!document.hidden) {
+          setSlide(current + 1);
+        }
+        timer = window.setTimeout(tick, AUTO_MS);
+      }, AUTO_MS);
+    }
+
     function go(step) {
-      const next = current + step;
-      if (next < 0) return;
-      if (next >= total) {
-        leaveHero();
-        return;
-      }
-      setSlide(next);
+      setSlide(current + step);
+      startAuto();
     }
 
     function cooldown() {
@@ -442,25 +475,99 @@
     navButtons.forEach(function (btn) {
       btn.addEventListener("click", function () {
         setSlide(Number(btn.getAttribute("data-hero-goto")));
+        startAuto();
       });
     });
 
     const nextBtn = root.querySelector("[data-hero-next]");
     if (nextBtn) {
-      nextBtn.addEventListener("click", function () {
-        go(1);
-      });
+      nextBtn.addEventListener("click", leaveHero);
     }
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stopAuto();
+      else startAuto();
+    });
 
     document.body.classList.add("is-in-hero");
     window.addEventListener(
       "scroll",
       function () {
-        document.body.classList.toggle("is-in-hero", heroLocked() || root.getBoundingClientRect().top >= 0);
+        const inView = heroLocked() || root.getBoundingClientRect().top >= 0;
+        document.body.classList.toggle("is-in-hero", inView);
       },
       { passive: true }
     );
+
     setSlide(0);
+    startAuto();
+  }
+
+  function trackQuoteLead($form) {
+    const sendTo = (($form.closest("[data-quote-modal]").attr("data-ads-send-to") || "")).trim();
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "generate_lead", lead_source: "quote_popup" });
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "generate_lead", { method: "quote_popup" });
+      if (sendTo) {
+        window.gtag("event", "conversion", { send_to: sendTo });
+      }
+    }
+    if (typeof window.fbq === "function") {
+      window.fbq("track", "Lead");
+    }
+  }
+
+  function initQuoteModal() {
+    const root = document.querySelector("[data-quote-modal]");
+    if (!root) return;
+
+    try {
+      if (sessionStorage.getItem("bluelotusQuoteLead") === "done") return;
+    } catch (err) {}
+
+    const qEl = root.querySelector("[data-quote-captcha-q]");
+    const refreshBtn = root.querySelector("[data-quote-captcha-refresh]");
+    const captchaInput = root.querySelector("#adsCaptcha");
+
+    function open() {
+      root.hidden = false;
+      document.body.classList.add("quote-locked");
+      const first = root.querySelector("input:not([type=hidden])");
+      if (first) first.focus();
+    }
+
+    function close() {
+      root.hidden = true;
+      document.body.classList.remove("quote-locked");
+      try { sessionStorage.setItem("bluelotusQuoteLead", "done"); } catch (err) {}
+    }
+
+    root.querySelectorAll("[data-quote-close]").forEach(function (el) {
+      el.addEventListener("click", close);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !root.hidden) close();
+    });
+
+    if (refreshBtn) {
+      refreshBtn.addEventListener("click", function () {
+        const endpoint = (window.SITE_SHELL && window.SITE_SHELL.url)
+          ? window.SITE_SHELL.url("contact-submit.php?captcha=1")
+          : "contact-submit.php?captcha=1";
+        fetch(endpoint, { headers: { Accept: "application/json" }, cache: "no-store" })
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            if (!data || data.a == null || data.b == null) return;
+            if (qEl) qEl.textContent = data.a + " + " + data.b + " =";
+            if (captchaInput) captchaInput.value = "";
+          })
+          .catch(function () {});
+      });
+    }
+
+    open();
   }
 
   function onShell() {
@@ -481,5 +588,9 @@
 
   window.SITE_SHELL.whenReady(onShell);
   $(document).on("config:rendered", onConfig);
-  $(initForms);
+  $(function () {
+    initForms();
+    initQuoteModal();
+    initHeroCarousel();
+  });
 })(jQuery);

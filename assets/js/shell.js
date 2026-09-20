@@ -42,13 +42,23 @@
     return url("blog/" + encodeURIComponent(slug));
   }
 
+  function categoryName(id) {
+    const cats = (window.SITE && SITE.categories) || [];
+    for (let i = 0; i < cats.length; i += 1) {
+      if (cats[i].id === id) return cats[i].name || "";
+    }
+    return "";
+  }
+
   function productCard(p) {
     const img = (p.images && p.images[0]) || FALLBACK_IMAGE;
+    const cat = categoryName(p.category);
     return `<a class="product-card" href="${productUrl(p.slug)}" data-reveal>
       <span class="product-card-media">
         <img src="${esc(url(img))}" alt="${esc(p.name)}" width="480" height="320" loading="lazy" data-fallback>
       </span>
       <span class="product-card-body">
+        ${cat ? `<span class="product-card-cat">${esc(cat)}</span>` : ""}
         <strong>${esc(p.name)}</strong>
         <em>${esc(p.short)}</em>
         <span class="tile-link">View Product ${icon("arrow")}</span>
@@ -89,7 +99,7 @@
   function socialLinks() {
     return ["facebook", "linkedin", "instagram", "youtube"]
       .map(function (net) {
-        return `<a data-config-href="social.${net}" target="_blank" rel="noopener" aria-label="${net}">${icon(net, 16)}</a>`;
+        return `<a class="social-${net}" data-config-href="social.${net}" target="_blank" rel="noopener" aria-label="${net}">${icon(net, 16)}</a>`;
       })
       .join("");
   }

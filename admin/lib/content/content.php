@@ -83,7 +83,7 @@ function default_hero_slides(): array
             'highlight' => 'every worksite,',
             'subtitle' => 'We supply, install, and maintain fire, road, industrial, and household safety systems for contractors, industries, and government agencies across India.',
             'image' => 'assets/img/hero.jpg',
-            'navLabel' => 'Protect',
+            'navLabel' => 'Supply',
             'buttonLabel' => 'Request a Site Audit',
             'buttonUrl' => 'contact',
             'button2Label' => 'Browse Product Range',
@@ -95,7 +95,7 @@ function default_hero_slides(): array
             'highlight' => 'before',
             'subtitle' => 'Extinguishers, hydrants, and detection specified for Indian sites — installed and maintained by our own crews.',
             'image' => 'assets/img/products.jpg',
-            'navLabel' => 'Fire',
+            'navLabel' => 'Install',
             'buttonLabel' => 'Learn More',
             'buttonUrl' => 'products/fire-safety',
             'button2Label' => '',
@@ -107,7 +107,7 @@ function default_hero_slides(): array
             'highlight' => 'work zone',
             'subtitle' => 'Barricades, cones, signage, and crash protection built for highways, yards, and temporary site approaches.',
             'image' => 'assets/img/about.jpg',
-            'navLabel' => 'Road',
+            'navLabel' => 'Maintain',
             'buttonLabel' => 'Learn More',
             'buttonUrl' => 'products/road-traffic-safety',
             'button2Label' => '',
@@ -119,7 +119,7 @@ function default_hero_slides(): array
             'highlight' => 'stay accountable.',
             'subtitle' => 'Consultancy, installation, and 24/7 maintenance — one team past the invoice, not a chain of vendors.',
             'image' => 'assets/img/blog-1.jpg',
-            'navLabel' => 'Service',
+            'navLabel' => 'Accountably',
             'buttonLabel' => 'Learn More',
             'buttonUrl' => 'faq',
             'button2Label' => '',
@@ -263,6 +263,17 @@ function map_category(array $row): array
         'noindex' => (int) ($row['noindex'] ?? 0) === 1,
         'updatedAt' => (string) ($row['updated_at'] ?? ''),
     ];
+}
+
+function category_card_image(array $cat): string
+{
+    foreach (['image', 'ogImage'] as $key) {
+        $value = trim((string) ($cat[$key] ?? ''));
+        if ($value !== '') {
+            return $value;
+        }
+    }
+    return 'assets/img/products.jpg';
 }
 
 function map_product(array $row): array
@@ -642,6 +653,7 @@ function save_enquiry(array $data): int
         $data['message'],
         $data['ip'],
     ]);
+    unset($_SESSION['quote_captcha']);
     return (int) db()->lastInsertId();
 }
 

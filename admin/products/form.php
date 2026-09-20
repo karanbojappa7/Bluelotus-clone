@@ -194,7 +194,7 @@ admin_header($row ? 'Edit Product' : 'Add Product', 'products', ['Products' => '
     </label>
     <label class="<?= field_class($errors, 'image_files', true) ?>">Add images
       <input type="file" name="image_files[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
-      <span class="hint">JPG, PNG, WebP, or GIF up to 5 MB each. The first image is the card thumbnail.</span>
+      <span class="hint">JPG, PNG, WebP, or GIF up to 5 MB each. Recommended 1200 × 900 px (4:3). The first image is the card thumbnail.</span>
       <?= field_msg($errors, 'image_files') ?>
     </label>
     <?php if ($product['images']): ?>

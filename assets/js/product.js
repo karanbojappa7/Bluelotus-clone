@@ -4,9 +4,21 @@
 
   function selectThumb($thumb) {
     if (!$thumb.length) return;
-    $("#prodMainImage").attr("src", $thumb.attr("data-src"));
-    $(".product-thumb").removeClass("is-active").attr("aria-pressed", "false");
+    const src = $thumb.attr("data-src");
+    const $img = $("#prodMainImage");
+    if ($img.attr("src") !== src) {
+      $img.css("opacity", "0.35");
+      window.setTimeout(function () {
+        $img.attr("src", src).css("opacity", "1");
+      }, 80);
+    }
+    const $all = $(".product-thumb");
+    $all.removeClass("is-active").attr("aria-pressed", "false");
     $thumb.addClass("is-active").attr("aria-pressed", "true");
+    const $count = $("#prodImageCount");
+    if ($count.length) {
+      $count.text(($all.index($thumb) + 1) + " / " + $all.length);
+    }
   }
 
   function buildShare() {

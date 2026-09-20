@@ -13,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'gaId' => trim(post('gaId')),
         'gtmId' => trim(post('gtmId')),
         'metaPixelId' => trim(post('metaPixelId')),
+        'adsId' => strtoupper(trim(post('adsId'))),
+        'adsLabel' => trim(post('adsLabel')),
         'customHead' => (string) ($_POST['customHead'] ?? ''),
     ];
 
@@ -24,6 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($analytics['metaPixelId'] !== '' && !preg_match('/^\d{6,}$/', $analytics['metaPixelId'])) {
         $errors['metaPixelId'] = 'Should be a numeric Pixel ID, or leave it blank.';
+    }
+    if ($analytics['adsId'] !== '' && !preg_match('/^AW-\d{6,}$/', $analytics['adsId'])) {
+        $errors['adsId'] = 'Should look like AW-123456789, or leave it blank.';
+    }
+    if ($analytics['adsLabel'] !== '' && !preg_match('/^[A-Za-z0-9_-]{4,}$/', $analytics['adsLabel'])) {
+        $errors['adsLabel'] = 'Paste the conversion label from Google Ads, or leave it blank.';
     }
 
     if (!$errors) {
@@ -57,6 +65,16 @@ admin_header('Analytics', 'analytics');
     <label class="<?= field_class($errors, 'metaPixelId') ?>">Meta (Facebook) Pixel ID
       <input type="text" name="metaPixelId" value="<?= e($analytics['metaPixelId'] ?? '') ?>" placeholder="123456789012345">
       <?= field_msg($errors, 'metaPixelId') ?>
+    </label>
+    <label class="<?= field_class($errors, 'adsId') ?>">Google Ads Conversion ID
+      <input type="text" name="adsId" value="<?= e($analytics['adsId'] ?? '') ?>" placeholder="AW-123456789">
+      <span class="hint">Loads with the quote popup so a successful lead can fire as a Google Ads conversion.</span>
+      <?= field_msg($errors, 'adsId') ?>
+    </label>
+    <label class="<?= field_class($errors, 'adsLabel') ?>">Google Ads Conversion Label
+      <input type="text" name="adsLabel" value="<?= e($analytics['adsLabel'] ?? '') ?>" placeholder="AbCDeFghIjkLmNoP">
+      <span class="hint">From Google Ads &rarr; Goals &rarr; Conversions. Needed together with the Conversion ID.</span>
+      <?= field_msg($errors, 'adsLabel') ?>
     </label>
     <label class="full">Custom tracking code <span class="hint">(optional)</span>
       <textarea name="customHead" rows="8" spellcheck="false"><?= e($analytics['customHead'] ?? '') ?></textarea>

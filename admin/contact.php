@@ -34,6 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'line2' => post('address2'),
         ],
         'mapEmbedUrl' => post('mapEmbedUrl'),
+        'mapLabel' => post('mapLabel'),
+        'mapEmbedUrl2' => post('mapEmbedUrl2'),
+        'mapLabel2' => post('mapLabel2'),
+        'mapEmbedUrl3' => post('mapEmbedUrl3'),
+        'mapLabel3' => post('mapLabel3'),
+        'mapEmbedUrl4' => post('mapEmbedUrl4'),
+        'mapLabel4' => post('mapLabel4'),
     ];
     save_setting('contact', $contact);
     export_site_config_js();
@@ -65,8 +72,30 @@ admin_header('Contact', 'contact');
     <label class="full">Address line 2
       <input type="text" name="address2" value="<?= e($contact['address']['line2'] ?? '') ?>">
     </label>
-    <label class="full">Google Maps embed URL
+    <label>Map 1 label
+      <input type="text" name="mapLabel" value="<?= e($contact['mapLabel'] ?? '') ?>" placeholder="Bangalore Head Office">
+    </label>
+    <label class="full">Google Maps embed URL (map 1)
       <textarea name="mapEmbedUrl" rows="2"><?= e($contact['mapEmbedUrl'] ?? '') ?></textarea>
+    </label>
+    <label>Map 2 label
+      <input type="text" name="mapLabel2" value="<?= e($contact['mapLabel2'] ?? '') ?>" placeholder="Bhubaneswar">
+    </label>
+    <label class="full">Google Maps embed URL (map 2)
+      <textarea name="mapEmbedUrl2" rows="2"><?= e($contact['mapEmbedUrl2'] ?? '') ?></textarea>
+    </label>
+    <label>Map 3 label
+      <input type="text" name="mapLabel3" value="<?= e($contact['mapLabel3'] ?? '') ?>" placeholder="Brahmapur">
+    </label>
+    <label class="full">Google Maps embed URL (map 3)
+      <textarea name="mapEmbedUrl3" rows="2"><?= e($contact['mapEmbedUrl3'] ?? '') ?></textarea>
+    </label>
+    <label>Map 4 label
+      <input type="text" name="mapLabel4" value="<?= e($contact['mapLabel4'] ?? '') ?>" placeholder="Paradeep">
+    </label>
+    <label class="full">Google Maps embed URL (map 4)
+      <textarea name="mapEmbedUrl4" rows="2"><?= e($contact['mapEmbedUrl4'] ?? '') ?></textarea>
+      <span class="hint">Paradeep can stay as a placeholder until the exact pin is provided.</span>
     </label>
   </div>
   <div class="form-actions">

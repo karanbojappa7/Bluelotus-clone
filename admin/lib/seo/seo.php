@@ -28,6 +28,39 @@ function seo_contact(): array
     return $cache;
 }
 
+function contact_phones(): array
+{
+    $out = [];
+    foreach ((seo_contact()['phones'] ?? []) as $row) {
+        $number = trim((string) ($row['number'] ?? ''));
+        if ($number !== '' && !in_array($number, $out, true)) {
+            $out[] = $number;
+        }
+    }
+    foreach (['+91 74833 94208', '+91 93377 45396', '+91 91487 36860'] as $number) {
+        if (!in_array($number, $out, true)) {
+            $out[] = $number;
+        }
+    }
+    return $out;
+}
+
+function contact_icon(string $name, int $size = 18): string
+{
+    return '<svg class="quote-contact-ico" width="' . $size . '" height="' . $size . '" aria-hidden="true"><use href="'
+        . e(url_for('assets/img/sprite.svg')) . '#icon-' . e($name) . '"></use></svg>';
+}
+
+function render_phone_links(): string
+{
+    $parts = [];
+    foreach (contact_phones() as $number) {
+        $tel = preg_replace('/[^\d+]/', '', $number) ?? '';
+        $parts[] = '<a href="tel:' . e($tel) . '">' . e($number) . '</a>';
+    }
+    return implode(' <span class="phone-sep">/</span> ', $parts);
+}
+
 function seo_domain(): string
 {
     $domain = trim((string) (seo_settings()['domain'] ?? ''));
@@ -408,10 +441,19 @@ function analytics_head(): string
     $html = '';
 
     $gaId = trim((string) ($a['gaId'] ?? ''));
-    if ($gaId !== '') {
-        $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . e($gaId) . '"></script>'
+    $adsId = trim((string) ($a['adsId'] ?? ''));
+    $gtagId = $gaId !== '' ? $gaId : $adsId;
+    if ($gtagId !== '') {
+        $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . e($gtagId) . '"></script>'
             . '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
-            . 'gtag("js",new Date());gtag("config",' . json_encode($gaId) . ');</script>';
+            . 'gtag("js",new Date());';
+        if ($gaId !== '') {
+            $html .= 'gtag("config",' . json_encode($gaId) . ');';
+        }
+        if ($adsId !== '') {
+            $html .= 'gtag("config",' . json_encode($adsId) . ');';
+        }
+        $html .= '</script>';
     }
 
     $gtmId = trim((string) ($a['gtmId'] ?? ''));
@@ -450,6 +492,129 @@ function analytics_body(): string
     }
     return '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=' . e($gtmId)
         . '" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>';
+}
+
+function ads_conversion_send_to(): string
+{
+    $a = analytics_settings();
+    $id = strtoupper(trim((string) ($a['adsId'] ?? '')));
+    $label = trim((string) ($a['adsLabel'] ?? ''));
+    if ($id === '' || $label === '') {
+        return '';
+    }
+    return $id . '/' . $label;
+}
+
+function render_quote_modal(): void
+{
+    $categories = db_ready() ? all_categories() : [];
+    $captcha = quote_captcha_issue();
+    $sendTo = ads_conversion_send_to();
+    $sprite = url_for('assets/img/sprite.svg');
+    ?>
+<div class="quote-modal" data-quote-modal hidden<?= $sendTo !== '' ? ' data-ads-send-to="' . e($sendTo) . '"' : '' ?>>
+  <div class="quote-modal-backdrop" data-quote-close></div>
+  <div class="quote-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="quote-modal-title">
+    <button type="button" class="quote-modal-close" data-quote-close aria-label="Close quote form">
+      <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-close"></use></svg>
+    </button>
+    <p class="quote-modal-kicker">B2B Safety Pricing</p>
+    <h2 id="quote-modal-title">Get a Bulk Quote</h2>
+    <p class="quote-modal-lead">Volume pricing, availability, and a scoped recommendation from our engineers.</p>
+
+    <div class="quote-modal-success" data-quote-success hidden>
+      <span class="quote-success-icon" aria-hidden="true">
+        <svg width="28" height="28"><use href="<?= e($sprite) ?>#icon-check"></use></svg>
+      </span>
+      <p class="quote-modal-kicker">Request received</p>
+      <h3>Thank you — our team will reply within one business day.</h3>
+      <p>You can keep browsing the catalog while we prepare your estimate.</p>
+      <button type="button" class="btn quote-modal-btn mt-4" data-quote-close>Continue browsing</button>
+    </div>
+
+    <form class="quote-modal-form" data-quote-form data-validate novalidate
+          method="post" action="<?= e(url_for('contact-submit.php')) ?>">
+      <?= csrf_field() ?>
+      <input type="hidden" name="source" value="quote-popup">
+      <div class="hp" aria-hidden="true">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="quote-modal-grid">
+        <div class="quote-field">
+          <label class="quote-label" for="adsFullName">Full Name <span>*</span></label>
+          <span class="quote-input-wrap">
+            <svg class="quote-input-icon" width="16" height="16" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-consult"></use></svg>
+            <input class="form-control" type="text" id="adsFullName" name="fullName" required autocomplete="name" placeholder="e.g. Full Name">
+          </span>
+        </div>
+        <div class="quote-field">
+          <label class="quote-label" for="adsEmail">Email <span>*</span></label>
+          <span class="quote-input-wrap">
+            <svg class="quote-input-icon" width="16" height="16" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-mail"></use></svg>
+            <input class="form-control" type="email" id="adsEmail" name="email" required autocomplete="email" placeholder="e.g. yourname@company.com">
+          </span>
+        </div>
+        <div class="quote-field">
+          <label class="quote-label" for="adsPhone">Phone <span>*</span></label>
+          <span class="quote-input-wrap">
+            <svg class="quote-input-icon" width="16" height="16" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-phone"></use></svg>
+            <input class="form-control" type="tel" id="adsPhone" name="phone" required autocomplete="tel" placeholder="e.g. +91 98765 43210">
+          </span>
+        </div>
+        <div class="quote-field">
+          <label class="quote-label" for="adsCompany">Company <span>*</span></label>
+          <span class="quote-input-wrap">
+            <svg class="quote-input-icon" width="16" height="16" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-household"></use></svg>
+            <input class="form-control" type="text" id="adsCompany" name="company" required autocomplete="organization" placeholder="e.g. Infrastructure Ltd / Warehouse">
+          </span>
+        </div>
+        <div class="quote-field quote-field--full">
+          <label class="quote-label" for="adsCategory">Safety Need <span>*</span></label>
+          <span class="quote-input-wrap">
+            <svg class="quote-input-icon" width="16" height="16" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-shield"></use></svg>
+            <select class="form-control" id="adsCategory" name="category" required>
+              <option value="" selected disabled>Select Primary Safety Need</option>
+              <?php foreach ($categories as $cat): ?>
+                <option value="<?= e($cat['name']) ?>"><?= e($cat['name']) ?></option>
+              <?php endforeach; ?>
+              <option value="Other / Not Sure">Other / Not Sure</option>
+            </select>
+          </span>
+        </div>
+        <div class="quote-field quote-field--full">
+          <label class="quote-label" for="adsMessage">Project details <em>(optional)</em></label>
+          <textarea class="form-control" id="adsMessage" name="message" rows="3" placeholder="Quantities, site type, timeline, or product references…"></textarea>
+        </div>
+      </div>
+
+      <div class="quote-modal-foot">
+        <div class="quote-captcha-block">
+          <span class="quote-label">Verification <span>*</span></span>
+          <div class="quote-captcha">
+            <span class="quote-captcha-sum">
+              <svg width="15" height="15" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-shield"></use></svg>
+              <span data-quote-captcha-q><?= (int) $captcha['a'] ?> + <?= (int) $captcha['b'] ?> =</span>
+            </span>
+            <input class="form-control" type="text" name="captcha" id="adsCaptcha" required inputmode="numeric" autocomplete="off" maxlength="2" placeholder="?" aria-label="Security verification answer">
+            <button type="button" class="quote-captcha-refresh" data-quote-captcha-refresh aria-label="Refresh security question">
+              <svg width="16" height="16" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-refresh"></use></svg>
+            </button>
+          </div>
+        </div>
+        <p class="quote-trust">
+          <svg width="14" height="14" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-check"></use></svg>
+          Your details stay private. No spam.
+        </p>
+        <button type="submit" class="btn quote-modal-btn">Get Quote
+          <svg width="14" height="14" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-arrow"></use></svg>
+        </button>
+      </div>
+      <span data-form-feedback></span>
+    </form>
+  </div>
+</div>
+    <?php
 }
 
 function page_absolute_url(array $page): string
@@ -549,8 +714,8 @@ function page_head(array $page): void
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="<?= e(url_for('assets/css/tokens.css')) ?>">
-<link rel="stylesheet" href="<?= e(url_for('assets/css/site.css')) ?>">
+<link rel="stylesheet" href="<?= e(url_for('assets/css/tokens.css')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/css/tokens.css') ?>">
+<link rel="stylesheet" href="<?= e(url_for('assets/css/site.css')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/css/site.css') ?>">
 <?= json_ld($schema) ?>
 <?= analytics_head() ?>
 </head>
@@ -569,6 +734,11 @@ function page_foot(array $opts = []): void
 </main>
 <div data-site="footer"<?= !empty($opts['compactFooter']) ? ' data-compact' : '' ?>></div>
 <div data-site="fabs"></div>
+<?php
+    if (empty($opts['skipQuoteModal']) && empty($opts['compactFooter'])) {
+        render_quote_modal();
+    }
+?>
 <script>window.SITE_BASE = <?= json_encode(seo_base_path() . '/', JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;</script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="<?= e(url_for('config/site.config.php')) ?>"></script>
@@ -781,19 +951,48 @@ function render_not_found(array $opts): void
     exit;
 }
 
+function render_category_tile(array $category): string
+{
+    $desc = trim((string) ($category['desc'] ?? ''));
+    $html = '<a class="tile tile--photo other-cat-card" href="' . e(category_path((string) $category['id'])) . '">'
+        . '<span class="tile-media" style="background-image:url(\'' . e(url_for(category_card_image($category))) . '\')"></span>'
+        . '<span class="tile-copy">'
+        . '<span class="other-cat-kicker">Category</span>'
+        . '<h3>' . e((string) $category['name']) . '</h3>';
+    if ($desc !== '') {
+        $html .= '<p>' . e(truncate($desc, 110)) . '</p>';
+    }
+    $html .= '<span class="tile-link">View range <svg width="14" height="14" aria-hidden="true"><use href="'
+        . e(url_for('assets/img/sprite.svg')) . '#icon-arrow"></use></svg></span>'
+        . '</span></a>';
+    return $html;
+}
+
 function render_product_card(array $product): string
 {
+    static $categoryNames = null;
+    if ($categoryNames === null) {
+        $categoryNames = [];
+        foreach (all_categories() as $cat) {
+            $categoryNames[(string) $cat['id']] = (string) $cat['name'];
+        }
+    }
     $image = $product['images'][0] ?? 'assets/img/products.jpg';
-    return '<a class="product-card" href="' . e(product_path((string) $product['slug'])) . '">'
+    $catName = $categoryNames[(string) ($product['category'] ?? '')] ?? '';
+    $html = '<a class="product-card" href="' . e(product_path((string) $product['slug'])) . '">'
         . '<span class="product-card-media">'
         . '<img src="' . e(url_for($image)) . '" alt="' . e((string) $product['name']) . '" width="480" height="320" loading="lazy" data-fallback>'
         . '</span>'
-        . '<span class="product-card-body">'
-        . '<strong>' . e((string) $product['name']) . '</strong>'
+        . '<span class="product-card-body">';
+    if ($catName !== '') {
+        $html .= '<span class="product-card-cat">' . e($catName) . '</span>';
+    }
+    $html .= '<strong>' . e((string) $product['name']) . '</strong>'
         . '<em>' . e((string) $product['short']) . '</em>'
-        . '<span class="tile-link">View Product <svg width="18" height="18" aria-hidden="true"><use href="'
+        . '<span class="tile-link">View Product <svg width="16" height="16" aria-hidden="true"><use href="'
         . e(url_for('assets/img/sprite.svg')) . '#icon-arrow"></use></svg></span>'
         . '</span></a>';
+    return $html;
 }
 
 function render_breadcrumbs(array $crumbs): string
