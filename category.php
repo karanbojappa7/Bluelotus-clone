@@ -67,7 +67,6 @@ page_head(seo_overrides($category) + [
         <span class="eyebrow">This Category</span>
         <h2 class="section-title"><?= e($category['name']) ?> products</h2>
         <h2 class="section-title section-title--sm mt-3"><?= e($category['headline'] ?: $category['name']) ?></h2>
-        <p class="catalog-lead mt-3"><?= e($category['intro'] ?: $category['desc']) ?></p>
       </div>
       <p class="section-sub">
         <?= $total
@@ -75,6 +74,7 @@ page_head(seo_overrides($category) + [
             : '0 products available' ?>
       </p>
     </div>
+    <p class="catalog-lead catalog-lead--full"><?= e($category['intro'] ?: $category['desc']) ?></p>
     <?php if ($products): ?>
       <div class="product-grid">
         <?php foreach ($products as $product): ?>

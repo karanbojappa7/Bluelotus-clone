@@ -139,10 +139,12 @@ button {
 
 .section-head--start {
   align-items: flex-start;
+  margin-bottom: var(--space-3);
 }
 
-.section-head--start .catalog-lead {
-  margin-bottom: 0;
+.catalog-lead--full {
+  max-width: none;
+  margin: 0 0 var(--space-5);
 }
 
 .section-title {
@@ -2711,6 +2713,10 @@ body.is-in-hero .back-to-top {
   line-height: 1.75;
   color: var(--slate);
   max-width: 62ch;
+}
+
+.catalog-lead--full {
+  max-width: none;
 }
 
 .buyer-panel {
