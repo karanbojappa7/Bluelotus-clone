@@ -52,6 +52,10 @@ $currency = strtoupper(trim((string) $product['currency']) !== '' ? (string) $pr
 $sku = trim((string) $product['sku']);
 $brand = trim((string) $product['brand']);
 $sprite = url_for('assets/img/sprite.svg');
+$instagram = trim((string) ((setting('social', []) ?: [])['instagram'] ?? ''));
+if ($instagram === '') {
+    $instagram = 'https://www.instagram.com/bluelotusenterprises';
+}
 
 page_head(seo_overrides($product) + [
     'title' => $product['metaTitle'] !== '' ? $product['metaTitle'] : $product['name'],
@@ -169,7 +173,11 @@ page_head(seo_overrides($product) + [
 
         <div class="product-share">
           <span class="meta-label">Share</span>
-          <div class="share-row" id="prodShare" data-share-url="<?= e($productUrl) ?>" data-share-title="<?= e($product['name'] . ' | ' . brand_name()) ?>" data-share-text="<?= e($product['short']) ?>"></div>
+          <div class="share-row" id="prodShare"
+               data-share-url="<?= e($productUrl) ?>"
+               data-share-title="<?= e($product['name'] . ' | ' . brand_name()) ?>"
+               data-share-text="<?= e($product['short']) ?>"
+               data-share-instagram="<?= e($instagram) ?>"></div>
         </div>
       </div>
     </div>

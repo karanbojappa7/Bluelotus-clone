@@ -60,8 +60,9 @@ admin_header('SEO', 'seo');
       <input type="url" name="domain" required value="<?= e($seo['domain'] ?? '') ?>" placeholder="https://www.example.com">
       <span class="hint">No trailing slash. Used to build every canonical URL, sitemap entry, and share link.</span>
     </label>
-    <label class="full">Default title suffix / home title
+    <label class="full">Default title / home title
       <input type="text" name="defaultTitle" value="<?= e($seo['defaultTitle'] ?? '') ?>" data-maxlen="60">
+      <span class="hint">Shown before “| <?= e(brand_name()) ?>” on the homepage and as the fallback for pages without their own title.</span>
     </label>
     <label class="full">Default meta description
       <textarea name="defaultDescription" rows="3" required data-maxlen="158"><?= e($seo['defaultDescription'] ?? '') ?></textarea>

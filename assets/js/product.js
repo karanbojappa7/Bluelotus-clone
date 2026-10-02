@@ -51,6 +51,12 @@
         className: "share-btn share-btn--li"
       },
       {
+        label: "Instagram",
+        href: $mount.attr("data-share-instagram") || "https://www.instagram.com/",
+        icon: "instagram",
+        className: "share-btn share-btn--ig"
+      },
+      {
         label: "Email",
         href: "mailto:?subject=" + encodedTitle + "&body=" + encodeURIComponent(text + "\n\n" + url),
         icon: "mail",

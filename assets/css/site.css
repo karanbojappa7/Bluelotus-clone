@@ -137,6 +137,14 @@ button {
   margin-bottom: var(--space-5);
 }
 
+.section-head--start {
+  align-items: flex-start;
+}
+
+.section-head--start .catalog-lead {
+  margin-bottom: 0;
+}
+
 .section-title {
   font-size: var(--fs-h2);
   margin-top: var(--space-2);
@@ -368,7 +376,8 @@ body.is-in-hero .site-header:not(.is-scrolled):not(.is-nav-open)::before {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.02rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   color: #7ec8f0;
 }
 
@@ -3728,6 +3737,11 @@ img[data-fallback].is-broken {
 
 .share-btn--li {
   background: #0a66c2;
+  color: #fff;
+}
+
+.share-btn--ig {
+  background: linear-gradient(45deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888);
   color: #fff;
 }
 

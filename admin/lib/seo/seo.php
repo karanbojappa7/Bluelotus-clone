@@ -144,6 +144,24 @@ function brand_name(): string
     return 'Bluelotus Infrasafety';
 }
 
+function format_document_title(string $title = ''): string
+{
+    $brand = brand_name();
+    $title = trim($title);
+    $title = preg_replace('/\bBluelotus\b(?!\s+Infrasafety)/i', 'Bluelotus Infrasafety', $title) ?? $title;
+    $title = trim((string) $title);
+
+    $quoted = preg_quote($brand, '/');
+    $title = preg_replace('/^' . $quoted . '\s*[|–—-]\s*/iu', '', $title) ?? $title;
+    $title = preg_replace('/\s*[|–—-]\s*' . $quoted . '\s*$/iu', '', $title) ?? $title;
+    $title = trim((string) $title);
+
+    if ($title === '' || strcasecmp($title, $brand) === 0) {
+        return $brand;
+    }
+    return $title . ' | ' . $brand;
+}
+
 function seo_image(?string $image = null): string
 {
     $image = trim((string) $image);
@@ -637,21 +655,12 @@ function page_absolute_url(array $page): string
 function page_head(array $page): void
 {
     $seo = seo_settings();
-    $brand = brand_name();
     $rawTitle = trim((string) ($page['title'] ?? ''));
     $fullTitle = trim((string) ($page['fullTitle'] ?? ''));
     if ($fullTitle === '') {
-        if ($rawTitle === '') {
-            $fullTitle = $brand . ' | ' . (string) ($seo['defaultTitle'] ?? '');
-        } elseif (stripos($rawTitle, 'Bluelotus Infrasafety') !== false || stripos($rawTitle, $brand) !== false) {
-            $fullTitle = preg_replace('/\bBluelotus\b(?!\s+Infrasafety)/i', 'Bluelotus Infrasafety', $rawTitle) ?? $rawTitle;
-        } else {
-            $fullTitle = preg_replace('/\bBluelotus\b(?!\s+Infrasafety)/i', 'Bluelotus Infrasafety', $rawTitle) ?? $rawTitle;
-            $fullTitle = $fullTitle . ' | ' . $brand;
-        }
-    } else {
-        $fullTitle = preg_replace('/\bBluelotus\b(?!\s+Infrasafety)/i', 'Bluelotus Infrasafety', $fullTitle) ?? $fullTitle;
+        $fullTitle = $rawTitle !== '' ? $rawTitle : (string) ($seo['defaultTitle'] ?? '');
     }
+    $fullTitle = format_document_title($fullTitle);
 
     $description = meta_text($page['description'] ?? '', 158, (string) ($seo['defaultDescription'] ?? ''));
     $keywords = trim((string) ($page['keywords'] ?? ($seo['keywords'] ?? '')));
@@ -669,7 +678,7 @@ function page_head(array $page): void
     }
 
     $seo = seo_settings();
-    $author = trim((string) ($page['author'] ?? '')) ?: $brand;
+    $author = trim((string) ($page['author'] ?? '')) ?: brand_name();
     $twitterHandle = trim((string) ($seo['twitterHandle'] ?? ''), " \t\n\r\0\x0B@");
     $googleVerify = trim((string) ($seo['googleVerification'] ?? ''));
     $bingVerify = trim((string) ($seo['bingVerification'] ?? ''));
@@ -756,9 +765,9 @@ function page_foot(array $opts = []): void
 <script>window.SITE_BASE = <?= json_encode(seo_base_path() . '/', JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;</script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="<?= e(url_for('config/site.config.php')) ?>"></script>
-<script src="<?= e(url_for('assets/js/shell.js')) ?>"></script>
-<script src="<?= e(url_for('assets/js/render.js')) ?>"></script>
-<script src="<?= e(url_for('assets/js/app.js')) ?>"></script>
+<script src="<?= e(url_for('assets/js/shell.js')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/js/shell.js') ?>"></script>
+<script src="<?= e(url_for('assets/js/render.js')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/js/render.js') ?>"></script>
+<script src="<?= e(url_for('assets/js/app.js')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/js/app.js') ?>"></script>
 <?php foreach ($scripts as $script): ?>
 <script src="<?= e(url_for('assets/js/' . $script)) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/js/' . $script) ?>"></script>
 <?php endforeach; ?>

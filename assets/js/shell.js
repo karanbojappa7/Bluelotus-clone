@@ -113,7 +113,7 @@
         <img class="brand-mark" src="${esc(url(mark))}" alt="" width="48" height="48">
       </span>
       <span class="brand-copy">
-        <span class="brand-name">BLUE LOTUS</span>
+        <span class="brand-name">BLUELOTUS</span>
         <span class="brand-sub">INFRASAFETY</span>
       </span>
     </a>`;

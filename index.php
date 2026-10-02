@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/admin/bootstrap.php';
 
 page_head([
-    'fullTitle' => brand_name() . ' | ' . (string) (seo_settings()['defaultTitle'] ?? 'Safety Equipment Supplier'),
+    'title' => (string) (seo_settings()['defaultTitle'] ?? 'Safety Equipment Manufacturer & Supplier India'),
     'description' => (string) (seo_settings()['defaultDescription'] ?? ''),
     'canonical' => '',
     'breadcrumbs' => ['Home' => null],

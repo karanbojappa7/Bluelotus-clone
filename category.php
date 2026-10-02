@@ -41,7 +41,6 @@ $schema = array_values(array_filter([
 ]));
 
 $titleBase = $category['metaTitle'] !== '' ? $category['metaTitle'] : $category['name'];
-$whatsapp = preg_replace('/[^\d]/', '', (string) (seo_contact()['whatsapp'] ?? ''));
 
 page_head(seo_overrides($category) + [
     'title' => $page > 1 ? $titleBase . ' — Page ' . $page : $titleBase,
@@ -63,10 +62,12 @@ page_head(seo_overrides($category) + [
 
 <section class="section section--dim">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head section-head--start">
       <div>
         <span class="eyebrow">This Category</span>
         <h2 class="section-title"><?= e($category['name']) ?> products</h2>
+        <h2 class="section-title section-title--sm mt-3"><?= e($category['headline'] ?: $category['name']) ?></h2>
+        <p class="catalog-lead mt-3"><?= e($category['intro'] ?: $category['desc']) ?></p>
       </div>
       <p class="section-sub">
         <?= $total
@@ -110,11 +111,10 @@ page_head(seo_overrides($category) + [
 </section>
 <?php endif; ?>
 
+<?php if ($category['buyers'] !== '' || $category['useCases']): ?>
 <section class="section section--dim">
-  <div class="container catalog-layout">
+  <div class="container">
     <article class="catalog-copy">
-      <h2 class="section-title"><?= e($category['headline'] ?: $category['name']) ?></h2>
-      <p class="catalog-lead mt-3"><?= e($category['intro'] ?: $category['desc']) ?></p>
       <?php if ($category['buyers'] !== ''): ?>
       <div class="buyer-panel mt-5">
         <span class="eyebrow">Who We Serve</span>
@@ -140,26 +140,9 @@ page_head(seo_overrides($category) + [
       </div>
       <?php endif; ?>
     </article>
-    <aside class="catalog-side">
-      <div class="side-card side-card--accent">
-        <span class="eyebrow">Need Help Choosing?</span>
-        <h2 class="mt-2">Free site safety consult</h2>
-        <p class="mt-2">Tell us your site type, volume, and timeline &mdash; we'll recommend a product mix.</p>
-        <div class="product-quote-contact mt-3">
-          <p class="product-quote-row">
-            <?= contact_icon('phone') ?>
-            <span><?= render_phone_links() ?></span>
-          </p>
-        </div>
-        <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Talk to Our Team</a>
-        <?php if ($whatsapp !== ''): ?>
-        <a href="https://wa.me/<?= e($whatsapp) ?>?text=<?= e(rawurlencode('Hello, I would like product details for the ' . $category['name'] . ' category.')) ?>"
-           class="btn btn-wa mt-2" target="_blank" rel="noopener">Enquire on WhatsApp</a>
-        <?php endif; ?>
-      </div>
-    </aside>
   </div>
 </section>
+<?php endif; ?>
 
 <?php if ($category['faqs']): ?>
 <section class="section">
