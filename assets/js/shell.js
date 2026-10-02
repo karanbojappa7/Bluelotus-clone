@@ -97,9 +97,21 @@
   }
 
   function socialLinks() {
-    return ["facebook", "linkedin", "instagram", "youtube"]
-      .map(function (net) {
-        return `<a class="social-${net}" data-config-href="social.${net}" target="_blank" rel="noopener" aria-label="${net}">${icon(net, 16)}</a>`;
+    const cfg = window.SITE_CONFIG || {};
+    const social = cfg.social || {};
+    const wa = String((cfg.contact && cfg.contact.whatsapp) || "").replace(/[^\d]/g, "");
+    const items = [
+      { net: "whatsapp", href: wa ? "https://wa.me/" + wa : "" },
+      { net: "instagram", href: social.instagram || "" },
+      { net: "facebook", href: social.facebook || "" },
+      { net: "linkedin", href: social.linkedin || "" }
+    ];
+    return items
+      .filter(function (item) {
+        return item.href;
+      })
+      .map(function (item) {
+        return `<a class="social-${item.net}" href="${esc(item.href)}" target="_blank" rel="noopener" aria-label="${item.net}">${icon(item.net, 16)}</a>`;
       })
       .join("");
   }

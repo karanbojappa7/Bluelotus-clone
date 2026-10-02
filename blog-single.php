@@ -94,6 +94,10 @@ $phones = contact_phones();
 $ctaPhone = (string) ($phones[0] ?? '');
 $ctaTel = preg_replace('/[^\d+]/', '', $ctaPhone) ?? '';
 $sprite = url_for('assets/img/sprite.svg');
+$instagram = trim((string) ((setting('social', []) ?: [])['instagram'] ?? ''));
+if ($instagram === '') {
+    $instagram = 'https://www.instagram.com/bluelotusenterprises';
+}
 $commented = isset($_SESSION['blog_comment_ok']) && $_SESSION['blog_comment_ok'] === $slug;
 if ($commented) {
     unset($_SESSION['blog_comment_ok']);
@@ -241,11 +245,11 @@ page_head(seo_overrides($post) + [
             <a class="article-share article-share--wa" href="https://api.whatsapp.com/send?text=<?= e(rawurlencode($shareText . "\n" . $postUrl)) ?>" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
               <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-whatsapp"></use></svg>
             </a>
+            <a class="article-share article-share--ig" href="<?= e($instagram) ?>" target="_blank" rel="noopener" aria-label="Share on Instagram">
+              <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-instagram"></use></svg>
+            </a>
             <a class="article-share article-share--fb" href="https://www.facebook.com/sharer/sharer.php?u=<?= e(rawurlencode($postUrl)) ?>" target="_blank" rel="noopener" aria-label="Share on Facebook">
               <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-facebook"></use></svg>
-            </a>
-            <a class="article-share article-share--x" href="https://twitter.com/intent/tweet?url=<?= e(rawurlencode($postUrl)) ?>&amp;text=<?= e(rawurlencode($shareText)) ?>" target="_blank" rel="noopener" aria-label="Share on X">
-              <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-x"></use></svg>
             </a>
             <a class="article-share article-share--li" href="https://www.linkedin.com/sharing/share-offsite/?url=<?= e(rawurlencode($postUrl)) ?>" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
               <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-linkedin"></use></svg>

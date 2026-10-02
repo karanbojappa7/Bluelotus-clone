@@ -2100,8 +2100,8 @@ body.is-in-hero .site-header:not(.is-scrolled):not(.is-nav-open)::before {
 }
 
 .article-share--wa { background: #25d366; }
+.article-share--ig { background: linear-gradient(45deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888); }
 .article-share--fb { background: #1877f2; }
-.article-share--x { background: #111; }
 .article-share--li { background: #0a66c2; }
 .article-share--copy { background: #e8edf3; color: var(--ink); }
 .article-share--copy.is-copied { background: var(--success); color: var(--white); }
@@ -2321,11 +2321,16 @@ body.is-in-hero .site-header:not(.is-scrolled):not(.is-nav-open)::before {
   color: var(--white);
 }
 
-.social-row a.social-instagram:hover,
-.social-row a.social-youtube:hover {
-  background: var(--amber);
-  border-color: var(--amber);
-  color: var(--ink);
+.social-row a.social-whatsapp:hover {
+  background: var(--brand-wa);
+  border-color: var(--brand-wa);
+  color: var(--white);
+}
+
+.social-row a.social-instagram:hover {
+  background: #e4405f;
+  border-color: #e4405f;
+  color: var(--white);
 }
 
 .whatsapp-fab,
