@@ -18,6 +18,7 @@ if (!$product) {
 $category = get_category((string) $product['category']);
 $categoryName = $category['name'] ?? $product['category'];
 $images = $product['images'] ?: ['assets/img/products.jpg'];
+[$mainW, $mainH] = image_dimensions($images[0]);
 $related = array_values(array_filter(all_products((string) $product['category']), static fn ($p) => $p['slug'] !== $product['slug']));
 $related = array_slice($related, 0, 4);
 
@@ -76,7 +77,7 @@ page_head(seo_overrides($product) + [
     <div class="product-layout mt-5">
       <div class="product-gallery<?= count($images) > 1 ? ' has-thumbs' : '' ?>">
         <div class="product-stage">
-          <img id="prodMainImage" src="<?= e(url_for($images[0])) ?>" alt="<?= e($product['name']) ?>" width="900" height="700" data-fallback>
+          <img id="prodMainImage" src="<?= e(url_for($images[0])) ?>" alt="<?= e($product['name']) ?>" width="<?= (int) $mainW ?>" height="<?= (int) $mainH ?>" data-fallback>
           <?php if (count($images) > 1): ?>
             <span class="product-stage-count" id="prodImageCount">1 / <?= count($images) ?></span>
           <?php endif; ?>
@@ -84,9 +85,10 @@ page_head(seo_overrides($product) + [
         <?php if (count($images) > 1): ?>
         <div class="product-thumbs" id="prodThumbs">
           <?php foreach ($images as $i => $src): ?>
+            <?php [$thumbW, $thumbH] = image_dimensions($src); ?>
             <button type="button" class="product-thumb<?= $i === 0 ? ' is-active' : '' ?>" data-src="<?= e(url_for($src)) ?>"
                     aria-label="View image <?= $i + 1 ?> of <?= count($images) ?>" aria-pressed="<?= $i === 0 ? 'true' : 'false' ?>">
-              <img src="<?= e(url_for($src)) ?>" alt="" width="120" height="90" loading="lazy" data-fallback>
+              <img src="<?= e(url_for($src)) ?>" alt="" width="<?= (int) $thumbW ?>" height="<?= (int) $thumbH ?>" loading="lazy" data-fallback>
             </button>
           <?php endforeach; ?>
         </div>

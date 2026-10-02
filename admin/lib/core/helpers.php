@@ -76,6 +76,20 @@ function json_list(?string $json): array
     return is_array($data) ? $data : [];
 }
 
+function image_dimensions(string $path, int $fallbackW = 900, int $fallbackH = 900): array
+{
+    static $cache = [];
+    if (isset($cache[$path])) {
+        return $cache[$path];
+    }
+    $full = CMS_ROOT . '/' . ltrim(str_replace('\\', '/', $path), '/');
+    $size = is_file($full) ? @getimagesize($full) : false;
+    $cache[$path] = (is_array($size) && (int) $size[0] > 0 && (int) $size[1] > 0)
+        ? [(int) $size[0], (int) $size[1]]
+        : [$fallbackW, $fallbackH];
+    return $cache[$path];
+}
+
 function field_class(array $errors, string $key, bool $full = false): string
 {
     $classes = $full ? ['full'] : [];
