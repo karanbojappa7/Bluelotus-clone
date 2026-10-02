@@ -12,6 +12,7 @@ $tiles = [
     ['label' => 'Categories', 'count' => $c['categories'], 'href' => 'categories/index.php', 'action' => 'categories/form.php'],
     ['label' => 'Services', 'count' => $c['services'], 'href' => 'services/index.php', 'action' => 'services/form.php'],
     ['label' => 'Blog posts', 'count' => $c['blog'], 'href' => 'blog/index.php', 'action' => 'blog/form.php'],
+    ['label' => 'Comments', 'count' => $c['comments'] ?? 0, 'href' => 'comments/index.php', 'action' => null],
     ['label' => 'Testimonials', 'count' => $c['testimonials'], 'href' => 'testimonials/index.php', 'action' => 'testimonials/form.php'],
     ['label' => 'Leadership', 'count' => $c['leadership'], 'href' => 'leadership/index.php', 'action' => 'leadership/form.php'],
     ['label' => 'Stats', 'count' => $c['stats'], 'href' => 'stats.php', 'action' => null],

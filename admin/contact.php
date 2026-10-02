@@ -83,7 +83,7 @@ admin_header('Contact', 'contact');
     </label>
     <label>WhatsApp number
       <input type="text" name="whatsapp" value="<?= e($contact['whatsapp'] ?? '') ?>">
-      <span class="hint">Digits with country code, e.g. +917483394208</span>
+      <span class="hint">Digits with country code. Used for the floating WhatsApp button, e.g. +919148736860</span>
     </label>
     <label>Working hours
       <input type="text" name="workingHours" value="<?= e($contact['workingHours'] ?? 'Mon – Sat, 9:00 AM – 7:00 PM') ?>">

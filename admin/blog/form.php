@@ -134,46 +134,52 @@ admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 
       <span class="hint">Shown on blog cards and used as the meta description fallback.</span>
       <?= field_msg($errors, 'excerpt') ?>
     </label>
-    <label class="<?= field_class($errors, 'body', true) ?>">Article body
-      <textarea name="body" id="blogBody" rows="14"><?= e($item['body']) ?></textarea>
-      <span class="hint">One paragraph per block, separated by a blank line. A line ending in a colon becomes a subheading. Link with <code>[visible text](/products/fire-safety)</code> or use Insert below.</span>
+    <div class="<?= field_class($errors, 'body', true) ?>">
+      <label for="blogBody">Article body</label>
+      <div class="editor-toolbar" data-rich-toolbar>
+        <button type="button" class="editor-btn" data-blog-heading="1" title="Heading 1">H1</button>
+        <button type="button" class="editor-btn" data-blog-heading="2" title="Heading 2">H2</button>
+        <button type="button" class="editor-btn" data-blog-heading="3" title="Heading 3">H3</button>
+        <span class="editor-toolbar-sep" aria-hidden="true"></span>
+        <label class="editor-link">
+          <span class="visually-hidden">Link target</span>
+          <select id="blogLinkTarget">
+            <option value="">Internal link…</option>
+            <optgroup label="Pages">
+              <option value="page:products" data-label="products">All products</option>
+              <option value="page:about" data-label="About us">About us</option>
+              <option value="page:contact" data-label="contact">Contact</option>
+              <option value="page:faq" data-label="FAQs">FAQs</option>
+              <option value="page:blog" data-label="blog">Blog</option>
+            </optgroup>
+            <?php if ($linkCategories): ?>
+              <optgroup label="Categories">
+                <?php foreach ($linkCategories as $cat): ?>
+                  <option value="category:<?= e($cat['id']) ?>" data-label="<?= e($cat['name']) ?>"><?= e($cat['name']) ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            <?php endif; ?>
+            <?php if ($linkProducts): ?>
+              <optgroup label="Products">
+                <?php foreach ($linkProducts as $product): ?>
+                  <option value="product:<?= e($product['slug']) ?>" data-label="<?= e($product['name']) ?>"><?= e($product['name']) ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            <?php endif; ?>
+            <?php if ($otherPosts): ?>
+              <optgroup label="Other posts">
+                <?php foreach ($otherPosts as $other): ?>
+                  <option value="blog:<?= e($other['slug']) ?>" data-label="<?= e($other['title'] ?? '') ?>"><?= e($other['title'] ?? '') ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            <?php endif; ?>
+          </select>
+        </label>
+        <button type="button" class="btn btn-secondary" data-insert-blog-link>Insert link</button>
+      </div>
+      <textarea name="body" id="blogBody" rows="16" data-rich-body><?= e($item['body']) ?></textarea>
+      <span class="hint">Select a line and click H1, H2, or H3. Choose a page, product, or post and click Insert link. Separate paragraphs with a blank line.</span>
       <?= field_msg($errors, 'body') ?>
-    </label>
-    <div class="full link-insert">
-      <label>Insert internal link
-        <select id="blogLinkTarget">
-          <option value="">Choose a page, category, product, or post</option>
-          <optgroup label="Pages">
-            <option value="page:products" data-label="products">All products</option>
-            <option value="page:about" data-label="About us">About us</option>
-            <option value="page:contact" data-label="contact">Contact</option>
-            <option value="page:faq" data-label="FAQs">FAQs</option>
-            <option value="page:blog" data-label="blog">Blog</option>
-          </optgroup>
-          <?php if ($linkCategories): ?>
-            <optgroup label="Categories">
-              <?php foreach ($linkCategories as $cat): ?>
-                <option value="category:<?= e($cat['id']) ?>" data-label="<?= e($cat['name']) ?>"><?= e($cat['name']) ?></option>
-              <?php endforeach; ?>
-            </optgroup>
-          <?php endif; ?>
-          <?php if ($linkProducts): ?>
-            <optgroup label="Products">
-              <?php foreach ($linkProducts as $product): ?>
-                <option value="product:<?= e($product['slug']) ?>" data-label="<?= e($product['name']) ?>"><?= e($product['name']) ?></option>
-              <?php endforeach; ?>
-            </optgroup>
-          <?php endif; ?>
-          <?php if ($otherPosts): ?>
-            <optgroup label="Other posts">
-              <?php foreach ($otherPosts as $other): ?>
-                <option value="blog:<?= e($other['slug']) ?>" data-label="<?= e($other['title'] ?? '') ?>"><?= e($other['title'] ?? '') ?></option>
-              <?php endforeach; ?>
-            </optgroup>
-          <?php endif; ?>
-        </select>
-      </label>
-      <button type="button" class="btn btn-secondary" data-insert-blog-link>Insert at cursor</button>
     </div>
     <fieldset class="full link-panel">
       <legend>Related links</legend>

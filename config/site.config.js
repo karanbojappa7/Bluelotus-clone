@@ -29,7 +29,7 @@ window.SITE_CONFIG = {
                 "address": "info@bluelotusinfrasafety.com"
             }
         ],
-        "whatsapp": "+917483394208",
+        "whatsapp": "+919148736860",
         "workingHours": "Mon – Sat, 9:00 AM – 7:00 PM",
         "address": {
             "line1": "Door No. 1, Mukteswar Apartment, NH16 near Pachamwari Temple Street near Siva Temple",
@@ -1948,7 +1948,7 @@ window.SITE_CONFIG = {
             "slug": "how-to-choose-industrial-safety-wearables-india",
             "date": "2026-02-28",
             "excerpt": "How connected PPE and hi-vis wearables are changing incident response times on Indian industrial sites.",
-            "body": "hvjhgjhsdjhhn",
+            "body": "# H1 test\r\n## h2 test\r\n### he tes\r\n\r\n[products](page:products)[Fire Extinguishers](product:fire-extinguishers)",
             "image": "assets/img/uploads/2ad1c9ecc937b830.jpg",
             "metaTitle": "",
             "metaDescription": "",

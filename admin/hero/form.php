@@ -14,6 +14,7 @@ $item = [
     'highlight' => $existing['highlight'] ?? '',
     'subtitle' => $existing['subtitle'] ?? '',
     'image' => $existing['image'] ?? '',
+    'imageMobile' => $existing['imageMobile'] ?? '',
     'navLabel' => $existing['navLabel'] ?? '',
     'buttonLabel' => $existing['buttonLabel'] ?? 'Learn More',
     'buttonUrl' => $existing['buttonUrl'] ?? 'contact',
@@ -24,12 +25,14 @@ $item = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
     $keepImage = $item['image'];
+    $keepMobile = $item['imageMobile'];
     $item = [
         'eyebrow' => post('eyebrow'),
         'title' => post('title'),
         'highlight' => post('highlight'),
         'subtitle' => post('subtitle'),
         'image' => $keepImage,
+        'imageMobile' => $keepMobile,
         'navLabel' => post('navLabel'),
         'buttonLabel' => post('buttonLabel'),
         'buttonUrl' => post('buttonUrl'),
@@ -38,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     try {
         $item['image'] = (string) (save_uploaded_image('image', $keepImage !== '' ? $keepImage : null) ?? '');
+        $item['imageMobile'] = (string) (save_uploaded_image('imageMobile', $keepMobile !== '' ? $keepMobile : null) ?? '');
     } catch (Throwable $e) {
         $errors[] = $e->getMessage();
     }
@@ -97,6 +101,15 @@ admin_header($existing ? 'Edit Banner Slide' : 'Add Banner Slide', 'hero', ['Hom
     <?php if ($item['image'] !== ''): ?>
       <div class="full file-preview">
         <img src="<?= e(url_for($item['image'])) ?>" alt="Current banner image">
+      </div>
+    <?php endif; ?>
+    <label class="full">Mobile banner image
+      <input type="file" name="imageMobile" accept="image/jpeg,image/png,image/webp,image/gif">
+      <span class="hint">Optional. Taller crop for phones, recommended 1080 × 1350 px (4:5). Falls back to the desktop image.</span>
+    </label>
+    <?php if ($item['imageMobile'] !== ''): ?>
+      <div class="full file-preview">
+        <img src="<?= e(url_for($item['imageMobile'])) ?>" alt="Current mobile banner">
       </div>
     <?php endif; ?>
     <label>Button label

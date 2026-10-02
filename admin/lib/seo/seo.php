@@ -136,7 +136,12 @@ function post_path(string $slug): string
 
 function brand_name(): string
 {
-    return (string) (seo_company()['name'] ?? 'Bluelotus Infrasafety');
+    $company = seo_company();
+    $name = trim((string) ($company['name'] ?? ''));
+    if ($name !== '' && strcasecmp($name, 'Bluelotus') !== 0) {
+        return $name;
+    }
+    return 'Bluelotus Infrasafety';
 }
 
 function seo_image(?string $image = null): string
@@ -636,7 +641,16 @@ function page_head(array $page): void
     $rawTitle = trim((string) ($page['title'] ?? ''));
     $fullTitle = trim((string) ($page['fullTitle'] ?? ''));
     if ($fullTitle === '') {
-        $fullTitle = $rawTitle !== '' ? $rawTitle . ' | ' . $brand : $brand . ' | ' . (string) ($seo['defaultTitle'] ?? '');
+        if ($rawTitle === '') {
+            $fullTitle = $brand . ' | ' . (string) ($seo['defaultTitle'] ?? '');
+        } elseif (stripos($rawTitle, 'Bluelotus Infrasafety') !== false || stripos($rawTitle, $brand) !== false) {
+            $fullTitle = preg_replace('/\bBluelotus\b(?!\s+Infrasafety)/i', 'Bluelotus Infrasafety', $rawTitle) ?? $rawTitle;
+        } else {
+            $fullTitle = preg_replace('/\bBluelotus\b(?!\s+Infrasafety)/i', 'Bluelotus Infrasafety', $rawTitle) ?? $rawTitle;
+            $fullTitle = $fullTitle . ' | ' . $brand;
+        }
+    } else {
+        $fullTitle = preg_replace('/\bBluelotus\b(?!\s+Infrasafety)/i', 'Bluelotus Infrasafety', $fullTitle) ?? $fullTitle;
     }
 
     $description = meta_text($page['description'] ?? '', 158, (string) ($seo['defaultDescription'] ?? ''));
@@ -713,7 +727,7 @@ function page_head(array $page): void
 <link rel="icon" href="<?= e(url_for('assets/img/logo.png')) ?>" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Roboto:wght@400;500;700&family=Oregano&family=Charm:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= e(url_for('assets/css/tokens.css')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/css/tokens.css') ?>">
 <link rel="stylesheet" href="<?= e(url_for('assets/css/site.css')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/css/site.css') ?>">
 <?= json_ld($schema) ?>
@@ -746,7 +760,7 @@ function page_foot(array $opts = []): void
 <script src="<?= e(url_for('assets/js/render.js')) ?>"></script>
 <script src="<?= e(url_for('assets/js/app.js')) ?>"></script>
 <?php foreach ($scripts as $script): ?>
-<script src="<?= e(url_for('assets/js/' . $script)) ?>"></script>
+<script src="<?= e(url_for('assets/js/' . $script)) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/js/' . $script) ?>"></script>
 <?php endforeach; ?>
 </body>
 </html>
@@ -861,11 +875,35 @@ function render_article_body(string $body, array $opts = []): string
         if ($block === '') {
             continue;
         }
-        if (!str_contains($block, "\n") && str_ends_with($block, ':') && mb_strlen($block) < 120) {
+        $lines = preg_split('/\R/', $block) ?: [];
+        if (count($lines) === 1 && preg_match('/^(#{1,3})\s+(.+)$/u', $block, $heading)) {
+            $level = strlen($heading[1]);
+            $html .= '<h' . $level . '>' . render_article_inline(trim($heading[2]), $auto, $used) . '</h' . $level . '>';
+            continue;
+        }
+        if (count($lines) === 1 && str_ends_with($block, ':') && mb_strlen($block) < 120 && !preg_match('/^#{1,3}\s+/', $block)) {
             $html .= '<h2>' . e(rtrim($block, ':')) . '</h2>';
             continue;
         }
-        $html .= '<p>' . nl2br(render_article_inline($block, $auto, $used)) . '</p>';
+        $para = [];
+        $flushPara = static function () use (&$html, &$para, $auto, &$used): void {
+            $text = trim(implode("\n", $para));
+            $para = [];
+            if ($text === '') {
+                return;
+            }
+            $html .= '<p>' . nl2br(render_article_inline($text, $auto, $used)) . '</p>';
+        };
+        foreach ($lines as $line) {
+            if (preg_match('/^(#{1,3})\s+(.+)$/u', trim($line), $heading)) {
+                $flushPara();
+                $level = strlen($heading[1]);
+                $html .= '<h' . $level . '>' . render_article_inline(trim($heading[2]), $auto, $used) . '</h' . $level . '>';
+                continue;
+            }
+            $para[] = $line;
+        }
+        $flushPara();
     }
     return $html;
 }

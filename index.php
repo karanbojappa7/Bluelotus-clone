@@ -12,13 +12,14 @@ page_head([
 ?>
 <?php
 $heroSlides = hero_slides();
+$home = page_copy('home');
 ?>
 <section class="hero-carousel" id="heroCarousel">
   <div class="hero-carousel-pin">
     <div class="hero-slides">
       <?php foreach ($heroSlides as $i => $slide): ?>
       <article class="hero-slide<?= $i === 0 ? ' is-active' : '' ?>" data-hero-index="<?= $i ?>">
-        <div class="hero-slide-media" style="background-image:url('<?= e(hero_image_url($slide)) ?>')"></div>
+        <div class="hero-slide-media" style="--hero-image:url('<?= e(hero_image_url($slide)) ?>');--hero-image-mobile:url('<?= e(hero_mobile_image_url($slide)) ?>')"></div>
         <div class="container hero-slide-copy">
           <?php if (trim((string) ($slide['eyebrow'] ?? '')) !== ''): ?>
             <span class="eyebrow eyebrow--light"><?= e((string) $slide['eyebrow']) ?></span>
@@ -90,10 +91,10 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="section-head">
       <div data-reveal>
-        <span class="eyebrow">What We Supply</span>
-        <h2 class="section-title">Ten categories, one accountable vendor</h2>
+        <span class="eyebrow"><?= e(page_text($home, 'supplyEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'supplyTitle')) ?></h2>
       </div>
-      <p class="section-sub" data-reveal>From roadside barricading to warehouse rack guards, every category is stocked, certified, and backed by our own installation crews.</p>
+      <p class="section-sub" data-reveal><?= e(page_text($home, 'supplyIntro')) ?></p>
     </div>
     <div class="grid grid-3" data-render="categories"></div>
     <div class="text-center mt-5" data-reveal>
@@ -106,10 +107,10 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="section-head">
       <div data-reveal>
-        <span class="eyebrow">What We Do</span>
-        <h2 class="section-title">Supply is the start. Service is the contract.</h2>
+        <span class="eyebrow"><?= e(page_text($home, 'servicesEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'servicesTitle')) ?></h2>
       </div>
-      <p class="section-sub" data-reveal>Consultancy, installation, and maintenance from the same crew that specified the equipment — so accountability does not stop at delivery.</p>
+      <p class="section-sub" data-reveal><?= e(page_text($home, 'servicesIntro')) ?></p>
     </div>
     <div data-reveal>
       <div class="service-tabs" data-render="service-tabs"></div>
@@ -122,8 +123,8 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="section-head">
       <div data-reveal>
-        <span class="eyebrow">Product Catalog</span>
-        <h2 class="section-title">Equipment stocked for live sites</h2>
+        <span class="eyebrow"><?= e(page_text($home, 'catalogEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'catalogTitle')) ?></h2>
       </div>
       <a href="<?= e(url_for('products')) ?>" class="btn btn-outline" data-reveal>Browse Full Range</a>
     </div>
@@ -135,9 +136,12 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="grid grid-2 split">
       <div data-reveal>
-        <span class="eyebrow">Why Bluelotus</span>
-        <h2 class="section-title">Built for accountability, not just supply</h2>
-        <p class="section-sub">We hold the relationship end to end — audit, spec, install, and maintain — so nothing falls through the gap between vendors.</p>
+        <span class="eyebrow"><?= e(page_text($home, 'whyEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'whyTitle')) ?></h2>
+        <p class="section-sub"><?= e(page_text($home, 'whyIntro')) ?></p>
+        <?php if (trim((string) ($home['whyImage'] ?? '')) !== ''): ?>
+          <img class="media-frame mt-4" src="<?= e(url_for((string) $home['whyImage'])) ?>" alt="<?= e(page_text($home, 'whyTitle')) ?>" width="900" height="560" loading="lazy" data-fallback>
+        <?php endif; ?>
         <div class="cluster mt-4">
           <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-shield')) ?>"></use></svg> ISO Certified</span>
           <span class="badge"><svg width="14" height="14" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg#icon-award')) ?>"></use></svg> OEM Backed</span>
@@ -145,9 +149,9 @@ $statCols = min(max($statCount, 1), 4);
         </div>
       </div>
       <div data-reveal>
-        <div class="feature-row"><span class="feature-num">01</span><div><h4>Professional</h4><p>An in-house team of certified safety engineers handles design, execution, commissioning, and maintenance across every category we sell.</p></div></div>
-        <div class="feature-row"><span class="feature-num">02</span><div><h4>Secure</h4><p>Every product is sourced against regulatory standards first, curated for reliability, not just price point.</p></div></div>
-        <div class="feature-row"><span class="feature-num">03</span><div><h4>Guaranteed</h4><p>We only integrate products with confirmed OEM after-sales support, so warranty and servicing are never in question.</p></div></div>
+        <div class="feature-row"><span class="feature-num">01</span><div><h4><?= e(page_text($home, 'why1Title')) ?></h4><p><?= e(page_text($home, 'why1Body')) ?></p></div></div>
+        <div class="feature-row"><span class="feature-num">02</span><div><h4><?= e(page_text($home, 'why2Title')) ?></h4><p><?= e(page_text($home, 'why2Body')) ?></p></div></div>
+        <div class="feature-row"><span class="feature-num">03</span><div><h4><?= e(page_text($home, 'why3Title')) ?></h4><p><?= e(page_text($home, 'why3Body')) ?></p></div></div>
       </div>
     </div>
   </div>
@@ -157,8 +161,8 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="section-head">
       <div data-reveal>
-        <span class="eyebrow">FAQ</span>
-        <h2 class="section-title">Answers before you call</h2>
+        <span class="eyebrow"><?= e(page_text($home, 'faqEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'faqTitle')) ?></h2>
       </div>
       <a href="<?= e(url_for('faq')) ?>" class="btn btn-outline" data-reveal>View All FAQs</a>
     </div>
@@ -170,8 +174,8 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="section-head">
       <div data-reveal>
-        <span class="eyebrow eyebrow--light">Client Feedback</span>
-        <h2 class="section-title">Trusted on sites across Odisha</h2>
+        <span class="eyebrow eyebrow--light"><?= e(page_text($home, 'testimonialsEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'testimonialsTitle')) ?></h2>
       </div>
     </div>
     <div class="grid grid-3" data-render="testimonials"></div>
@@ -180,7 +184,7 @@ $statCols = min(max($statCount, 1), 4);
 
 <section class="section--tight">
   <div class="container">
-    <p class="eyebrow eyebrow--center mb-4">Trusted By Companies Across India</p>
+    <p class="eyebrow eyebrow--center mb-4"><?= e(page_text($home, 'clientsEyebrow')) ?></p>
   </div>
   <div class="client-marquee">
     <div class="client-track" data-render="clients"></div>
@@ -191,8 +195,8 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="section-head">
       <div data-reveal>
-        <span class="eyebrow">From the Blog</span>
-        <h2 class="section-title">Field notes on safety standards</h2>
+        <span class="eyebrow"><?= e(page_text($home, 'blogEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'blogTitle')) ?></h2>
       </div>
       <a href="<?= e(url_for('blog')) ?>" class="btn btn-outline" data-reveal>All Articles</a>
     </div>
@@ -204,10 +208,10 @@ $statCols = min(max($statCount, 1), 4);
   <div class="container">
     <div class="cta-banner" data-reveal>
       <div class="cta-banner-inner">
-        <span class="eyebrow eyebrow--light eyebrow--center">Get Started</span>
-        <h2 class="section-title">Ready to safety-proof your site?</h2>
-        <p>Tell us your site type and headcount — we'll come back with a scoped safety plan within 24 hours.</p>
-        <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4">Talk to Our Team</a>
+        <span class="eyebrow eyebrow--light eyebrow--center"><?= e(page_text($home, 'ctaEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($home, 'ctaTitle')) ?></h2>
+        <p><?= e(page_text($home, 'ctaIntro')) ?></p>
+        <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary mt-4"><?= e(page_text($home, 'ctaButton')) ?></a>
       </div>
     </div>
   </div>

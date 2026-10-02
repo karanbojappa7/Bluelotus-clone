@@ -7,6 +7,7 @@ function admin_nav_groups(): array
         'Overview' => [
             ['id' => 'dashboard', 'href' => 'index.php', 'label' => 'Dashboard'],
             ['id' => 'enquiries', 'href' => 'enquiries/index.php', 'label' => 'Enquiries'],
+            ['id' => 'comments', 'href' => 'comments/index.php', 'label' => 'Comments'],
         ],
         'Catalog' => [
             ['id' => 'products', 'href' => 'products/index.php', 'label' => 'Products'],
@@ -20,6 +21,7 @@ function admin_nav_groups(): array
             ['id' => 'leadership', 'href' => 'leadership/index.php', 'label' => 'Leadership'],
             ['id' => 'stats', 'href' => 'stats.php', 'label' => 'Stats'],
             ['id' => 'hero', 'href' => 'hero/index.php', 'label' => 'Homepage banner'],
+            ['id' => 'pages', 'href' => 'pages/index.php', 'label' => 'Pages'],
             ['id' => 'clients', 'href' => 'clients.php', 'label' => 'Clients'],
         ],
         'Settings' => [
@@ -107,7 +109,7 @@ function admin_footer(): void
     ?>
   </main>
 </div>
-<script src="<?= e(admin_url('assets/admin.js')) ?>" defer></script>
+<script src="<?= e(admin_url('assets/admin.js')) ?>?v=<?= (int) @filemtime(__DIR__ . '/../../assets/admin.js') ?>" defer></script>
 </body>
 </html>
 <?php

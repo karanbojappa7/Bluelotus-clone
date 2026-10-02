@@ -105,6 +105,30 @@
     );
   }
 
+  function initCopyLink() {
+    $(document).on("click", "[data-copy-link]", function () {
+      const btn = this;
+      const value = btn.getAttribute("data-copy-link") || location.href;
+      const done = function () {
+        btn.classList.add("is-copied");
+        window.setTimeout(function () {
+          btn.classList.remove("is-copied");
+        }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done).catch(function () {});
+        return;
+      }
+      const input = document.createElement("input");
+      input.value = value;
+      document.body.appendChild(input);
+      input.select();
+      try { document.execCommand("copy"); } catch (err) {}
+      input.remove();
+      done();
+    });
+  }
+
   function initWhatsapp() {
     const $fab = $(".whatsapp-fab");
     if (!$fab.length || !window.SITE_CONFIG) return;
@@ -592,5 +616,6 @@
     initForms();
     initQuoteModal();
     initHeroCarousel();
+    initCopyLink();
   });
 })(jQuery);

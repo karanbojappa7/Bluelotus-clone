@@ -74,6 +74,34 @@
     }
   }
 
+  function closeZoom() {
+    $(".product-zoom").remove();
+    $("body").removeClass("quote-locked");
+  }
+
+  $(document).on("click", "#prodMainImage", function () {
+    const src = this.getAttribute("src");
+    if (!src) return;
+    const alt = this.getAttribute("alt") || "";
+    $("body").append(
+      '<div class="product-zoom" role="dialog" aria-modal="true">' +
+        '<button type="button" class="product-zoom-close" aria-label="Close">&times;</button>' +
+        '<img src="' + esc(src) + '" alt="' + esc(alt) + '">' +
+      "</div>"
+    );
+    $("body").addClass("quote-locked");
+  });
+
+  $(document).on("click", ".product-zoom", function (e) {
+    if (e.target === this || $(e.target).closest(".product-zoom-close").length) {
+      closeZoom();
+    }
+  });
+
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape") closeZoom();
+  });
+
   $(document).on("click", ".product-thumb", function () {
     selectThumb($(this));
   });

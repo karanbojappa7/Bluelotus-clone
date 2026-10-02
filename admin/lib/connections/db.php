@@ -111,6 +111,18 @@ function migrate(): void
             INDEX idx_enquiries_created (created_at),
             INDEX idx_enquiries_read (is_read)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci',
+        'CREATE TABLE IF NOT EXISTS blog_comments (
+            id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            post_slug VARCHAR(191) NOT NULL,
+            name VARCHAR(191) NOT NULL,
+            email VARCHAR(191) NOT NULL DEFAULT "",
+            body TEXT NOT NULL,
+            ip VARCHAR(45) NOT NULL DEFAULT "",
+            is_approved TINYINT(1) NOT NULL DEFAULT 1,
+            created_at DATETIME NOT NULL,
+            INDEX idx_blog_comments_post (post_slug, is_approved, created_at),
+            INDEX idx_blog_comments_created (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci',
     ];
 
     foreach ($statements as $sql) {

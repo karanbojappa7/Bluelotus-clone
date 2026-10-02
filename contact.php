@@ -4,6 +4,7 @@ require_once __DIR__ . '/admin/bootstrap.php';
 
 $categories = db_ready() ? all_categories() : [];
 $services = db_ready() ? all_services() : [];
+$contactCopy = page_copy('contact');
 $contact = db_ready() ? (setting('contact', []) ?: []) : [];
 $maps = contact_maps($contact);
 $sent = isset($_GET['sent']);
@@ -18,8 +19,8 @@ page_head([
 ?>
 <section class="page-header">
   <div class="container">
-    <span class="eyebrow eyebrow--light">Get In Touch</span>
-    <h1 class="page-title">Tell us about your site, we'll take it from there.</h1>
+    <span class="eyebrow eyebrow--light"><?= e(page_text($contactCopy, 'eyebrow')) ?></span>
+    <h1 class="page-title"><?= e(page_text($contactCopy, 'title')) ?></h1>
     <div class="breadcrumb-row"><a href="<?= e(url_for('')) ?>">Home</a> / <span>Contact Us</span></div>
   </div>
 </section>
@@ -28,13 +29,13 @@ page_head([
   <div class="container">
     <div class="grid grid-2 split split--start">
       <div data-reveal>
-        <span class="eyebrow">Contact Details</span>
-        <h2 class="section-title">Reach us directly</h2>
+        <span class="eyebrow"><?= e(page_text($contactCopy, 'detailsEyebrow')) ?></span>
+        <h2 class="section-title"><?= e(page_text($contactCopy, 'detailsTitle')) ?></h2>
         <div class="mt-4" data-render="contact-cards"></div>
       </div>
       <div class="tile tile--static" data-reveal>
-        <span class="eyebrow">Send a Message</span>
-        <h2 class="section-title mb-4">Request a quote or audit</h2>
+        <span class="eyebrow"><?= e(page_text($contactCopy, 'formEyebrow')) ?></span>
+        <h2 class="section-title mb-4"><?= e(page_text($contactCopy, 'formTitle')) ?></h2>
         <?php if ($sent): ?>
           <p class="form-feedback is-success" role="status">Thank you. Our team will get back to you within one business day.</p>
         <?php elseif ($sendError): ?>

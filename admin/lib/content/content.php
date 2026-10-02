@@ -186,6 +186,223 @@ function hero_image_url(array $slide): string
     return url_for($image);
 }
 
+function hero_mobile_image_url(array $slide): string
+{
+    $image = trim((string) ($slide['imageMobile'] ?? ''));
+    if ($image === '') {
+        return hero_image_url($slide);
+    }
+    return url_for($image);
+}
+
+function page_labels(): array
+{
+    return [
+        'home' => 'Home',
+        'about' => 'About Us',
+        'contact' => 'Contact Us',
+        'privacy' => 'Privacy Policy',
+    ];
+}
+
+function default_page_copy(): array
+{
+    return [
+        'home' => [
+            'supplyEyebrow' => 'What We Supply',
+            'supplyTitle' => 'Ten categories, one accountable vendor',
+            'supplyIntro' => 'From roadside barricading to warehouse rack guards, every category is stocked, certified, and backed by our own installation crews.',
+            'servicesEyebrow' => 'What We Do',
+            'servicesTitle' => 'Supply is the start. Service is the contract.',
+            'servicesIntro' => 'Consultancy, installation, and maintenance from the same crew that specified the equipment — so accountability does not stop at delivery.',
+            'catalogEyebrow' => 'Product Catalog',
+            'catalogTitle' => 'Equipment stocked for live sites',
+            'whyEyebrow' => 'Why Bluelotus',
+            'whyTitle' => 'Built for accountability, not just supply',
+            'whyIntro' => 'We hold the relationship end to end — audit, spec, install, and maintain — so nothing falls through the gap between vendors.',
+            'whyImage' => '',
+            'why1Title' => 'Professional',
+            'why1Body' => 'An in-house team of certified safety engineers handles design, execution, commissioning, and maintenance across every category we sell.',
+            'why2Title' => 'Secure',
+            'why2Body' => 'Every product is sourced against regulatory standards first, curated for reliability, not just price point.',
+            'why3Title' => 'Guaranteed',
+            'why3Body' => 'We only integrate products with confirmed OEM after-sales support, so warranty and servicing are never in question.',
+            'faqEyebrow' => 'FAQ',
+            'faqTitle' => 'Answers before you call',
+            'testimonialsEyebrow' => 'Client Feedback',
+            'testimonialsTitle' => 'Trusted on sites across Odisha',
+            'clientsEyebrow' => 'Trusted By Companies Across India',
+            'blogEyebrow' => 'From the Blog',
+            'blogTitle' => 'Field notes on safety standards',
+            'ctaEyebrow' => 'Get Started',
+            'ctaTitle' => 'Ready to safety-proof your site?',
+            'ctaIntro' => "Tell us your site type and headcount — we'll come back with a scoped safety plan within 24 hours.",
+            'ctaButton' => 'Talk to Our Team',
+        ],
+        'about' => [
+            'eyebrow' => 'About Bluelotus',
+            'title' => 'Safety systems built by people who install them.',
+            'storyEyebrow' => 'Our Story',
+            'storyTitle' => 'Founded on-site, not in a boardroom',
+            'storyBody1' => 'Bluelotus Infrasafety started with a single fire-safety contract in Berhampur, Odisha in {foundedYear}. What we learned fitting out that first plant — that most safety failures come from mismatched vendors, not bad products — still shapes how we work today.',
+            'storyBody2' => 'We now run supply, installation, and maintenance under one roof across ten safety categories, so a facilities manager deals with one accountable partner instead of six.',
+            'storyImage' => 'assets/img/about.jpg',
+            'approachEyebrow' => 'Our Approach',
+            'approachTitle' => 'Three commitments behind every project',
+            'tile1Title' => 'Professional',
+            'tile1Body' => 'Design, execution, commissioning, and maintenance run through the same certified in-house team on every engagement.',
+            'tile2Title' => 'Secure',
+            'tile2Body' => 'Every product line is checked against IS and ISO standards before it enters our catalog, not after a complaint.',
+            'tile3Title' => 'Guaranteed',
+            'tile3Body' => 'We only recommend products with confirmed OEM after-sales support, so servicing is never a dead end.',
+            'teamEyebrow' => 'Meet the team',
+            'teamTitle' => 'Founders & Leadership',
+            'teamIntro' => 'The people guiding every site from first audit to handover.',
+            'ctaEyebrow' => 'Work With Us',
+            'ctaTitle' => "Let's talk about your site's safety plan",
+            'ctaButton' => 'Contact Our Team',
+        ],
+        'contact' => [
+            'eyebrow' => 'Get In Touch',
+            'title' => "Tell us about your site, we'll take it from there.",
+            'detailsEyebrow' => 'Contact Details',
+            'detailsTitle' => 'Reach us directly',
+            'formEyebrow' => 'Send a Message',
+            'formTitle' => 'Request a quote or audit',
+        ],
+        'privacy' => [
+            'eyebrow' => 'Legal',
+            'title' => 'Privacy Policy',
+            'body' => "We collect only the information you provide through our contact and quote forms — name, company, email, phone, and message content — to respond to your enquiry. We do not sell or share this data with third parties outside of fulfilling your request.\n\n## Information We Collect\n\nContact form submissions, newsletter sign-ups, and standard analytics data such as pages visited and approximate location derived from IP address.\n\n## How We Use It\n\nTo respond to quote and audit requests, send requested updates, and improve site content. We retain enquiry data for as long as needed to service your request.\n\n## Your Rights\n\nYou may request access to, correction of, or deletion of your data at any time by emailing us through the contact page.",
+        ],
+    ];
+}
+
+function page_copy(string $slug): array
+{
+    $defaults = default_page_copy()[$slug] ?? [];
+    $all = setting('pages', []);
+    $stored = is_array($all) && is_array($all[$slug] ?? null) ? $all[$slug] : [];
+    foreach ($defaults as $key => $value) {
+        if (!array_key_exists($key, $stored)) {
+            continue;
+        }
+        $next = $stored[$key];
+        if (is_string($next) && $next !== '') {
+            $defaults[$key] = $next;
+        }
+    }
+    return $defaults;
+}
+
+function save_page_copy(string $slug, array $data): void
+{
+    $all = setting('pages', []);
+    if (!is_array($all)) {
+        $all = [];
+    }
+    $all[$slug] = $data;
+    save_setting('pages', $all);
+}
+
+function page_text(array $copy, string $key): string
+{
+    $text = (string) ($copy[$key] ?? '');
+    if (str_contains($text, '{foundedYear}')) {
+        $year = trim((string) (seo_company()['foundedYear'] ?? ''));
+        $text = str_replace('{foundedYear}', $year !== '' ? $year : '2011', $text);
+    }
+    return $text;
+}
+
+function page_editor_fields(string $slug): array
+{
+    $fields = [
+        'home' => [
+            ['legend' => 'Categories block'],
+            ['key' => 'supplyEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'supplyTitle', 'label' => 'Heading'],
+            ['key' => 'supplyIntro', 'label' => 'Intro', 'type' => 'textarea'],
+            ['legend' => 'Services block'],
+            ['key' => 'servicesEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'servicesTitle', 'label' => 'Heading'],
+            ['key' => 'servicesIntro', 'label' => 'Intro', 'type' => 'textarea'],
+            ['legend' => 'Catalog block'],
+            ['key' => 'catalogEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'catalogTitle', 'label' => 'Heading'],
+            ['legend' => 'Why Bluelotus'],
+            ['key' => 'whyEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'whyTitle', 'label' => 'Heading'],
+            ['key' => 'whyIntro', 'label' => 'Intro', 'type' => 'textarea'],
+            ['key' => 'whyImage', 'label' => 'Section image', 'type' => 'image', 'hint' => 'Recommended 900 × 700 px. Optional.'],
+            ['key' => 'why1Title', 'label' => 'Point 1 title'],
+            ['key' => 'why1Body', 'label' => 'Point 1 text', 'type' => 'textarea'],
+            ['key' => 'why2Title', 'label' => 'Point 2 title'],
+            ['key' => 'why2Body', 'label' => 'Point 2 text', 'type' => 'textarea'],
+            ['key' => 'why3Title', 'label' => 'Point 3 title'],
+            ['key' => 'why3Body', 'label' => 'Point 3 text', 'type' => 'textarea'],
+            ['legend' => 'FAQ, testimonials, clients, blog'],
+            ['key' => 'faqEyebrow', 'label' => 'FAQ eyebrow'],
+            ['key' => 'faqTitle', 'label' => 'FAQ heading'],
+            ['key' => 'testimonialsEyebrow', 'label' => 'Testimonials eyebrow'],
+            ['key' => 'testimonialsTitle', 'label' => 'Testimonials heading'],
+            ['key' => 'clientsEyebrow', 'label' => 'Clients eyebrow'],
+            ['key' => 'blogEyebrow', 'label' => 'Blog eyebrow'],
+            ['key' => 'blogTitle', 'label' => 'Blog heading'],
+            ['legend' => 'Bottom CTA'],
+            ['key' => 'ctaEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'ctaTitle', 'label' => 'Heading'],
+            ['key' => 'ctaIntro', 'label' => 'Intro', 'type' => 'textarea'],
+            ['key' => 'ctaButton', 'label' => 'Button label'],
+        ],
+        'about' => [
+            ['legend' => 'Page header'],
+            ['key' => 'eyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['legend' => 'Our story'],
+            ['key' => 'storyEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'storyTitle', 'label' => 'Heading', 'full' => true],
+            ['key' => 'storyBody1', 'label' => 'First paragraph', 'type' => 'textarea', 'hint' => 'Use {foundedYear} to insert the company founded year.'],
+            ['key' => 'storyBody2', 'label' => 'Second paragraph', 'type' => 'textarea'],
+            ['key' => 'storyImage', 'label' => 'Story image', 'type' => 'image', 'hint' => 'Recommended 900 × 420 px.'],
+            ['legend' => 'Approach tiles'],
+            ['key' => 'approachEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'approachTitle', 'label' => 'Heading', 'full' => true],
+            ['key' => 'tile1Title', 'label' => 'Tile 1 title'],
+            ['key' => 'tile1Body', 'label' => 'Tile 1 text', 'type' => 'textarea'],
+            ['key' => 'tile2Title', 'label' => 'Tile 2 title'],
+            ['key' => 'tile2Body', 'label' => 'Tile 2 text', 'type' => 'textarea'],
+            ['key' => 'tile3Title', 'label' => 'Tile 3 title'],
+            ['key' => 'tile3Body', 'label' => 'Tile 3 text', 'type' => 'textarea'],
+            ['legend' => 'Leadership & CTA'],
+            ['key' => 'teamEyebrow', 'label' => 'Team eyebrow'],
+            ['key' => 'teamTitle', 'label' => 'Team heading'],
+            ['key' => 'teamIntro', 'label' => 'Team intro', 'type' => 'textarea'],
+            ['key' => 'ctaEyebrow', 'label' => 'CTA eyebrow'],
+            ['key' => 'ctaTitle', 'label' => 'CTA heading', 'full' => true],
+            ['key' => 'ctaButton', 'label' => 'CTA button'],
+        ],
+        'contact' => [
+            ['legend' => 'Page header'],
+            ['key' => 'eyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['legend' => 'Columns'],
+            ['key' => 'detailsEyebrow', 'label' => 'Details eyebrow'],
+            ['key' => 'detailsTitle', 'label' => 'Details heading'],
+            ['key' => 'formEyebrow', 'label' => 'Form eyebrow'],
+            ['key' => 'formTitle', 'label' => 'Form heading'],
+        ],
+        'privacy' => [
+            ['legend' => 'Page header'],
+            ['key' => 'eyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['legend' => 'Policy body'],
+            ['key' => 'body', 'label' => 'Privacy policy', 'type' => 'rich', 'hint' => 'Use H1–H3 and Internal link the same way as blog posts.'],
+        ],
+    ];
+    return $fields[$slug] ?? [];
+}
+
 function default_faqs(): array
 {
     $contact = is_array(setting('contact', [])) ? setting('contact', []) : [];
@@ -552,6 +769,7 @@ function counts(): array
         'hero' => count(setting_list('hero')),
         'enquiries' => enquiry_count(),
         'enquiriesUnread' => enquiry_unread_count(),
+        'comments' => blog_comment_count(),
     ];
 }
 
@@ -655,6 +873,106 @@ function save_enquiry(array $data): int
     ]);
     unset($_SESSION['quote_captcha']);
     return (int) db()->lastInsertId();
+}
+
+function blog_read_minutes(array $post): int
+{
+    $text = trim((string) ($post['excerpt'] ?? '') . ' ' . (string) ($post['body'] ?? ''));
+    $words = str_word_count(strip_tags($text));
+    return max(1, (int) ceil($words / 180));
+}
+
+function popular_blog_posts(array $all, string $excludeSlug = '', int $limit = 6): array
+{
+    $out = [];
+    foreach ($all as $candidate) {
+        $slug = (string) ($candidate['slug'] ?? '');
+        if ($slug === '' || $slug === $excludeSlug) {
+            continue;
+        }
+        $out[] = $candidate;
+    }
+    usort($out, static function (array $a, array $b): int {
+        return strcmp((string) ($b['date'] ?? ''), (string) ($a['date'] ?? ''));
+    });
+    return array_slice($out, 0, $limit);
+}
+
+function blog_comment_count(?string $slug = null): int
+{
+    if (!db_ready()) {
+        return 0;
+    }
+    migrate();
+    try {
+        if ($slug) {
+            $stmt = db()->prepare('SELECT COUNT(*) FROM blog_comments WHERE post_slug = ? AND is_approved = 1');
+            $stmt->execute([$slug]);
+            return (int) $stmt->fetchColumn();
+        }
+        return (int) db()->query('SELECT COUNT(*) FROM blog_comments')->fetchColumn();
+    } catch (Throwable $e) {
+        return 0;
+    }
+}
+
+function blog_comments(string $slug): array
+{
+    if ($slug === '' || !db_ready()) {
+        return [];
+    }
+    migrate();
+    try {
+        $stmt = db()->prepare(
+            'SELECT * FROM blog_comments WHERE post_slug = ? AND is_approved = 1 ORDER BY created_at ASC, id ASC'
+        );
+        $stmt->execute([$slug]);
+        return $stmt->fetchAll() ?: [];
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+function all_blog_comments(): array
+{
+    if (!db_ready()) {
+        return [];
+    }
+    migrate();
+    try {
+        return db()->query('SELECT * FROM blog_comments ORDER BY created_at DESC, id DESC')->fetchAll() ?: [];
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+function blog_comment_ip_limited(string $ip): bool
+{
+    $stmt = db()->prepare('SELECT COUNT(*) FROM blog_comments WHERE ip = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)');
+    $stmt->execute([$ip]);
+    return (int) $stmt->fetchColumn() >= 5;
+}
+
+function save_blog_comment(array $data): int
+{
+    migrate();
+    $stmt = db()->prepare(
+        'INSERT INTO blog_comments (post_slug, name, email, body, ip, is_approved, created_at)
+         VALUES (?, ?, ?, ?, ?, 1, NOW())'
+    );
+    $stmt->execute([
+        $data['post_slug'],
+        $data['name'],
+        $data['email'],
+        $data['body'],
+        $data['ip'],
+    ]);
+    return (int) db()->lastInsertId();
+}
+
+function delete_blog_comment(int $id): void
+{
+    db()->prepare('DELETE FROM blog_comments WHERE id = ?')->execute([$id]);
 }
 
 function article_auto_links(?string $excludePostSlug = null): array

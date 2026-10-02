@@ -292,11 +292,41 @@
     });
   }
 
-  function initBlogLinkInsert() {
-    const button = document.querySelector("[data-insert-blog-link]");
-    const select = document.getElementById("blogLinkTarget");
-    const textarea = document.getElementById("blogBody");
-    if (!button || !select || !textarea) return;
+  function initRichBody() {
+    const toolbar = document.querySelector("[data-rich-toolbar]");
+    const textarea = document.querySelector("[data-rich-body]");
+    if (!toolbar || !textarea) return;
+
+    function currentLineRange() {
+      const value = textarea.value;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+      let lineEnd = value.indexOf("\n", end);
+      if (lineEnd === -1) lineEnd = value.length;
+      return { lineStart: lineStart, lineEnd: lineEnd, value: value, start: start, end: end };
+    }
+
+    toolbar.querySelectorAll("[data-blog-heading]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const level = Math.max(1, Math.min(3, parseInt(btn.getAttribute("data-blog-heading") || "2", 10)));
+        const range = currentLineRange();
+        let line = range.value.slice(range.lineStart, range.lineEnd).replace(/^#{1,6}\s*/, "");
+        if (range.start !== range.end) {
+          const selected = range.value.slice(range.start, range.end).replace(/^#{1,6}\s*/, "").trim();
+          if (selected) line = selected;
+        }
+        if (!line.trim()) line = "Heading";
+        const next = "#".repeat(level) + " " + line.trim();
+        textarea.setRangeText(next, range.lineStart, range.lineEnd, "end");
+        textarea.focus();
+        textarea.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    });
+
+    const button = toolbar.querySelector("[data-insert-blog-link]");
+    const select = toolbar.querySelector("#blogLinkTarget") || document.getElementById("blogLinkTarget");
+    if (!button || !select) return;
 
     button.addEventListener("click", function () {
       const option = select.options[select.selectedIndex];
@@ -308,9 +338,7 @@
       const selected = textarea.value.slice(textarea.selectionStart, textarea.selectionEnd);
       const label = selected.trim() !== "" ? selected : (option.getAttribute("data-label") || option.textContent || "read more");
       const snippet = "[" + label + "](" + value + ")";
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      textarea.setRangeText(snippet, start, end, "end");
+      textarea.setRangeText(snippet, textarea.selectionStart, textarea.selectionEnd, "end");
       textarea.focus();
       textarea.dispatchEvent(new Event("input", { bubbles: true }));
     });
@@ -361,7 +389,7 @@
     initCounters();
     initSerpPreview();
     initTableFilter();
-    initBlogLinkInsert();
+    initRichBody();
     initMapRows();
   });
 })();

@@ -166,6 +166,17 @@ a:hover { text-decoration: underline; }
 }
 .card strong { display: block; font-size: 1.8rem; margin-top: 0.35rem; }
 .card span { color: var(--muted); font-size: 0.9rem; }
+a.card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: border-color 0.15s ease;
+}
+a.card:hover { border-color: var(--accent); }
+a.card strong {
+  font-size: 1.05rem;
+  margin: 0 0 0.35rem;
+}
 
 .toolbar {
   display: flex;
@@ -462,6 +473,69 @@ input[type="color"] {
   align-items: end;
 }
 .link-insert .btn { white-space: nowrap; }
+.editor-field label,
+.form-grid > div > label[for] {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.45rem;
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  background: #f4f6f8;
+}
+.editor-toolbar + textarea {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.editor-btn {
+  min-width: 2.2rem;
+  height: 2rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.editor-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.editor-toolbar-sep {
+  width: 1px;
+  height: 1.4rem;
+  background: var(--line);
+  margin: 0 0.15rem;
+}
+.editor-link {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+}
+.editor-link select {
+  width: 100%;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 .link-panel {
   margin: 0;
   padding: 1rem;
