@@ -164,37 +164,118 @@ function build_sitemap(string $map = 'index'): string
     };
 }
 
+function robots_allow_groups(): array
+{
+    return [
+        'Search engines' => [
+            'Googlebot',
+            'Googlebot-Image',
+            'Googlebot-News',
+            'Googlebot-Video',
+            'Bingbot',
+            'Slurp',
+            'DuckDuckBot',
+            'Baiduspider',
+            'YandexBot',
+            'Applebot',
+            'Sogou',
+            'Qwantify',
+            'SeznamBot',
+            'Naverbot',
+            'Yeti',
+            'Ecosia',
+            'Brave',
+        ],
+        'AI / LLM crawlers and chatbots' => [
+            '# OpenAI (ChatGPT)',
+            'GPTBot',
+            'ChatGPT-User',
+            'OAI-SearchBot',
+            '# Anthropic (Claude)',
+            'ClaudeBot',
+            'Claude-User',
+            'Claude-SearchBot',
+            'anthropic-ai',
+            'Claude-Web',
+            '# Google (Gemini / AI Overviews)',
+            'Google-Extended',
+            'GoogleOther',
+            'Google-CloudVertexBot',
+            '# Microsoft (Copilot / Bing AI)',
+            'BingPreview',
+            '# Perplexity',
+            'PerplexityBot',
+            'Perplexity-User',
+            '# Meta (Llama / Meta AI)',
+            'meta-externalagent',
+            'meta-externalfetcher',
+            'FacebookBot',
+            'facebookexternalhit',
+            '# Apple Intelligence',
+            'Applebot-Extended',
+            '# Amazon (Alexa / Amazon AI)',
+            'Amazonbot',
+            '# ByteDance / TikTok',
+            'Bytespider',
+            '# DuckDuckGo AI',
+            'DuckAssistBot',
+            '# Mistral',
+            'MistralAI-User',
+            '# Cohere',
+            'cohere-ai',
+            'cohere-training-data-crawler',
+            '# You.com',
+            'YouBot',
+            '# Common Crawl (feeds many AI models)',
+            'CCBot',
+            '# Diffbot',
+            'Diffbot',
+            '# Other AI crawlers',
+            'AI2Bot',
+            'Ai2Bot-Dolma',
+            'omgili',
+            'omgilibot',
+            'PetalBot',
+            'Timpibot',
+            'ImagesiftBot',
+            'Webzio-Extended',
+        ],
+        'Social preview bots' => [
+            'Twitterbot',
+            'LinkedInBot',
+            'WhatsApp',
+            'TelegramBot',
+            'Slackbot',
+            'Pinterestbot',
+        ],
+    ];
+}
+
 function build_robots_txt(bool $allowCrawling = true): string
 {
     if (!$allowCrawling) {
         return "User-agent: *\nDisallow: /\n";
     }
 
-    $host = parse_url(seo_domain(), PHP_URL_HOST);
-    $lines = [
-        'User-agent: *',
-        'Allow: /',
-        '',
-        'Disallow: /admin/',
-        'Disallow: /config/',
-        'Disallow: /*?q=',
-        'Disallow: /*&page=',
-        '',
-        'Sitemap: ' . seo_url('sitemap.xml'),
-    ];
-    if (is_string($host) && $host !== '') {
-        $lines[] = 'Host: ' . $host;
-    }
-    return implode("\n", $lines) . "\n";
-}
+    $out = '# robots.txt for ' . rtrim(seo_domain(), '/') . "/\n";
+    $out .= "# Allows all search engines, AI crawlers and chatbots\n\n";
+    $out .= "# ---- Default: allow everything ----\n";
+    $out .= "User-agent: *\nAllow: /\n\n";
 
-function robots_allow_crawling(): bool
-{
-    $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
-    if ($host === '' || str_contains($host, 'localhost') || str_starts_with($host, '127.')) {
-        return false;
+    foreach (robots_allow_groups() as $heading => $agents) {
+        $out .= '# ---- ' . $heading . " ----\n";
+        foreach ($agents as $agent) {
+            if (str_starts_with($agent, '# ')) {
+                $out .= $agent . "\n";
+                continue;
+            }
+            $out .= "User-agent: {$agent}\nAllow: /\n\n";
+        }
     }
-    return true;
+
+    $out .= "# ---- Sitemap ----\n";
+    $out .= 'Sitemap: ' . seo_url('sitemap.xml') . "\n";
+    return $out;
 }
 
 function export_sitemaps(): void
@@ -230,5 +311,5 @@ function serve_robots(): void
 {
     header('Content-Type: text/plain; charset=UTF-8');
     header('Cache-Control: public, max-age=3600');
-    echo build_robots_txt(robots_allow_crawling());
+    echo build_robots_txt(true);
 }
