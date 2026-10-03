@@ -3378,16 +3378,16 @@ img[data-fallback].is-broken {
   height: 100%;
   max-width: none;
   max-height: none;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   padding: 0;
   margin: 0;
   display: block;
-  transition: opacity 0.18s ease, transform 0.45s var(--ease);
+  transition: opacity 0.18s ease;
 }
 
 .product-stage:hover img {
-  transform: scale(1.04);
+  transform: none;
 }
 
 .product-stage-count {
@@ -3425,7 +3425,7 @@ img[data-fallback].is-broken {
 .product-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   padding: 0;
   display: block;

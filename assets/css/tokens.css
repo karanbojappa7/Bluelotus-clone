@@ -19,9 +19,9 @@
   --brand-li: #0a66c2;
   --brand-mail: #4285f4;
 
-  --font-display: "Jost", "Segoe UI", sans-serif;
-  --font-body: "Roboto", "Segoe UI", sans-serif;
-  --font-accent: "Oregano", "Charm", cursive;
+  --font-display: "Poppins", "Segoe UI", sans-serif;
+  --font-body: "Poppins", "Segoe UI", sans-serif;
+  --font-accent: "Poppins", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", "Courier New", monospace;
 
   --fs-hero: clamp(2.4rem, 5vw, 4.6rem);
