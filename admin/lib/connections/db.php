@@ -237,7 +237,7 @@ function seed_from_json(): void
         $stmt->execute(['admin', password_hash('admin123', PASSWORD_DEFAULT), gmdate('c')]);
     }
 
-    $settingKeys = ['company', 'contact', 'social', 'seo', 'stats', 'testimonials', 'blog', 'clients', 'hero'];
+    $settingKeys = ['company', 'contact', 'social', 'seo', 'stats', 'testimonials', 'blog', 'clients', 'hero', 'analytics'];
     $setStmt = $pdo->prepare(
         'INSERT INTO settings (`key`, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?'
     );

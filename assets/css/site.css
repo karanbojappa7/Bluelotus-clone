@@ -2042,6 +2042,9 @@ body.is-in-hero .site-header:not(.is-scrolled):not(.is-nav-open)::before {
   line-height: 1.8;
   color: var(--ink-soft);
   margin: 1.25rem 0 0;
+  padding: 0.95rem 1.1rem;
+  border-radius: 14px;
+  background: #f4f6fa;
 }
 
 .article-side {
