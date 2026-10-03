@@ -6,7 +6,8 @@ window.SITE_CONFIG = {
         "legalName": "Bluelotus Infrasafety",
         "foundedYear": 2011,
         "logo": "assets/img/logo.png",
-        "logoMark": "assets/img/logo-mark.png"
+        "logoMark": "assets/img/logo-mark.png",
+        "gstin": "21AAOCB8443K1ZF"
     },
     "contact": {
         "phones": [

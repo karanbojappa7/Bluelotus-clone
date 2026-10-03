@@ -13,8 +13,9 @@ page_head([
 <?php
 $heroSlides = hero_slides();
 $home = page_copy('home');
+$homeClients = setting_list('clients');
 ?>
-<section class="hero-carousel" id="heroCarousel">
+<section class="hero-carousel<?= $homeClients ? ' has-clients' : '' ?>" id="heroCarousel">
   <div class="hero-carousel-pin">
     <div class="hero-slides">
       <?php foreach ($heroSlides as $i => $slide): ?>
@@ -60,6 +61,14 @@ $home = page_copy('home');
     </nav>
     <?php endif; ?>
     <button type="button" class="hero-scroll-cue" data-hero-next>Scroll</button>
+    <?php if ($homeClients): ?>
+    <div class="hero-clients">
+      <p class="eyebrow eyebrow--light eyebrow--center"><?= e(page_text($home, 'clientsEyebrow')) ?></p>
+      <div class="client-marquee" aria-label="Trusted companies">
+        <div class="client-track" data-render="clients"></div>
+      </div>
+    </div>
+    <?php endif; ?>
   </div>
 </section>
 
@@ -179,15 +188,6 @@ $statCols = min(max($statCount, 1), 4);
       </div>
     </div>
     <div class="grid grid-3" data-render="testimonials"></div>
-  </div>
-</section>
-
-<section class="section--tight">
-  <div class="container">
-    <p class="eyebrow eyebrow--center mb-4"><?= e(page_text($home, 'clientsEyebrow')) ?></p>
-  </div>
-  <div class="client-marquee">
-    <div class="client-track" data-render="clients"></div>
   </div>
 </section>
 

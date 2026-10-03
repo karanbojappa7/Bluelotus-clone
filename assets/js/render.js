@@ -309,17 +309,66 @@
     );
   }
 
+  function runClientMarquee() {
+    const track = document.querySelector(".hero-clients .client-track");
+    if (!track || track.dataset.marquee === "on") return;
+    if (track.children.length < 2) return;
+
+    track.dataset.marquee = "on";
+    const wrap = track.closest(".client-marquee");
+    let offset = 0;
+    let paused = false;
+    let last = 0;
+    const speed = 42;
+
+    if (wrap) {
+      wrap.addEventListener("mouseenter", function () {
+        paused = true;
+      });
+      wrap.addEventListener("mouseleave", function () {
+        paused = false;
+      });
+    }
+
+    function tick(now) {
+      if (!last) last = now;
+      const delta = Math.min(now - last, 48);
+      last = now;
+      if (!paused) {
+        offset += (speed * delta) / 1000;
+        const half = track.scrollWidth / 2;
+        if (half > 0 && offset >= half) {
+          offset -= half;
+        }
+        track.style.transform = "translate3d(" + -offset + "px,0,0)";
+      }
+      window.requestAnimationFrame(tick);
+    }
+
+    window.requestAnimationFrame(tick);
+  }
+
   function buildClients() {
-    const clients = CFG.clients || [];
+    const clients = (CFG.clients || []).map(function (c) {
+      return String(c || "").trim();
+    }).filter(Boolean);
+    if (!clients.length) return;
+
+    let loop = clients.slice();
+    while (loop.length < 12) {
+      loop = loop.concat(clients);
+    }
+
     fill(
       "[data-render='clients']",
-      clients
-        .concat(clients)
-        .map(function (c) {
-          return `<span>${esc(c)}</span>`;
+      loop.concat(loop)
+        .map(function (c, i) {
+          const dup = i >= loop.length ? ' aria-hidden="true"' : "";
+          return `<span class="client-logo"${dup}>${esc(c)}</span>`;
         })
         .join("")
     );
+    window.requestAnimationFrame(runClientMarquee);
   }
 
   function buildFooterContact() {

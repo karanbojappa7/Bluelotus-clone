@@ -122,7 +122,7 @@
     const name = (cfg && cfg.company && cfg.company.name) || "Bluelotus Infrasafety";
     return `<a class="brand" href="${url("")}" aria-label="${esc(name)}">
       <span class="brand-mark-wrap">
-        <img class="brand-mark" src="${esc(url(mark))}" alt="" width="48" height="48">
+        <img class="brand-mark" src="${esc(url(mark))}" alt="" width="56" height="56">
       </span>
       <span class="brand-copy">
         <span class="brand-name">BLUELOTUS</span>
@@ -139,6 +139,7 @@
       <ul class="nav-links">${navItems()}</ul>
     </nav>
     <div class="nav-actions">
+      <div class="social-row social-row--header">${socialLinks()}</div>
       <a href="${url("contact")}" class="btn btn-primary nav-cta">Get a Quote</a>
       <button class="nav-toggle" type="button" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">${icon("menu", 26)}</button>
     </div>
@@ -153,6 +154,7 @@
     <div class="hazard-rule mb-5"></div>
     <div class="footer-bottom footer-bottom--solo">
       <span>© <span data-current-year></span> <span data-config="company.legalName"></span>. All rights reserved.</span>
+      <span class="footer-gstin">GSTIN: <span data-config="company.gstin">21AAOCB8443K1ZF</span></span>
       <a href="${url("")}">Back to Home</a>
     </div>
   </div>
@@ -165,7 +167,6 @@
       <div>
         ${brandHtml()}
         <p class="footer-blurb">Certified safety equipment supply, installation, and maintenance for industries, contractors, and government agencies across India.</p>
-        <div class="social-row mt-4">${socialLinks()}</div>
       </div>
       <div>
         <h2 class="footer-heading">Company</h2>
@@ -188,6 +189,7 @@
     </div>
     <div class="footer-bottom">
       <span>© <span data-current-year></span> <span data-config="company.legalName"></span>. All rights reserved.</span>
+      <span class="footer-gstin">GSTIN: <span data-config="company.gstin">21AAOCB8443K1ZF</span></span>
       <div class="footer-legal">
         <a href="${url("privacy-policy")}">Privacy Policy</a>
         <a href="${url("sitemap.xml")}">Sitemap</a>

@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'shortName' => post('shortName'),
         'tagline' => post('tagline'),
         'legalName' => post('legalName'),
+        'gstin' => strtoupper(trim(post('gstin'))),
         'foundedYear' => (int) post('foundedYear'),
         'logo' => $company['logo'] ?? '',
         'logoMark' => $company['logoMark'] ?? '',
@@ -51,6 +52,9 @@ admin_header('Company', 'company');
     </label>
     <label>Legal name
       <input type="text" name="legalName" value="<?= e($company['legalName'] ?? '') ?>">
+    </label>
+    <label>GSTIN
+      <input type="text" name="gstin" value="<?= e($company['gstin'] ?? '21AAOCB8443K1ZF') ?>" maxlength="15" autocomplete="off">
     </label>
     <label>Founded year
       <input type="number" name="foundedYear" value="<?= e((string) ($company['foundedYear'] ?? '')) ?>">

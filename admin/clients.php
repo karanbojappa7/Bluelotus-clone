@@ -19,7 +19,7 @@ admin_header('Clients', 'clients');
 ?>
 <form method="post" class="form-panel">
   <?= csrf_field() ?>
-  <p class="muted">Shown in the homepage marquee. One company name per line.</p>
+  <p class="muted">Shown as logo-style names in the homepage hero. One company name per line.</p>
   <label class="full">Client names
     <textarea name="clients" rows="12"><?= e(array_to_lines($clients)) ?></textarea>
   </label>
