@@ -17,7 +17,7 @@ $tiles = [
     ['label' => 'Leadership', 'count' => $c['leadership'], 'href' => 'leadership/index.php', 'action' => 'leadership/form.php'],
     ['label' => 'Stats', 'count' => $c['stats'], 'href' => 'stats.php', 'action' => null],
     ['label' => 'Banner slides', 'count' => $c['hero'], 'href' => 'hero/index.php', 'action' => 'hero/form.php'],
-    ['label' => 'Clients', 'count' => $c['clients'], 'href' => 'clients.php', 'action' => null],
+    ['label' => 'Clients', 'count' => $c['clients'], 'href' => 'clients.php', 'action' => 'clients/form.php'],
 ];
 
 $emptySections = array_values(array_filter($tiles, static fn ($t) => (int) $t['count'] === 0 && !empty($t['action'])));

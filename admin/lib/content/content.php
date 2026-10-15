@@ -74,6 +74,37 @@ function setting_delete_item(string $key, int $index): void
     save_setting($key, array_values($list));
 }
 
+function normalize_client($row): ?array
+{
+    if (is_string($row)) {
+        $name = trim($row);
+        return $name !== '' ? ['name' => $name, 'logo' => ''] : null;
+    }
+    if (!is_array($row)) {
+        return null;
+    }
+    $name = trim((string) ($row['name'] ?? $row['title'] ?? ''));
+    if ($name === '') {
+        return null;
+    }
+    return [
+        'name' => $name,
+        'logo' => trim((string) ($row['logo'] ?? $row['image'] ?? '')),
+    ];
+}
+
+function all_clients(): array
+{
+    $out = [];
+    foreach (setting_list('clients') as $row) {
+        $item = normalize_client($row);
+        if ($item) {
+            $out[] = $item;
+        }
+    }
+    return $out;
+}
+
 function default_hero_slides(): array
 {
     return [
@@ -201,6 +232,7 @@ function page_labels(): array
         'home' => 'Home',
         'about' => 'About Us',
         'contact' => 'Contact Us',
+        'blog' => 'Blog',
         'privacy' => 'Privacy Policy',
     ];
 }
@@ -265,10 +297,16 @@ function default_page_copy(): array
         'contact' => [
             'eyebrow' => 'Get In Touch',
             'title' => "Tell us about your site, we'll take it from there.",
+            'heroImage' => 'assets/img/contact-hero.jpg',
             'detailsEyebrow' => 'Contact Details',
             'detailsTitle' => 'Reach us directly',
             'formEyebrow' => 'Send a Message',
             'formTitle' => 'Request a quote or audit',
+        ],
+        'blog' => [
+            'eyebrow' => 'Safety Insights',
+            'title' => 'Guidance from the people who install it.',
+            'heroImage' => 'assets/img/hero.jpg',
         ],
         'privacy' => [
             'eyebrow' => 'Legal',
@@ -386,11 +424,18 @@ function page_editor_fields(string $slug): array
             ['legend' => 'Page header'],
             ['key' => 'eyebrow', 'label' => 'Eyebrow'],
             ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['key' => 'heroImage', 'label' => 'Hero image', 'type' => 'image', 'hint' => 'Wide banner shown behind the page title. Recommended 1920 × 450 px.'],
             ['legend' => 'Columns'],
             ['key' => 'detailsEyebrow', 'label' => 'Details eyebrow'],
             ['key' => 'detailsTitle', 'label' => 'Details heading'],
             ['key' => 'formEyebrow', 'label' => 'Form eyebrow'],
             ['key' => 'formTitle', 'label' => 'Form heading'],
+        ],
+        'blog' => [
+            ['legend' => 'Page header'],
+            ['key' => 'eyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['key' => 'heroImage', 'label' => 'Hero image', 'type' => 'image', 'hint' => 'Wide banner shown behind the page title. Recommended 1920 × 450 px.'],
         ],
         'privacy' => [
             ['legend' => 'Page header'],
@@ -736,7 +781,7 @@ function build_site_config(): array
         'services' => all_services(),
         'testimonials' => setting('testimonials', []),
         'blog' => setting('blog', []),
-        'clients' => setting('clients', []),
+        'clients' => all_clients(),
         'faqs' => site_faqs(),
         'hero' => hero_slides(),
     ];
@@ -764,7 +809,7 @@ function counts(): array
         'blog' => count(setting_list('blog')),
         'testimonials' => count(setting_list('testimonials')),
         'leadership' => count(all_leadership()),
-        'clients' => count(setting_list('clients')),
+        'clients' => count(all_clients()),
         'stats' => count(setting_list('stats')),
         'hero' => count(setting_list('hero')),
         'enquiries' => enquiry_count(),

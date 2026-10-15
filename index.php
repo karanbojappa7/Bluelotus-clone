@@ -13,7 +13,7 @@ page_head([
 <?php
 $heroSlides = hero_slides();
 $home = page_copy('home');
-$homeClients = setting_list('clients');
+$homeClients = all_clients();
 ?>
 <section class="hero-carousel<?= $homeClients ? ' has-clients' : '' ?>" id="heroCarousel">
   <div class="hero-carousel-pin">

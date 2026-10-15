@@ -55,7 +55,8 @@ window.SITE_CONFIG = {
         "domain": "https://www.bluelotusinfrasafety.com",
         "defaultTitle": "Safety Equipment Supplier & Services in Berhampur, Odisha",
         "defaultDescription": "Certified fire, road, and industrial safety equipment supplier in Berhampur, Odisha. End-to-end supply, installation, and maintenance for contractors, industries, and government agencies.",
-        "keywords": "safety equipment supplier berhampur, industrial safety equipment odisha, fire safety products, road safety equipment, PPE supplier india, warehouse safety, construction safety equipment"
+        "keywords": "safety equipment supplier berhampur, industrial safety equipment odisha, fire safety products, road safety equipment, PPE supplier india, warehouse safety, construction safety equipment",
+        "googleVerification": "SkhD71Wj19USu06AJcwTFcwXvCOjYOPT8MKVx_ZNHAk"
     },
     "stats": [
         {
@@ -1988,16 +1989,46 @@ window.SITE_CONFIG = {
         }
     ],
     "clients": [
-        "Metro Infra",
-        "Peenya Industrial Estate",
-        "Whitefield Logistics",
-        "Karnataka PWD",
-        "Bosch India",
-        "L&T Construction",
-        "Toyota Kirloskar",
-        "BEML",
-        "ABB India",
-        "Titan Engineering"
+        {
+            "name": "Metro Infra",
+            "logo": "assets/img/clients/metro-infra.svg"
+        },
+        {
+            "name": "Peenya Industrial Estate",
+            "logo": "assets/img/clients/peenya.svg"
+        },
+        {
+            "name": "Whitefield Logistics",
+            "logo": "assets/img/clients/whitefield.svg"
+        },
+        {
+            "name": "Karnataka PWD",
+            "logo": "assets/img/clients/karnataka-pwd.svg"
+        },
+        {
+            "name": "Bosch India",
+            "logo": "assets/img/clients/bosch.svg"
+        },
+        {
+            "name": "L&T Construction",
+            "logo": "assets/img/clients/lt-construction.svg"
+        },
+        {
+            "name": "Toyota Kirloskar",
+            "logo": "assets/img/clients/toyota-kirloskar.svg"
+        },
+        {
+            "name": "BEML",
+            "logo": "assets/img/clients/beml.svg"
+        },
+        {
+            "name": "ABB India",
+            "logo": "assets/img/clients/abb.svg"
+        },
+        {
+            "name": "Titan Engineering",
+            "logo": "assets/img/clients/titan.svg"
+        }
     ],
     "faqs": [
         {

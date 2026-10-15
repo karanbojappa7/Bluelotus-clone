@@ -12,6 +12,11 @@ $page = max(1, min($page, $pages));
 $offset = ($page - 1) * BLOG_PER_PAGE;
 $list = array_slice($posts, $offset, BLOG_PER_PAGE);
 
+$blogCopy = page_copy('blog');
+$blogHero = trim((string) ($blogCopy['heroImage'] ?? ''));
+if ($blogHero === '') {
+    $blogHero = 'assets/img/hero.jpg';
+}
 $crumbs = ['Home' => '/', 'Blog' => null];
 
 $schema = schema_url_list('Safety insights', $list, static fn ($post) => [
@@ -29,10 +34,10 @@ page_head([
     'next' => $page < $pages ? 'blog?page=' . ($page + 1) : null,
 ]);
 ?>
-<section class="page-header page-header--light">
+<section class="page-header page-header--banner page-header--blog" style="--page-header-image:url('<?= e(url_for($blogHero)) ?>')">
   <div class="container">
-    <span class="eyebrow eyebrow--light">Safety Insights</span>
-    <h1 class="page-title">Guidance from the people who install it.</h1>
+    <span class="eyebrow eyebrow--light"><?= e(page_text($blogCopy, 'eyebrow')) ?></span>
+    <h1 class="page-title"><?= e(page_text($blogCopy, 'title')) ?></h1>
     <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
   </div>
 </section>

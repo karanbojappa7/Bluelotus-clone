@@ -1327,15 +1327,15 @@
     }
   ],
   "clients": [
-    "Metro Infra",
-    "Peenya Industrial Estate",
-    "Whitefield Logistics",
-    "Karnataka PWD",
-    "Bosch India",
-    "L&T Construction",
-    "Toyota Kirloskar",
-    "BEML",
-    "ABB India",
-    "Titan Engineering"
+    { "name": "Metro Infra", "logo": "assets/img/clients/metro-infra.svg" },
+    { "name": "Peenya Industrial Estate", "logo": "assets/img/clients/peenya.svg" },
+    { "name": "Whitefield Logistics", "logo": "assets/img/clients/whitefield.svg" },
+    { "name": "Karnataka PWD", "logo": "assets/img/clients/karnataka-pwd.svg" },
+    { "name": "Bosch India", "logo": "assets/img/clients/bosch.svg" },
+    { "name": "L&T Construction", "logo": "assets/img/clients/lt-construction.svg" },
+    { "name": "Toyota Kirloskar", "logo": "assets/img/clients/toyota-kirloskar.svg" },
+    { "name": "BEML", "logo": "assets/img/clients/beml.svg" },
+    { "name": "ABB India", "logo": "assets/img/clients/abb.svg" },
+    { "name": "Titan Engineering", "logo": "assets/img/clients/titan.svg" }
   ]
 }

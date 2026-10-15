@@ -348,10 +348,31 @@
     window.requestAnimationFrame(tick);
   }
 
+  function normalizeClient(raw) {
+    if (typeof raw === "string") {
+      return { name: raw.trim(), logo: "" };
+    }
+    if (!raw || typeof raw !== "object") {
+      return { name: "", logo: "" };
+    }
+    return {
+      name: String(raw.name || raw.title || "").trim(),
+      logo: String(raw.logo || raw.image || "").trim(),
+    };
+  }
+
+  function clientMarkup(client, dup) {
+    const initial = esc((client.name.match(/[A-Za-z0-9]/) || ["•"])[0].toUpperCase());
+    const mark = client.logo
+      ? `<span class="client-logo-mark"><img src="${esc(siteUrl(client.logo))}" alt="" width="72" height="40"></span>`
+      : `<span class="client-logo-mark" aria-hidden="true">${initial}</span>`;
+    return `<span class="client-logo"${dup}>${mark}<span class="client-logo-name">${esc(client.name)}</span></span>`;
+  }
+
   function buildClients() {
-    const clients = (CFG.clients || []).map(function (c) {
-      return String(c || "").trim();
-    }).filter(Boolean);
+    const clients = (CFG.clients || []).map(normalizeClient).filter(function (c) {
+      return c.name !== "";
+    });
     if (!clients.length) return;
 
     let loop = clients.slice();
@@ -364,7 +385,7 @@
       loop.concat(loop)
         .map(function (c, i) {
           const dup = i >= loop.length ? ' aria-hidden="true"' : "";
-          return `<span class="client-logo"${dup}>${esc(c)}</span>`;
+          return clientMarkup(c, dup);
         })
         .join("")
     );
