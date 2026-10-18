@@ -5,10 +5,6 @@ require_once __DIR__ . '/admin/bootstrap.php';
 $categories = db_ready() ? all_categories() : [];
 $services = db_ready() ? all_services() : [];
 $contactCopy = page_copy('contact');
-$contactHero = trim((string) ($contactCopy['heroImage'] ?? ''));
-if ($contactHero === '') {
-    $contactHero = 'assets/img/contact-hero.jpg';
-}
 $contact = db_ready() ? (setting('contact', []) ?: []) : [];
 $maps = contact_maps($contact);
 $sent = isset($_GET['sent']);
@@ -20,14 +16,9 @@ page_head([
     'canonical' => 'contact',
     'breadcrumbs' => ['Home' => '/', 'Contact Us' => null],
 ]);
+$contactCrumbs = ['Home' => '/', 'Contact Us' => null];
+render_page_banner($contactCopy, $contactCrumbs, 'contact');
 ?>
-<section class="page-header page-header--banner page-header--contact" style="--page-header-image:url('<?= e(url_for($contactHero)) ?>')">
-  <div class="container">
-    <span class="eyebrow eyebrow--light"><?= e(page_text($contactCopy, 'eyebrow')) ?></span>
-    <h1 class="page-title"><?= e(page_text($contactCopy, 'title')) ?></h1>
-    <div class="breadcrumb-row"><a href="<?= e(url_for('')) ?>">Home</a> / <span>Contact Us</span></div>
-  </div>
-</section>
 
 <section class="section">
   <div class="container">

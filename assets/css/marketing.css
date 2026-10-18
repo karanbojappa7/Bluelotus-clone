@@ -1,0 +1,440 @@
+.feature-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.feature-row:last-child {
+  border-bottom: 0;
+}
+
+.feature-num {
+  font-family: var(--font-mono);
+  color: var(--orange);
+  font-size: 0.9rem;
+  padding-top: 2px;
+}
+
+.feature-row h4 {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-1);
+}
+
+.feature-row p {
+  color: var(--slate);
+  font-size: 0.95rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--paper-line);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--slate);
+}
+
+.badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.service-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.service-tab-btn {
+  border: 1px solid var(--paper-line);
+  background: transparent;
+  color: var(--ink);
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background var(--fast), color var(--fast), border-color var(--fast);
+}
+
+.service-tab-btn.is-active,
+.service-tab-btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--amber);
+}
+
+.service-panel {
+  display: none;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+.service-panel.is-active {
+  display: grid;
+  animation: rise var(--med) var(--ease);
+}
+
+.service-visual {
+  background: var(--steel);
+  color: var(--white);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+  border-left: 3px solid var(--amber);
+}
+
+.service-visual .icon-wrap {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--amber);
+  margin-bottom: 0;
+}
+
+.service-visual h3 {
+  color: var(--white);
+}
+
+.service-visual p {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.service-panel-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.service-panel-points {
+  width: 100%;
+}
+
+.service-panel-points li {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0.7rem 0;
+  border-bottom: 1px dashed var(--paper-line);
+  color: var(--ink);
+}
+
+.service-panel-points li::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-top: 0.45rem;
+  flex-shrink: 0;
+  background: var(--orange);
+}
+
+.testimonial-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--ink-soft);
+  border: 1px solid var(--ink-line);
+  border-top: 3px solid var(--amber);
+}
+
+.testimonial-media {
+  height: 180px;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.testimonial-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.testimonial-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--space-4);
+}
+
+.testimonial-quote {
+  color: var(--paper);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.testimonial-quote::before {
+  content: "\201C";
+  display: block;
+  color: var(--amber);
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.testimonial-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin-top: auto;
+  padding-top: var(--space-4);
+}
+
+.testimonial-author {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.testimonial-author .name {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.testimonial-author .role {
+  color: var(--slate-light);
+  font-size: 0.85rem;
+}
+
+.testimonial-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 76px;
+  height: 52px;
+  padding: 0.35rem 0.4rem;
+  border-radius: 8px;
+}
+
+.testimonial-logo img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.client-marquee {
+  overflow: hidden;
+  min-width: 0;
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.client-track {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: max-content;
+  will-change: transform;
+}
+
+.client-track span,
+.client-logo {
+  font-family: var(--font-display);
+  color: var(--slate);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.hero-clients .client-logo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.2rem 2.35rem 0.2rem 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color var(--fast), opacity var(--fast);
+}
+
+.hero-clients .client-logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  padding: 5px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.hero-clients .client-logo-mark img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.hero-clients .client-logo-name {
+  letter-spacing: 0.1em;
+}
+
+.hero-clients .client-logo::after {
+  content: "";
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--amber);
+  transform: translateY(-50%) rotate(45deg);
+  opacity: 0.85;
+}
+
+.hero-clients .client-marquee:hover .client-logo {
+  opacity: 0.55;
+}
+
+.hero-clients .client-marquee:hover .client-logo:hover {
+  opacity: 1;
+  color: var(--white);
+}
+
+.client-strip {
+  padding: 1.35rem 0 1.5rem;
+  background: var(--white);
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.client-strip .eyebrow {
+  justify-content: center;
+  width: 100%;
+  margin: 0 0 0.9rem;
+}
+
+.client-strip .client-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+  padding: 0.35rem 0.15rem;
+}
+
+.client-strip .client-logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 148px;
+  height: 64px;
+  padding: 0.45rem 0.7rem;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid var(--paper-line);
+}
+
+.client-strip .client-logo-mark img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.client-strip .client-logo-name,
+.client-strip .client-logo::after {
+  display: none;
+}
+
+.festive-pop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(8, 12, 18, 0.62);
+}
+
+.festive-pop[hidden] {
+  display: none;
+}
+
+.festive-pop-card {
+  position: relative;
+  width: min(34rem, 100%);
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--white);
+  box-shadow: 0 24px 60px rgba(8, 12, 18, 0.28);
+}
+
+.festive-pop-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  z-index: 1;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(15, 20, 25, 0.72);
+  color: var(--white);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.festive-pop-card--image {
+  width: min(28rem, 100%);
+  background: transparent;
+  box-shadow: none;
+}
+
+.festive-pop-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(80vh, 640px);
+  object-fit: contain;
+  border-radius: 16px;
+  background: transparent;
+}
+
+.festive-pop-copy {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.25rem 1.35rem 1.4rem;
+}
+
+.festive-pop-copy h2 {
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.festive-pop-copy p {
+  color: var(--slate);
+  line-height: 1.6;
+}
+
+.festive-pop-copy .btn {
+  justify-self: start;
+}
+
+body.festive-locked {
+  overflow: hidden;
+}
+

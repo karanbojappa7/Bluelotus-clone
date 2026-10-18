@@ -134,9 +134,9 @@ admin_header($existing ? 'Edit Category' : 'Add Category', 'categories', ['Categ
     <label class="full">Short description
       <textarea name="desc" rows="2"><?= e($category['desc']) ?></textarea>
     </label>
-    <label class="full">Card background image
+    <label class="full">Hero / card image
       <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
-      <span class="hint">Shown behind this category on the homepage. Recommended 1600 × 900 px (16:9). Leave empty to keep the current image.</span>
+      <span class="hint">Used as the category page hero banner and the homepage card. Recommended 1600 × 900 px (16:9). Leave empty to keep the current image.</span>
     </label>
     <?php if ($category['image'] !== ''): ?>
       <div class="full file-preview">

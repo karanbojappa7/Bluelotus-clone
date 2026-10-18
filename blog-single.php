@@ -268,7 +268,7 @@ page_head(seo_overrides($post) + [
               <li>Supply, install &amp; maintain</li>
               <li>Pan-India delivery</li>
               <li>OEM after-sales support</li>
-              <li>Quote in 48 hours</li>
+              <li>Quote in 24 hours</li>
               <li>One accountable partner</li>
             </ul>
             <a class="btn btn-primary" href="<?= e(url_for('contact')) ?>">Get a Quote</a>

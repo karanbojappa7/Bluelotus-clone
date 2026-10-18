@@ -497,15 +497,15 @@ window.SITE_CONFIG = {
             "canonical": "",
             "ogImage": "",
             "noindex": false,
-            "brand": "",
-            "sku": "",
-            "gtin": "",
-            "mpn": "",
+            "brand": "test",
+            "sku": "sksdsd",
+            "gtin": "32434",
+            "mpn": "fg",
             "condition": "",
             "availability": "",
-            "price": "",
-            "currency": "",
-            "updatedAt": "2026-09-12T11:18:48+00:00"
+            "price": "23",
+            "currency": "50",
+            "updatedAt": "2026-10-15T17:36:08+00:00"
         },
         {
             "slug": "temporary-fencing",

@@ -9,8 +9,21 @@ function enquiry_wants_json(): bool
     return str_contains($accept, 'application/json') || $requested === 'fetch' || $requested === 'xmlhttprequest';
 }
 
+function enquiry_return_path(): string
+{
+    if (post('source') !== 'career') {
+        return 'contact';
+    }
+    $back = trim(post('return'));
+    if (preg_match('#^careers/[a-z0-9-]+$#', $back) === 1) {
+        return $back;
+    }
+    return 'careers';
+}
+
 function enquiry_reply(bool $ok, string $message, int $status = 200): void
 {
+    $path = enquiry_return_path();
     if (enquiry_wants_json()) {
         http_response_code($status);
         header('Content-Type: application/json; charset=UTF-8');
@@ -19,10 +32,10 @@ function enquiry_reply(bool $ok, string $message, int $status = 200): void
         exit;
     }
     if ($ok) {
-        redirect(url_for('contact') . '?sent=1');
+        redirect(url_for($path) . ($path === 'careers' ? '?sent=1#apply' : '?sent=1'));
     }
     http_response_code($status);
-    redirect(url_for('contact') . '?error=1');
+    redirect(url_for($path) . ($path === 'careers' ? '?error=1#apply' : '?error=1'));
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && isset($_GET['captcha'])) {
@@ -99,6 +112,28 @@ if ($isQuotePopup) {
         $parts[] = $message;
     }
     $message = implode("\n\n", $parts);
+} elseif ($source === 'career') {
+    $parts = ['Career application.'];
+    if ($category !== '') {
+        $parts[] = 'Role: ' . $category;
+    }
+    if ($message !== '') {
+        $parts[] = $message;
+    }
+    $message = implode("\n\n", $parts);
+    if ($category === '') {
+        $category = 'Career — general';
+    }
+}
+
+$resume = '';
+if ($source === 'career') {
+    try {
+        $files = uploaded_files('resume');
+        $resume = $files ? store_uploaded_resume($files[0]) : '';
+    } catch (Throwable $e) {
+        enquiry_reply(false, $e->getMessage(), 422);
+    }
 }
 
 try {
@@ -109,6 +144,7 @@ try {
         'phone' => substr($phone, 0, 80),
         'category' => substr($category, 0, 191),
         'message' => substr($message, 0, 8000),
+        'resume' => substr($resume, 0, 255),
         'ip' => substr($ip, 0, 45),
     ]);
 } catch (Throwable $e) {

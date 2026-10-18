@@ -12,13 +12,7 @@ page_head([
     'breadcrumbs' => $crumbs,
 ]);
 ?>
-<section class="page-header">
-  <div class="container">
-    <span class="eyebrow eyebrow--light"><?= e(page_text($privacy, 'eyebrow')) ?></span>
-    <h1 class="page-title"><?= e(page_text($privacy, 'title')) ?></h1>
-    <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
-  </div>
-</section>
+<?php render_page_banner($privacy, $crumbs); ?>
 
 <section class="section">
   <div class="container prose-wrap article-body">

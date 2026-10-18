@@ -140,6 +140,7 @@ function migrate(): void
     }
 
     ensure_column('categories', 'image', 'VARCHAR(255) NOT NULL DEFAULT ""');
+    ensure_column('enquiries', 'resume', 'VARCHAR(255) NOT NULL DEFAULT ""');
 
     ensure_column('products', 'brand', 'VARCHAR(120) NOT NULL DEFAULT ""');
     ensure_column('products', 'sku', 'VARCHAR(120) NOT NULL DEFAULT ""');

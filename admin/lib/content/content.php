@@ -105,6 +105,193 @@ function all_clients(): array
     return $out;
 }
 
+function default_jobs(): array
+{
+    return [
+        [
+            'title' => 'Safety Installation Technician',
+            'slug' => 'safety-installation-technician',
+            'department' => 'Field',
+            'location' => 'Berhampur, with site travel',
+            'type' => 'Full-time',
+            'openings' => 1,
+            'summary' => 'Install, commission, and hand over certified safety equipment on industrial, road, and warehouse sites.',
+            'duties' => [
+                'Fit barricades, fire systems, rack guards, and related kit to drawing',
+                'Work with the site engineer on layout, fixings, and handover notes',
+                'Travel to live plants and highway jobs across Odisha and neighbouring states',
+                'Keep tools, PPE, and van stock in usable condition',
+            ],
+            'open' => true,
+            'posted' => '2026-10-01',
+        ],
+        [
+            'title' => 'B2B Sales Engineer',
+            'slug' => 'b2b-sales-engineer',
+            'department' => 'Sales',
+            'location' => 'Odisha & Andhra Pradesh',
+            'type' => 'Full-time',
+            'openings' => 1,
+            'summary' => 'Specify and close certified safety packages for contractors, industries, and government buyers.',
+            'duties' => [
+                'Qualify project enquiries and build a scoped bill of materials',
+                'Visit sites with the technical team before quoting',
+                'Own the relationship from first call through order and installation',
+                'Keep a clean pipeline of municipal, industrial, and contractor accounts',
+            ],
+            'open' => true,
+            'posted' => '2026-10-01',
+        ],
+        [
+            'title' => 'Warehouse & Dispatch Coordinator',
+            'slug' => 'warehouse-dispatch-coordinator',
+            'department' => 'Operations',
+            'location' => 'Berhampur, Odisha',
+            'type' => 'Full-time',
+            'openings' => 1,
+            'summary' => 'Stage, pack, and dispatch project lots so crews arrive with the right kit, in the right sequence.',
+            'duties' => [
+                'Pick and pack orders against project lists',
+                'Coordinate inbound stock and outbound site vehicles',
+                'Keep inventory counts honest across ten product categories',
+                'Flag shortages before a crew leaves the yard',
+            ],
+            'open' => true,
+            'posted' => '2026-10-01',
+        ],
+        [
+            'title' => 'Fire Systems Service Technician',
+            'slug' => 'fire-systems-service-technician',
+            'department' => 'Service',
+            'location' => 'Pan-India project sites',
+            'type' => 'Full-time',
+            'openings' => 1,
+            'summary' => 'Inspect, refill, and maintain installed fire systems under AMC, including emergency call-outs.',
+            'duties' => [
+                'Run scheduled inspections and refill cycles',
+                'Respond to breakdown calls with the service roster',
+                'Document every visit so the next technician is not guessing',
+                'Escalate OEM warranty issues instead of patching around them',
+            ],
+            'open' => true,
+            'posted' => '2026-10-01',
+        ],
+    ];
+}
+
+function normalize_job($row): ?array
+{
+    if (!is_array($row)) {
+        return null;
+    }
+    $title = trim((string) ($row['title'] ?? ''));
+    if ($title === '') {
+        return null;
+    }
+    $duties = $row['duties'] ?? [];
+    if (is_string($duties)) {
+        $duties = lines_to_array($duties);
+    }
+    if (!is_array($duties)) {
+        $duties = [];
+    }
+    $open = $row['open'] ?? true;
+    if (is_string($open)) {
+        $open = !in_array(strtolower($open), ['0', 'false', 'no', ''], true);
+    }
+    $openings = (int) ($row['openings'] ?? 1);
+    if ($openings < 1) {
+        $openings = 1;
+    }
+    $slug = trim((string) ($row['slug'] ?? ''));
+    return [
+        'title' => $title,
+        'slug' => $slug !== '' ? slugify($slug) : slugify($title),
+        'department' => trim((string) ($row['department'] ?? '')),
+        'location' => trim((string) ($row['location'] ?? '')),
+        'type' => trim((string) ($row['type'] ?? 'Full-time')),
+        'summary' => trim((string) ($row['summary'] ?? '')),
+        'duties' => array_values(array_filter(array_map(static fn ($line) => trim((string) $line), $duties))),
+        'open' => (bool) $open,
+        'openings' => $openings,
+        'posted' => trim((string) ($row['posted'] ?? '')),
+    ];
+}
+
+function job_by_slug(string $slug): ?array
+{
+    $slug = slugify($slug);
+    if ($slug === '') {
+        return null;
+    }
+    foreach (all_jobs() as $job) {
+        if ($job['slug'] === $slug && !empty($job['open'])) {
+            return $job;
+        }
+    }
+    return null;
+}
+
+function job_openings_label(int $count): string
+{
+    $count = max(1, $count);
+    return $count . ' open position' . ($count === 1 ? '' : 's');
+}
+
+function job_date_label(string $posted): string
+{
+    $posted = substr(trim($posted), 0, 10);
+    $date = DateTimeImmutable::createFromFormat('!Y-m-d', $posted);
+    if (!$date) {
+        return '';
+    }
+    return $date->format('j F Y');
+}
+
+function ensure_jobs_setting(): void
+{
+    if (!db_ready()) {
+        return;
+    }
+    if (!is_array(setting('jobs', null))) {
+        save_setting('jobs', default_jobs());
+    }
+}
+
+function all_jobs(): array
+{
+    $source = db_ready() && is_array(setting('jobs', null))
+        ? setting_list('jobs')
+        : default_jobs();
+    $out = [];
+    foreach ($source as $row) {
+        $job = normalize_job($row);
+        if ($job) {
+            $out[] = $job;
+        }
+    }
+    return $out;
+}
+
+function open_jobs(): array
+{
+    return array_values(array_filter(all_jobs(), static fn (array $job) => $job['open']));
+}
+
+function career_listicle_items(array $copy, string $prefix, int $count): array
+{
+    $items = [];
+    for ($i = 1; $i <= $count; $i++) {
+        $title = trim(page_text($copy, $prefix . $i . 'Title'));
+        $body = trim(page_text($copy, $prefix . $i . 'Body'));
+        if ($title === '' && $body === '') {
+            continue;
+        }
+        $items[] = ['title' => $title, 'body' => $body];
+    }
+    return $items;
+}
+
 function default_hero_slides(): array
 {
     return [
@@ -231,8 +418,11 @@ function page_labels(): array
     return [
         'home' => 'Home',
         'about' => 'About Us',
-        'contact' => 'Contact Us',
+        'products' => 'Products',
+        'faq' => 'FAQ',
         'blog' => 'Blog',
+        'careers' => 'Careers',
+        'contact' => 'Contact Us',
         'privacy' => 'Privacy Policy',
     ];
 }
@@ -264,6 +454,9 @@ function default_page_copy(): array
             'testimonialsEyebrow' => 'Client Feedback',
             'testimonialsTitle' => 'Trusted on sites across Odisha',
             'clientsEyebrow' => 'Trusted By Companies Across India',
+            'festiveFrom' => '',
+            'festiveTo' => '',
+            'festiveImage' => '',
             'blogEyebrow' => 'From the Blog',
             'blogTitle' => 'Field notes on safety standards',
             'ctaEyebrow' => 'Get Started',
@@ -274,6 +467,7 @@ function default_page_copy(): array
         'about' => [
             'eyebrow' => 'About Bluelotus',
             'title' => 'Safety systems built by people who install them.',
+            'heroImage' => 'assets/img/about.jpg',
             'storyEyebrow' => 'Our Story',
             'storyTitle' => 'Founded on-site, not in a boardroom',
             'storyBody1' => 'Bluelotus Infrasafety started with a single fire-safety contract in Berhampur, Odisha in {foundedYear}. What we learned fitting out that first plant — that most safety failures come from mismatched vendors, not bad products — still shapes how we work today.',
@@ -308,9 +502,68 @@ function default_page_copy(): array
             'title' => 'Guidance from the people who install it.',
             'heroImage' => 'assets/img/hero.jpg',
         ],
+        'products' => [
+            'eyebrow' => 'Full Catalog',
+            'title' => 'Certified safety equipment, one vendor.',
+            'intro' => 'Browse fire, road, industrial, warehouse, and construction ranges — ready for site supply and bulk orders.',
+            'heroImage' => 'assets/img/products.jpg',
+            'bulkImage' => 'assets/img/products.jpg',
+            'bulkMark' => 'Project Supply',
+            'bulkEyebrow' => 'Bulk & Project Supply',
+            'bulkTitle' => 'Need equipment for a full site rollout?',
+            'bulkLead' => 'Bulk procurement, staged delivery, and on-site installation for campuses, industrial parks, and government contracts — one accountable partner for the whole project.',
+            'bulkPoint1' => 'Wholesale pricing for multi-site and govt. orders',
+            'bulkPoint2' => 'Staged delivery matched to your install calendar',
+            'bulkPoint3' => 'Single point of contact from audit to handover',
+            'bulkButton' => 'Request Bulk Quote',
+            'bulkButtonUrl' => 'contact',
+            'bulkButton2' => 'Talk to Sales',
+            'bulkButton2Url' => 'contact#quote-form',
+        ],
+        'faq' => [
+            'eyebrow' => 'Help Center',
+            'title' => 'Frequently asked questions.',
+            'heroImage' => 'assets/img/hero.jpg',
+        ],
+        'careers' => [
+            'eyebrow' => 'Careers',
+            'title' => 'Work on sites that actually get installed.',
+            'heroImage' => 'assets/img/about.jpg',
+            'introEyebrow' => 'The list',
+            'introTitle' => 'Five reasons people join the crew',
+            'intro' => 'Bluelotus is a field company. You will spend more time on plants, highways, and warehouses than in a conference room — and you will own the work from spec to handover.',
+            'why1Title' => 'Live sites, not slide decks',
+            'why1Body' => 'Installation, commissioning, and maintenance happen on real industrial floors. You learn the product by fitting it, not by quoting a catalog.',
+            'why2Title' => 'One crew, end to end',
+            'why2Body' => 'Audit, supply, install, and service sit in the same team. There is no vendor to blame when something does not land.',
+            'why3Title' => 'Certified kit, serious standards',
+            'why3Body' => 'We specify against IS, ISO, and IRC requirements before a line enters the truck. You will be expected to know why a product is on site.',
+            'why4Title' => 'Ten categories, one career path',
+            'why4Body' => 'Fire, road, warehouse, industrial, construction — people grow sideways here. A technician who can work two categories is more useful than a specialist who will not travel.',
+            'why5Title' => 'Berhampur base, India-wide work',
+            'why5Body' => 'The office is in Berhampur, Odisha. The jobs are on plants, highways, campuses, and government sites across the country.',
+            'rolesEyebrow' => 'Openings',
+            'rolesTitle' => 'Roles we are hiring for',
+            'rolesIntro' => 'Each role below is a live opening. Apply to a specific one, or send a general profile if you work across categories.',
+            'processEyebrow' => 'The process',
+            'processTitle' => 'How hiring works here',
+            'process1Title' => 'Send your profile',
+            'process1Body' => 'A short note, a phone number, and what you have actually installed or sold. We read every application that lands in Enquiries.',
+            'process2Title' => 'Screening call',
+            'process2Body' => 'Fifteen to twenty minutes with the hiring lead. We will ask about sites you have worked, not about hypotheticals.',
+            'process3Title' => 'Role conversation',
+            'process3Body' => 'A longer talk — sometimes on a live site — covering tools, travel, and the category you would own.',
+            'process4Title' => 'Offer and joining',
+            'process4Body' => 'If it is a fit, we send written terms and a joining date. Field roles typically start within two to three weeks.',
+            'applyEyebrow' => 'Apply',
+            'applyTitle' => 'Tell us where you fit',
+            'applyIntro' => 'Applications land in the same enquiry desk as quote requests. We typically reply within one business day.',
+            'applyButton' => 'Submit application',
+        ],
         'privacy' => [
             'eyebrow' => 'Legal',
             'title' => 'Privacy Policy',
+            'heroImage' => 'assets/img/hero.jpg',
             'body' => "We collect only the information you provide through our contact and quote forms — name, company, email, phone, and message content — to respond to your enquiry. We do not sell or share this data with third parties outside of fulfilling your request.\n\n## Information We Collect\n\nContact form submissions, newsletter sign-ups, and standard analytics data such as pages visited and approximate location derived from IP address.\n\n## How We Use It\n\nTo respond to quote and audit requests, send requested updates, and improve site content. We retain enquiry data for as long as needed to service your request.\n\n## Your Rights\n\nYou may request access to, correction of, or deletion of your data at any time by emailing us through the contact page.",
         ],
     ];
@@ -343,6 +596,70 @@ function save_page_copy(string $slug, array $data): void
     save_setting('pages', $all);
 }
 
+function festival_time(string $value): ?DateTimeImmutable
+{
+    $value = trim($value);
+    if (preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', $value) !== 1) {
+        return null;
+    }
+    $date = DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $value, new DateTimeZone('Asia/Kolkata'));
+    return $date ?: null;
+}
+
+function festival_clear(array $pages): void
+{
+    $home = is_array($pages['home'] ?? null) ? $pages['home'] : [];
+    $image = trim((string) ($home['festiveImage'] ?? ''));
+    if ($image !== '') {
+        delete_uploaded_image($image);
+    }
+    $home['festiveImage'] = '';
+    $home['festiveFrom'] = '';
+    $home['festiveTo'] = '';
+    $pages['home'] = $home;
+    save_setting('pages', $pages);
+}
+
+function festival_expire(): void
+{
+    if (!db_ready()) {
+        return;
+    }
+    $pages = setting('pages', []);
+    if (!is_array($pages) || !is_array($pages['home'] ?? null)) {
+        return;
+    }
+    $to = festival_time((string) ($pages['home']['festiveTo'] ?? ''));
+    if (!$to) {
+        return;
+    }
+    $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Kolkata'));
+    if ($now <= $to) {
+        return;
+    }
+    festival_clear($pages);
+}
+
+function festival_popup(): ?array
+{
+    festival_expire();
+    $home = page_copy('home');
+    $image = trim(page_text($home, 'festiveImage'));
+    $from = festival_time(page_text($home, 'festiveFrom'));
+    $to = festival_time(page_text($home, 'festiveTo'));
+    if ($image === '' || !$from || !$to) {
+        return null;
+    }
+    $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Kolkata'));
+    if ($now < $from || $now > $to) {
+        return null;
+    }
+    return [
+        'image' => $image,
+        'key' => substr(md5($image . '|' . $from->format('c') . '|' . $to->format('c')), 0, 12),
+    ];
+}
+
 function page_text(array $copy, string $key): string
 {
     $text = (string) ($copy[$key] ?? '');
@@ -351,6 +668,31 @@ function page_text(array $copy, string $key): string
         $text = str_replace('{foundedYear}', $year !== '' ? $year : '2011', $text);
     }
     return $text;
+}
+
+function page_hero_image(array $copy, string $fallback = 'assets/img/hero.jpg'): string
+{
+    $image = trim((string) ($copy['heroImage'] ?? ''));
+    return $image !== '' ? $image : $fallback;
+}
+
+function render_page_banner(array $copy, array $crumbs, string $variant = 'photo', ?string $titleOverride = null): void
+{
+    $fallback = $variant === 'contact' ? 'assets/img/contact-hero.jpg' : 'assets/img/hero.jpg';
+    $image = page_hero_image($copy, $fallback);
+    $class = 'page-header page-header--banner page-header--' . ($variant === 'contact' ? 'contact' : 'photo');
+    $title = $titleOverride !== null && $titleOverride !== '' ? $titleOverride : page_text($copy, 'title');
+    ?>
+<section class="<?= e($class) ?>" style="--page-header-image:url('<?= e(url_for($image)) ?>')">
+  <div class="container">
+    <span class="eyebrow eyebrow--light"><?= e(page_text($copy, 'eyebrow')) ?></span>
+    <h1 class="page-title"><?= e($title) ?></h1>
+    <?php if ($crumbs): ?>
+      <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
+    <?php endif; ?>
+  </div>
+</section>
+    <?php
 }
 
 function page_editor_fields(string $slug): array
@@ -385,6 +727,10 @@ function page_editor_fields(string $slug): array
             ['key' => 'testimonialsEyebrow', 'label' => 'Testimonials eyebrow'],
             ['key' => 'testimonialsTitle', 'label' => 'Testimonials heading'],
             ['key' => 'clientsEyebrow', 'label' => 'Clients eyebrow'],
+            ['legend' => 'Festival popup'],
+            ['key' => 'festiveFrom', 'label' => 'From', 'type' => 'datetime', 'hint' => 'India time. The picture popup starts at this moment.'],
+            ['key' => 'festiveTo', 'label' => 'To', 'type' => 'datetime', 'hint' => 'India time. When this moment passes, the picture is deleted and the popup stops.'],
+            ['key' => 'festiveImage', 'label' => 'Festival picture', 'type' => 'image', 'hint' => 'Shown once when a page loads, until the visitor closes it. Recommended 1000 × 1200 px.'],
             ['key' => 'blogEyebrow', 'label' => 'Blog eyebrow'],
             ['key' => 'blogTitle', 'label' => 'Blog heading'],
             ['legend' => 'Bottom CTA'],
@@ -397,6 +743,7 @@ function page_editor_fields(string $slug): array
             ['legend' => 'Page header'],
             ['key' => 'eyebrow', 'label' => 'Eyebrow'],
             ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['key' => 'heroImage', 'label' => 'Hero banner', 'type' => 'image', 'hint' => 'Wide banner behind the page title. Recommended 1920 × 450 px.'],
             ['legend' => 'Our story'],
             ['key' => 'storyEyebrow', 'label' => 'Eyebrow'],
             ['key' => 'storyTitle', 'label' => 'Heading', 'full' => true],
@@ -424,7 +771,7 @@ function page_editor_fields(string $slug): array
             ['legend' => 'Page header'],
             ['key' => 'eyebrow', 'label' => 'Eyebrow'],
             ['key' => 'title', 'label' => 'Page title', 'full' => true],
-            ['key' => 'heroImage', 'label' => 'Hero image', 'type' => 'image', 'hint' => 'Wide banner shown behind the page title. Recommended 1920 × 450 px.'],
+            ['key' => 'heroImage', 'label' => 'Hero banner', 'type' => 'image', 'hint' => 'Wide banner behind the page title. Recommended 1920 × 450 px.'],
             ['legend' => 'Columns'],
             ['key' => 'detailsEyebrow', 'label' => 'Details eyebrow'],
             ['key' => 'detailsTitle', 'label' => 'Details heading'],
@@ -435,12 +782,50 @@ function page_editor_fields(string $slug): array
             ['legend' => 'Page header'],
             ['key' => 'eyebrow', 'label' => 'Eyebrow'],
             ['key' => 'title', 'label' => 'Page title', 'full' => true],
-            ['key' => 'heroImage', 'label' => 'Hero image', 'type' => 'image', 'hint' => 'Wide banner shown behind the page title. Recommended 1920 × 450 px.'],
+            ['key' => 'heroImage', 'label' => 'Hero banner', 'type' => 'image', 'hint' => 'Wide banner behind the page title. Recommended 1920 × 450 px.'],
+        ],
+        'products' => [
+            ['legend' => 'Page header'],
+            ['key' => 'eyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['key' => 'intro', 'label' => 'Intro', 'type' => 'textarea'],
+            ['key' => 'heroImage', 'label' => 'Hero banner', 'type' => 'image', 'hint' => 'Wide banner behind the page title. Recommended 1920 × 450 px.'],
+            ['legend' => 'Bulk supply banner'],
+            ['key' => 'bulkEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'bulkTitle', 'label' => 'Heading', 'full' => true],
+            ['key' => 'bulkLead', 'label' => 'Intro', 'type' => 'textarea'],
+            ['key' => 'bulkPoint1', 'label' => 'Point 1'],
+            ['key' => 'bulkPoint2', 'label' => 'Point 2'],
+            ['key' => 'bulkPoint3', 'label' => 'Point 3'],
+            ['key' => 'bulkMark', 'label' => 'Image label'],
+            ['key' => 'bulkImage', 'label' => 'Banner image', 'type' => 'image', 'hint' => 'Left photo on the products page. Recommended 1100 × 720 px.'],
+            ['key' => 'bulkButton', 'label' => 'Primary button'],
+            ['key' => 'bulkButtonUrl', 'label' => 'Primary button link'],
+            ['key' => 'bulkButton2', 'label' => 'Secondary button'],
+            ['key' => 'bulkButton2Url', 'label' => 'Secondary button link'],
+        ],
+        'faq' => [
+            ['legend' => 'Page header'],
+            ['key' => 'eyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['key' => 'heroImage', 'label' => 'Hero banner', 'type' => 'image', 'hint' => 'Wide banner behind the page title. Recommended 1920 × 450 px.'],
+        ],
+        'careers' => [
+            ['legend' => 'Page header'],
+            ['key' => 'eyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['key' => 'heroImage', 'label' => 'Hero banner', 'type' => 'image', 'hint' => 'Wide banner behind the page title. Recommended 1920 × 450 px.'],
+            ['legend' => 'Application form'],
+            ['key' => 'applyEyebrow', 'label' => 'Eyebrow'],
+            ['key' => 'applyTitle', 'label' => 'Heading', 'full' => true],
+            ['key' => 'applyIntro', 'label' => 'Intro', 'type' => 'textarea'],
+            ['key' => 'applyButton', 'label' => 'Button label'],
         ],
         'privacy' => [
             ['legend' => 'Page header'],
             ['key' => 'eyebrow', 'label' => 'Eyebrow'],
             ['key' => 'title', 'label' => 'Page title', 'full' => true],
+            ['key' => 'heroImage', 'label' => 'Hero banner', 'type' => 'image', 'hint' => 'Wide banner behind the page title. Recommended 1920 × 450 px.'],
             ['legend' => 'Policy body'],
             ['key' => 'body', 'label' => 'Privacy policy', 'type' => 'rich', 'hint' => 'Use H1–H3 and Internal link the same way as blog posts.'],
         ],
@@ -812,6 +1197,7 @@ function counts(): array
         'clients' => count(all_clients()),
         'stats' => count(setting_list('stats')),
         'hero' => count(setting_list('hero')),
+        'jobs' => count(all_jobs()),
         'enquiries' => enquiry_count(),
         'enquiriesUnread' => enquiry_unread_count(),
         'comments' => blog_comment_count(),
@@ -904,8 +1290,8 @@ function save_enquiry(array $data): int
 {
     migrate();
     $stmt = db()->prepare(
-        'INSERT INTO enquiries (name, company, email, phone, category, message, ip, is_read, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW())'
+        'INSERT INTO enquiries (name, company, email, phone, category, message, resume, ip, is_read, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())'
     );
     $stmt->execute([
         $data['name'],
@@ -914,6 +1300,7 @@ function save_enquiry(array $data): int
         $data['phone'],
         $data['category'],
         $data['message'],
+        (string) ($data['resume'] ?? ''),
         $data['ip'],
     ]);
     unset($_SESSION['quote_captcha']);

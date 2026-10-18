@@ -40,13 +40,7 @@ page_head([
     'schema' => array_values(array_filter([$aboutPage, $team ? ['@type' => 'ItemList', 'name' => 'Leadership', 'itemListElement' => $team] : null])),
 ]);
 ?>
-<section class="page-header">
-  <div class="container">
-    <span class="eyebrow eyebrow--light"><?= e(page_text($about, 'eyebrow')) ?></span>
-    <h1 class="page-title"><?= e(page_text($about, 'title')) ?></h1>
-    <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
-  </div>
-</section>
+<?php render_page_banner($about, $crumbs); ?>
 
 <section class="section">
   <div class="container">

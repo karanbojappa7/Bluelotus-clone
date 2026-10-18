@@ -17,6 +17,7 @@ function admin_nav_groups(): array
         ],
         'Site content' => [
             ['id' => 'faqs', 'href' => 'faqs/index.php', 'label' => 'FAQ'],
+            ['id' => 'jobs', 'href' => 'jobs/index.php', 'label' => 'Careers'],
             ['id' => 'testimonials', 'href' => 'testimonials/index.php', 'label' => 'Testimonials'],
             ['id' => 'leadership', 'href' => 'leadership/index.php', 'label' => 'Leadership'],
             ['id' => 'stats', 'href' => 'stats.php', 'label' => 'Stats'],

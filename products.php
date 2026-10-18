@@ -65,6 +65,7 @@ if ($isSearch) {
 }
 
 $crumbs = ['Home' => '/', 'Products' => null];
+$productsCopy = page_copy('products');
 
 page_head([
     'title' => $page > 1 && !$isSearch ? $title . ' — Page ' . $page : $title,
@@ -76,16 +77,14 @@ page_head([
     'prev' => $page > 1 ? ($page - 1 > 1 ? 'products?' . http_build_query($extra + ['page' => $page - 1]) : 'products') : null,
     'next' => $page < $pages ? 'products?' . http_build_query($extra + ['page' => $page + 1]) : null,
 ]);
+render_page_banner($productsCopy, $crumbs, 'photo', $isSearch ? 'Search: ' . $query : null);
 ?>
 <section class="section section--catalog">
   <div class="container">
     <div class="catalog-intro">
       <div>
-        <div class="product-crumbs"><?= render_breadcrumbs($crumbs) ?></div>
-        <span class="eyebrow">Full Catalog</span>
-        <h1 class="catalog-title"><?= $isSearch ? 'Search: ' . e($query) : 'Certified safety equipment, one vendor.' ?></h1>
         <?php if (!$isSearch): ?>
-          <p class="catalog-intro-lead">Browse fire, road, industrial, warehouse, and construction ranges &mdash; ready for site supply and bulk orders.</p>
+          <p class="catalog-intro-lead"><?= e(page_text($productsCopy, 'intro')) ?></p>
         <?php endif; ?>
       </div>
       <form class="catalog-search" id="productSearchForm" role="search" method="get" action="<?= e(url_for('products')) ?>">
@@ -154,28 +153,57 @@ page_head([
 </section>
 <?php endif; ?>
 
+<?php
+$bulkImage = trim(page_text($productsCopy, 'bulkImage'));
+if ($bulkImage === '') {
+    $bulkImage = 'assets/img/products.jpg';
+}
+$bulkPoints = array_values(array_filter([
+    page_text($productsCopy, 'bulkPoint1'),
+    page_text($productsCopy, 'bulkPoint2'),
+    page_text($productsCopy, 'bulkPoint3'),
+], static fn (string $line): bool => $line !== ''));
+$bulkPrimary = page_text($productsCopy, 'bulkButton');
+$bulkPrimaryUrl = trim(page_text($productsCopy, 'bulkButtonUrl'));
+$bulkSecondary = page_text($productsCopy, 'bulkButton2');
+$bulkSecondaryUrl = trim(page_text($productsCopy, 'bulkButton2Url'));
+?>
 <section class="section section--flush">
   <div class="bulk-quote">
     <div class="bulk-quote-media">
-      <img src="<?= e(url_for('assets/img/products.jpg')) ?>" alt="Bulk safety equipment staged for site delivery" width="1100" height="720" loading="lazy">
+      <img src="<?= e(url_for($bulkImage)) ?>" alt="" width="1100" height="720" loading="lazy">
       <div class="bulk-quote-media-shade"></div>
-      <span class="bulk-quote-mark">Project Supply</span>
+      <?php if (page_text($productsCopy, 'bulkMark') !== ''): ?>
+        <span class="bulk-quote-mark"><?= e(page_text($productsCopy, 'bulkMark')) ?></span>
+      <?php endif; ?>
     </div>
     <div class="bulk-quote-copy">
-      <span class="eyebrow eyebrow--light">Bulk &amp; Project Supply</span>
-      <h2 class="section-title">Need equipment for a full site rollout?</h2>
-      <p class="bulk-quote-lead">Bulk procurement, staged delivery, and on-site installation for campuses, industrial parks, and government contracts &mdash; one accountable partner for the whole project.</p>
-      <ul class="bulk-quote-points">
-        <li>Wholesale pricing for multi-site and govt. orders</li>
-        <li>Staged delivery matched to your install calendar</li>
-        <li>Single point of contact from audit to handover</li>
-      </ul>
-      <div class="bulk-quote-actions">
-        <a href="<?= e(url_for('contact')) ?>" class="btn btn-primary">Request Bulk Quote
-          <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-arrow"></use></svg>
-        </a>
-        <a href="<?= e(url_for('contact#quote-form')) ?>" class="btn btn-ghost">Talk to Sales</a>
-      </div>
+      <?php if (page_text($productsCopy, 'bulkEyebrow') !== ''): ?>
+        <span class="eyebrow eyebrow--light"><?= e(page_text($productsCopy, 'bulkEyebrow')) ?></span>
+      <?php endif; ?>
+      <h2 class="section-title"><?= e(page_text($productsCopy, 'bulkTitle')) ?></h2>
+      <?php if (page_text($productsCopy, 'bulkLead') !== ''): ?>
+        <p class="bulk-quote-lead"><?= e(page_text($productsCopy, 'bulkLead')) ?></p>
+      <?php endif; ?>
+      <?php if ($bulkPoints): ?>
+        <ul class="bulk-quote-points">
+          <?php foreach ($bulkPoints as $point): ?>
+            <li><?= e($point) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
+      <?php if (($bulkPrimary !== '' && $bulkPrimaryUrl !== '') || ($bulkSecondary !== '' && $bulkSecondaryUrl !== '')): ?>
+        <div class="bulk-quote-actions">
+          <?php if ($bulkPrimary !== '' && $bulkPrimaryUrl !== ''): ?>
+            <a href="<?= e(url_for(ltrim($bulkPrimaryUrl, '/'))) ?>" class="btn btn-primary"><?= e($bulkPrimary) ?>
+              <svg width="16" height="16" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-arrow"></use></svg>
+            </a>
+          <?php endif; ?>
+          <?php if ($bulkSecondary !== '' && $bulkSecondaryUrl !== ''): ?>
+            <a href="<?= e(url_for(ltrim($bulkSecondaryUrl, '/'))) ?>" class="btn btn-ghost"><?= e($bulkSecondary) ?></a>
+          <?php endif; ?>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>

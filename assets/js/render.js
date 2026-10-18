@@ -310,7 +310,7 @@
   }
 
   function runClientMarquee() {
-    const track = document.querySelector(".hero-clients .client-track");
+    const track = document.querySelector(".client-strip .client-track");
     if (!track || track.dataset.marquee === "on") return;
     if (track.children.length < 2) return;
 
@@ -364,9 +364,9 @@
   function clientMarkup(client, dup) {
     const initial = esc((client.name.match(/[A-Za-z0-9]/) || ["•"])[0].toUpperCase());
     const mark = client.logo
-      ? `<span class="client-logo-mark"><img src="${esc(siteUrl(client.logo))}" alt="" width="72" height="40"></span>`
+      ? `<span class="client-logo-mark"><img src="${esc(siteUrl(client.logo))}" alt="" width="148" height="64"></span>`
       : `<span class="client-logo-mark" aria-hidden="true">${initial}</span>`;
-    return `<span class="client-logo"${dup}>${mark}<span class="client-logo-name">${esc(client.name)}</span></span>`;
+    return `<span class="client-logo" role="img" aria-label="${esc(client.name)}"${dup}>${mark}</span>`;
   }
 
   function buildClients() {

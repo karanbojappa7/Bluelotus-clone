@@ -70,6 +70,14 @@ function sitemap_pages_xml(): string
     $body .= sitemap_url_entry('about', 'monthly', '0.7', $today);
     $body .= sitemap_url_entry('products', 'weekly', '0.9', $today);
     $body .= sitemap_url_entry('faq', 'monthly', '0.75', $today);
+    $body .= sitemap_url_entry('careers', 'weekly', '0.7', $today);
+    foreach (open_jobs() as $job) {
+        $slug = trim((string) ($job['slug'] ?? ''));
+        if ($slug === '') {
+            continue;
+        }
+        $body .= sitemap_url_entry('careers/' . rawurlencode($slug), 'weekly', '0.6', sitemap_lastmod((string) ($job['posted'] ?? $today)));
+    }
     $body .= sitemap_url_entry('blog', 'weekly', '0.7', $today);
     $body .= sitemap_url_entry('contact', 'monthly', '0.6', $today);
     $body .= sitemap_url_entry('privacy-policy', 'yearly', '0.2');
@@ -275,6 +283,7 @@ function build_robots_txt(bool $allowCrawling = true): string
 
     $out .= "# ---- Sitemap ----\n";
     $out .= 'Sitemap: ' . seo_url('sitemap.xml') . "\n";
+    $out .= '# llms.txt: ' . seo_url('llms.txt') . "\n";
     return $out;
 }
 

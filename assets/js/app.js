@@ -408,14 +408,40 @@
     let wheelAcc = 0;
     let touchY = 0;
     let timer = 0;
+    let leaveTimer = 0;
 
     function heroLocked() {
       const rect = root.getBoundingClientRect();
       return rect.top > -24 && rect.top < 24 && rect.bottom > window.innerHeight - 24;
     }
 
-    function setSlide(index) {
-      current = ((index % total) + total) % total;
+    function setSlide(index, step) {
+      const next = ((index % total) + total) % total;
+      const forward = step == null ? next >= current : step > 0;
+      if (next !== current) {
+        root.classList.toggle("is-reverse", !forward);
+        slides.forEach(function (slide) {
+          slide.classList.remove("is-leaving", "is-reset", "is-from-left");
+        });
+        if (!forward && slides[next]) {
+          slides[next].classList.add("is-reset", "is-from-left");
+          void slides[next].offsetWidth;
+          slides[next].classList.remove("is-reset");
+        }
+        if (slides[current]) slides[current].classList.add("is-leaving");
+        window.clearTimeout(leaveTimer);
+        leaveTimer = window.setTimeout(function () {
+          slides.forEach(function (slide) {
+            if (!slide.classList.contains("is-leaving")) return;
+            slide.classList.add("is-reset");
+            slide.classList.remove("is-leaving");
+            window.requestAnimationFrame(function () {
+              slide.classList.remove("is-reset");
+            });
+          });
+        }, reduce ? 0 : 760);
+      }
+      current = next;
       slides.forEach(function (slide, i) {
         slide.classList.toggle("is-active", i === current);
       });
@@ -447,7 +473,7 @@
     }
 
     function go(step) {
-      setSlide(current + step);
+      setSlide(current + step, step);
       startAuto();
     }
 
@@ -498,7 +524,9 @@
 
     navButtons.forEach(function (btn) {
       btn.addEventListener("click", function () {
-        setSlide(Number(btn.getAttribute("data-hero-goto")));
+        const target = Number(btn.getAttribute("data-hero-goto"));
+        const step = target === current ? 0 : (target > current ? 1 : -1);
+        setSlide(target, step);
         startAuto();
       });
     });
@@ -542,7 +570,39 @@
     }
   }
 
+  function initFestive() {
+    const root = document.querySelector("[data-festive]");
+    if (!root) return false;
+    const key = "bluelotusFestive:" + (root.getAttribute("data-festive") || "1");
+    try {
+      if (sessionStorage.getItem(key) === "done") return false;
+    } catch (err) {}
+
+    function close() {
+      root.hidden = true;
+      document.body.classList.remove("festive-locked");
+      try { sessionStorage.setItem(key, "done"); } catch (err) {}
+    }
+
+    root.hidden = false;
+    document.body.classList.add("festive-locked");
+    root.querySelectorAll("[data-festive-close]").forEach(function (el) {
+      el.addEventListener("click", close);
+    });
+    root.addEventListener("click", function (e) {
+      if (e.target === root) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !root.hidden) close();
+    });
+    const closeBtn = root.querySelector("[data-festive-close]");
+    if (closeBtn) closeBtn.focus();
+    return true;
+  }
+
   function initQuoteModal() {
+    const festive = document.querySelector("[data-festive]");
+    if (festive && !festive.hidden) return;
     const root = document.querySelector("[data-quote-modal]");
     if (!root) return;
 
@@ -614,6 +674,7 @@
   $(document).on("config:rendered", onConfig);
   $(function () {
     initForms();
+    initFestive();
     initQuoteModal();
     initHeroCarousel();
     initCopyLink();

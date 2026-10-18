@@ -293,6 +293,66 @@ function schema_breadcrumbs(array $crumbs): ?array
     return ['@type' => 'BreadcrumbList', 'itemListElement' => $items];
 }
 
+function schema_job(array $job): ?array
+{
+    $title = trim((string) ($job['title'] ?? ''));
+    if ($title === '' || empty($job['open'])) {
+        return null;
+    }
+    $duties = array_values(array_filter((array) ($job['duties'] ?? [])));
+    $description = trim((string) ($job['summary'] ?? ''));
+    if ($duties) {
+        $description = trim($description . "\n\n" . implode("\n", array_map(static fn ($line) => '• ' . $line, $duties)));
+    }
+    $type = strtolower((string) ($job['type'] ?? 'full-time'));
+    $employment = 'FULL_TIME';
+    if (str_contains($type, 'part')) {
+        $employment = 'PART_TIME';
+    } elseif (str_contains($type, 'contract')) {
+        $employment = 'CONTRACTOR';
+    } elseif (str_contains($type, 'intern')) {
+        $employment = 'INTERN';
+    }
+    $posted = trim((string) ($job['posted'] ?? ''));
+    if ($posted === '' || !preg_match('/^\d{4}-\d{2}-\d{2}/', $posted)) {
+        $posted = gmdate('Y-m-d');
+    } else {
+        $posted = substr($posted, 0, 10);
+    }
+    $location = trim((string) ($job['location'] ?? 'Berhampur, Odisha'));
+    $url = seo_url('careers/' . rawurlencode((string) ($job['slug'] ?? slugify($title))));
+    $node = [
+        '@type' => 'JobPosting',
+        'title' => $title,
+        'description' => $description !== '' ? $description : $title,
+        'datePosted' => $posted,
+        'employmentType' => $employment,
+        'hiringOrganization' => [
+            '@type' => 'Organization',
+            '@id' => seo_url('#organization'),
+            'name' => brand_name(),
+            'sameAs' => seo_url(),
+        ],
+        'jobLocation' => [
+            '@type' => 'Place',
+            'address' => array_filter([
+                '@type' => 'PostalAddress',
+                'streetAddress' => $location,
+                'addressLocality' => 'Berhampur',
+                'addressRegion' => 'Odisha',
+                'addressCountry' => 'IN',
+            ]),
+        ],
+        'url' => $url,
+        'directApply' => true,
+    ];
+    $department = trim((string) ($job['department'] ?? ''));
+    if ($department !== '') {
+        $node['industry'] = $department;
+    }
+    return $node;
+}
+
 function schema_faq(array $faqs): ?array
 {
     $entities = [];
@@ -320,6 +380,82 @@ function product_keywords(array $product): string
     return implode(', ', array_values(array_filter((array) ($product['tags'] ?? []))));
 }
 
+function product_brand_name(array $product): string
+{
+    $brand = trim((string) ($product['brand'] ?? ''));
+    return $brand !== '' ? $brand : brand_name();
+}
+
+function product_sku_value(array $product): string
+{
+    $sku = trim((string) ($product['sku'] ?? ''));
+    return $sku !== '' ? $sku : (string) ($product['slug'] ?? '');
+}
+
+function product_availability_key(array $product): string
+{
+    $key = trim((string) ($product['availability'] ?? ''));
+    return $key !== '' ? $key : 'InStock';
+}
+
+function product_condition_key(array $product): string
+{
+    $key = trim((string) ($product['condition'] ?? ''));
+    return $key !== '' ? $key : 'NewCondition';
+}
+
+function product_availability_label(array $product): string
+{
+    $labels = [
+        'InStock' => 'In stock',
+        'OutOfStock' => 'Out of stock',
+        'PreOrder' => 'Pre-order',
+        'BackOrder' => 'Back-order',
+        'Discontinued' => 'Discontinued',
+    ];
+    $key = product_availability_key($product);
+    return $labels[$key] ?? 'In stock';
+}
+
+function product_condition_label(array $product): string
+{
+    $labels = [
+        'NewCondition' => 'New',
+        'RefurbishedCondition' => 'Refurbished',
+        'UsedCondition' => 'Used',
+    ];
+    $key = product_condition_key($product);
+    return $labels[$key] ?? 'New';
+}
+
+function product_currency_code(array $product): string
+{
+    $currency = strtoupper(trim((string) ($product['currency'] ?? '')));
+    return $currency !== '' ? $currency : 'INR';
+}
+
+function product_spec_rows(array $product, ?array $category = null): array
+{
+    $rows = [
+        ['label' => 'Brand', 'value' => product_brand_name($product)],
+        ['label' => 'SKU', 'value' => product_sku_value($product)],
+    ];
+    $gtin = trim((string) ($product['gtin'] ?? ''));
+    if ($gtin !== '') {
+        $rows[] = ['label' => 'GTIN', 'value' => $gtin];
+    }
+    $mpn = trim((string) ($product['mpn'] ?? ''));
+    if ($mpn !== '') {
+        $rows[] = ['label' => 'MPN', 'value' => $mpn];
+    }
+    $rows[] = ['label' => 'Condition', 'value' => product_condition_label($product)];
+    $rows[] = ['label' => 'Availability', 'value' => product_availability_label($product)];
+    if ($category && trim((string) ($category['name'] ?? '')) !== '') {
+        $rows[] = ['label' => 'Category', 'value' => (string) $category['name']];
+    }
+    return $rows;
+}
+
 function schema_product(array $product, ?array $category): array
 {
     $url = seo_url(product_slug_path((string) $product['slug']));
@@ -338,8 +474,8 @@ function schema_product(array $product, ?array $category): array
         'description' => meta_text($product['short'] ?? '', 300, (string) ($product['description'] ?? '')),
         'image' => $images,
         'url' => $url,
-        'sku' => ($product['sku'] ?? '') !== '' ? (string) $product['sku'] : (string) $product['slug'],
-        'brand' => ['@type' => 'Brand', 'name' => ($product['brand'] ?? '') !== '' ? (string) $product['brand'] : brand_name()],
+        'sku' => product_sku_value($product),
+        'brand' => ['@type' => 'Brand', 'name' => product_brand_name($product)],
     ];
 
     if (($product['gtin'] ?? '') !== '') {
@@ -359,9 +495,9 @@ function schema_product(array $product, ?array $category): array
     $offer = [
         '@type' => 'Offer',
         'url' => $url,
-        'availability' => 'https://schema.org/' . (($product['availability'] ?? '') !== '' ? $product['availability'] : 'InStock'),
-        'itemCondition' => 'https://schema.org/' . (($product['condition'] ?? '') !== '' ? $product['condition'] : 'NewCondition'),
-        'priceCurrency' => ($product['currency'] ?? '') !== '' ? strtoupper((string) $product['currency']) : 'INR',
+        'availability' => 'https://schema.org/' . product_availability_key($product),
+        'itemCondition' => 'https://schema.org/' . product_condition_key($product),
+        'priceCurrency' => product_currency_code($product),
         'seller' => ['@id' => seo_url('#organization')],
     ];
     if (($product['price'] ?? '') !== '' && is_numeric($product['price'])) {
@@ -485,6 +621,14 @@ function analytics_head(): string
             . 'var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";'
             . 'j.async=true;j.src="https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);'
             . '})(window,document,"script","dataLayer",' . json_encode($gtmId) . ');</script>';
+    }
+
+    $clarityId = trim((string) ($a['clarityId'] ?? ''));
+    if ($clarityId !== '') {
+        $html .= '<script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};'
+            . 't=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;'
+            . 'y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);'
+            . '})(window,document,"clarity","script",' . json_encode($clarityId) . ');</script>';
     }
 
     $pixelId = trim((string) ($a['metaPixelId'] ?? ''));
@@ -678,7 +822,8 @@ function page_head(array $page): void
     }
 
     $seo = seo_settings();
-    $author = trim((string) ($page['author'] ?? '')) ?: brand_name();
+    $brand = brand_name();
+    $author = trim((string) ($page['author'] ?? '')) ?: $brand;
     $twitterHandle = trim((string) ($seo['twitterHandle'] ?? ''), " \t\n\r\0\x0B@");
     $googleVerify = trim((string) ($seo['googleVerification'] ?? ''));
     $bingVerify = trim((string) ($seo['bingVerification'] ?? ''));
@@ -737,8 +882,9 @@ function page_head(array $page): void
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="<?= e(url_for('assets/css/tokens.css')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/css/tokens.css') ?>">
-<link rel="stylesheet" href="<?= e(url_for('assets/css/site.css')) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/css/site.css') ?>">
+<?php foreach (['tokens.css', 'base.css', 'home.css', 'marketing.css', 'blog.css', 'content.css', 'chrome.css', 'catalog.css', 'product.css', 'quote.css', 'jobs.css'] as $sheet): ?>
+<link rel="stylesheet" href="<?= e(url_for('assets/css/' . $sheet)) ?>?v=<?= (int) @filemtime(CMS_ROOT . '/assets/css/' . $sheet) ?>">
+<?php endforeach; ?>
 <?= json_ld($schema) ?>
 <?= analytics_head() ?>
 </head>
@@ -755,6 +901,17 @@ function page_foot(array $opts = []): void
     $scripts = $opts['scripts'] ?? [];
     ?>
 </main>
+<?php
+    $festival = festival_popup();
+    if ($festival):
+?>
+<div class="festive-pop" data-festive="<?= e($festival['key']) ?>" hidden>
+  <div class="festive-pop-card festive-pop-card--image" role="dialog" aria-modal="true" aria-label="Festival greeting">
+    <button type="button" class="festive-pop-close" data-festive-close aria-label="Close greeting">×</button>
+    <img class="festive-pop-image" src="<?= e(url_for($festival['image'])) ?>" alt="">
+  </div>
+</div>
+<?php endif; ?>
 <div data-site="footer"<?= !empty($opts['compactFooter']) ? ' data-compact' : '' ?>></div>
 <div data-site="fabs"></div>
 <?php
@@ -788,13 +945,13 @@ function internal_href(string $raw): ?string
             'product' => product_path($id),
             'category' => category_path($id),
             'blog' => post_path($id),
-            'page' => url_for($id),
+            'page' => in_array(strtolower($id), ['home', 'index', 'homepage'], true) ? url_for('') : url_for($id),
         };
     }
     if (preg_match('#^https?://#i', $raw) === 1) {
         return $raw;
     }
-    if (str_starts_with($raw, '/') || preg_match('#^(blog|product|products|about|contact|faq|privacy-policy)(/|$)#', $raw) === 1) {
+    if (str_starts_with($raw, '/') || preg_match('#^(blog|product|products|about|contact|faq|careers|privacy-policy)(/|$)#', $raw) === 1) {
         return url_for(ltrim($raw, '/'));
     }
     return null;

@@ -11,12 +11,7 @@ page_head([
     'robots' => 'noindex, follow',
 ]);
 ?>
-<section class="page-header">
-  <div class="container">
-    <span class="eyebrow eyebrow--light">Error 404</span>
-    <h1 class="page-title">That page isn't here.</h1>
-  </div>
-</section>
+<?php render_page_banner(['eyebrow' => 'Error 404', 'title' => "That page isn't here.", 'heroImage' => 'assets/img/hero.jpg'], []); ?>
 
 <section class="section">
   <div class="container">

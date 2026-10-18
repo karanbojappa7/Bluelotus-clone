@@ -49,6 +49,9 @@ admin_header('Enquiries', 'enquiries');
     <p><strong>Company</strong> · <?= e($selected['company']) ?></p>
   <?php endif; ?>
   <p style="white-space:pre-wrap;margin-top:0.8rem"><?= e($selected['message']) ?></p>
+  <?php if (!empty($selected['resume'])): ?>
+    <p style="margin-top:0.8rem"><a class="btn btn-secondary btn-sm" href="<?= e(admin_url('enquiries/resume.php?id=' . (int) $selected['id'])) ?>">Download resume</a></p>
+  <?php endif; ?>
   <div class="actions" style="margin-top:1rem">
     <a class="btn btn-secondary btn-sm" href="<?= e(admin_url('enquiries/index.php')) ?>">Back to list</a>
     <form method="post" data-confirm="Delete this enquiry?">

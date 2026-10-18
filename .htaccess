@@ -33,11 +33,12 @@ DirectoryIndex index.php index.html
   RewriteRule ^services(\.(html|php))?/?$ %{ENV:BASE}#services [R=301,NE,L]
 
   RewriteCond %{ENV:REDIRECT_STATUS} ^$
-  RewriteRule ^(about|products|blog|contact|faq|privacy-policy)\.(html|php)$ %{ENV:BASE}$1 [R=301,L]
+  RewriteRule ^(about|products|blog|contact|faq|privacy-policy|careers)\.(html|php)$ %{ENV:BASE}$1 [R=301,L]
 
   RewriteRule ^sitemap\.xml$ sitemap.php?map=index [L,QSA]
   RewriteRule ^sitemap-(pages|products|categories|posts)\.xml$ sitemap.php?map=$1 [L,QSA]
   RewriteRule ^robots\.txt$ robots.php [L]
+  RewriteRule ^llms\.txt$ llms.php [L]
 
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
@@ -48,7 +49,9 @@ DirectoryIndex index.php index.html
   RewriteRule ^products/([^/]+)/?$ category.php?cat=$1 [L,QSA]
   RewriteRule ^blog/?$ blog.php [L,QSA]
   RewriteRule ^blog/([^/]+)/?$ blog-single.php?post=$1 [L,QSA]
-  RewriteRule ^(about|contact|faq|privacy-policy)/?$ $1.php [L,QSA]
+  RewriteRule ^career/?$ %{ENV:BASE}careers [R=301,L]
+  RewriteRule ^careers/([^/]+)/?$ careers.php?job=$1 [L,QSA]
+  RewriteRule ^(about|contact|faq|privacy-policy|careers)/?$ $1.php [L,QSA]
 </IfModule>
 
 <IfModule mod_headers.c>

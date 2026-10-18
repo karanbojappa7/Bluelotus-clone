@@ -7,7 +7,7 @@ page_head([
     'description' => (string) (seo_settings()['defaultDescription'] ?? ''),
     'canonical' => '',
     'breadcrumbs' => ['Home' => null],
-    'bodyAttr' => 'data-blog-limit="4" data-products-limit="12"',
+    'bodyAttr' => 'data-blog-limit="3" data-products-limit="12"',
 ]);
 ?>
 <?php
@@ -15,7 +15,7 @@ $heroSlides = hero_slides();
 $home = page_copy('home');
 $homeClients = all_clients();
 ?>
-<section class="hero-carousel<?= $homeClients ? ' has-clients' : '' ?>" id="heroCarousel">
+<section class="hero-carousel" id="heroCarousel">
   <div class="hero-carousel-pin">
     <div class="hero-slides">
       <?php foreach ($heroSlides as $i => $slide): ?>
@@ -61,16 +61,19 @@ $homeClients = all_clients();
     </nav>
     <?php endif; ?>
     <button type="button" class="hero-scroll-cue" data-hero-next>Scroll</button>
-    <?php if ($homeClients): ?>
-    <div class="hero-clients">
-      <p class="eyebrow eyebrow--light eyebrow--center"><?= e(page_text($home, 'clientsEyebrow')) ?></p>
-      <div class="client-marquee" aria-label="Trusted companies">
-        <div class="client-track" data-render="clients"></div>
-      </div>
-    </div>
-    <?php endif; ?>
   </div>
 </section>
+
+<?php if ($homeClients): ?>
+<section class="client-strip" aria-label="Trusted companies">
+  <div class="container">
+    <p class="eyebrow eyebrow--center"><?= e(page_text($home, 'clientsEyebrow')) ?></p>
+  </div>
+  <div class="client-marquee">
+    <div class="client-track" data-render="clients"></div>
+  </div>
+</section>
+<?php endif; ?>
 
 <?php
 $homeStats = setting_list('stats');
@@ -78,7 +81,7 @@ $statCount = count($homeStats);
 $statCols = min(max($statCount, 1), 4);
 ?>
 <?php if ($statCount): ?>
-<section class="hero-stats hero-stats--after">
+<!-- <section class="hero-stats hero-stats--after">
   <div class="container">
     <div class="stats-grid" data-stat-count="<?= (int) $statCount ?>" style="--stat-count: <?= (int) $statCols ?>">
       <?php foreach ($homeStats as $stat): ?>
@@ -93,7 +96,7 @@ $statCols = min(max($statCount, 1), 4);
       <?php endforeach; ?>
     </div>
   </div>
-</section>
+</section> -->
 <?php endif; ?>
 
 <section class="section">
@@ -200,7 +203,7 @@ $statCols = min(max($statCount, 1), 4);
       </div>
       <a href="<?= e(url_for('blog')) ?>" class="btn btn-outline" data-reveal>All Articles</a>
     </div>
-    <div class="grid grid-4" data-render="blog"></div>
+    <div class="grid grid-3" data-render="blog"></div>
   </div>
 </section>
 

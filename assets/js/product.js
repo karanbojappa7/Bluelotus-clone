@@ -29,45 +29,35 @@
     const title = $mount.attr("data-share-title") || document.title;
     const text = $mount.attr("data-share-text") || "";
     const encodedUrl = encodeURIComponent(url);
-    const encodedTitle = encodeURIComponent(title);
 
     const links = [
       {
         label: "WhatsApp",
-        href: "https://api.whatsapp.com/send?text=" + encodeURIComponent(title + "\n" + text + "\n" + url),
-        icon: "whatsapp",
-        className: "share-btn share-btn--wa"
-      },
-      {
-        label: "Facebook",
-        href: "https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl,
-        icon: "facebook",
-        className: "share-btn share-btn--fb"
-      },
-      {
-        label: "LinkedIn",
-        href: "https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl,
-        icon: "linkedin",
-        className: "share-btn share-btn--li"
+        net: "whatsapp",
+        href: "https://api.whatsapp.com/send?text=" + encodeURIComponent(title + "\n" + text + "\n" + url)
       },
       {
         label: "Instagram",
-        href: $mount.attr("data-share-instagram") || "https://www.instagram.com/",
-        icon: "instagram",
-        className: "share-btn share-btn--ig"
+        net: "instagram",
+        href: $mount.attr("data-share-instagram") || "https://www.instagram.com/"
       },
       {
-        label: "Email",
-        href: "mailto:?subject=" + encodedTitle + "&body=" + encodeURIComponent(text + "\n\n" + url),
-        icon: "mail",
-        className: "share-btn share-btn--mail"
+        label: "Facebook",
+        net: "facebook",
+        href: "https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl
+      },
+      {
+        label: "LinkedIn",
+        net: "linkedin",
+        href: "https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl
       }
     ];
 
+    $mount.addClass("social-row social-row--product");
     $mount.html(
       links
         .map(function (item) {
-          return `<a class="${item.className}" href="${esc(item.href)}" target="_blank" rel="noopener" aria-label="Share on ${item.label}">${icon(item.icon, 18)}<span>${item.label}</span></a>`;
+          return `<a class="social-${item.net}" href="${esc(item.href)}" target="_blank" rel="noopener" aria-label="Share on ${item.label}">${icon(item.net, 16)}</a>`;
         })
         .join("")
     );

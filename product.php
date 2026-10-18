@@ -37,21 +37,12 @@ $productUrl = seo_url(product_slug_path((string) $product['slug']));
 $waMessage = 'Hello, I would like to enquire about *' . $product['name'] . "*.\n\n" . $product['short'] . "\n\nProduct link: " . $productUrl;
 $waHref = $whatsapp !== '' ? 'https://wa.me/' . $whatsapp . '?text=' . rawurlencode($waMessage) : '';
 
-$availLabels = [
-    '' => 'In stock',
-    'InStock' => 'In stock',
-    'OutOfStock' => 'Out of stock',
-    'PreOrder' => 'Pre-order',
-    'BackOrder' => 'Back-order',
-    'Discontinued' => 'Discontinued',
-];
-$availKey = $product['availability'] !== '' ? $product['availability'] : 'InStock';
-$availLabel = $availLabels[$availKey] ?? 'In stock';
+$availKey = product_availability_key($product);
+$availLabel = product_availability_label($product);
 $availOk = !in_array($availKey, ['OutOfStock', 'Discontinued'], true);
 $price = trim((string) $product['price']);
-$currency = strtoupper(trim((string) $product['currency']) !== '' ? (string) $product['currency'] : 'INR');
-$sku = trim((string) $product['sku']);
-$brand = trim((string) $product['brand']);
+$currency = product_currency_code($product);
+$specRows = product_spec_rows($product, $category);
 $sprite = url_for('assets/img/sprite.svg');
 $instagram = trim((string) ((setting('social', []) ?: [])['instagram'] ?? ''));
 if ($instagram === '') {
@@ -104,12 +95,6 @@ page_head(seo_overrides($product) + [
 
         <div class="product-facts">
           <span class="product-avail<?= $availOk ? ' is-ok' : ' is-out' ?>"><?= e($availLabel) ?></span>
-          <?php if ($brand !== ''): ?>
-            <span class="product-fact">Brand <strong><?= e($brand) ?></strong></span>
-          <?php endif; ?>
-          <?php if ($sku !== ''): ?>
-            <span class="product-fact">SKU <strong><?= e($sku) ?></strong></span>
-          <?php endif; ?>
         </div>
 
         <div class="product-price-row">
@@ -119,6 +104,17 @@ page_head(seo_overrides($product) + [
             <p class="product-price product-price--request">Pricing on request</p>
           <?php endif; ?>
         </div>
+
+        <?php if ($specRows): ?>
+        <dl class="product-data">
+          <?php foreach ($specRows as $row): ?>
+            <div class="product-data-row">
+              <dt><?= e($row['label']) ?></dt>
+              <dd><?= e($row['value']) ?></dd>
+            </div>
+          <?php endforeach; ?>
+        </dl>
+        <?php endif; ?>
 
         <?php if ($product['features']): ?>
         <div class="product-spec">
@@ -169,7 +165,7 @@ page_head(seo_overrides($product) + [
             <span class="product-trust-ico" aria-hidden="true">
               <svg width="16" height="16"><use href="<?= e($sprite) ?>#icon-clock"></use></svg>
             </span>
-            Quote in 48 hours
+            Quote in 24 hours
           </li>
         </ul>
 

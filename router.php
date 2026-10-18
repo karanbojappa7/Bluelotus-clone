@@ -29,6 +29,10 @@ if ($uri === '/robots.txt') {
     dispatch('/robots.php');
     return true;
 }
+if ($uri === '/llms.txt') {
+    dispatch('/llms.php');
+    return true;
+}
 if ($uri === '/sitemap.xml') {
     $_GET['map'] = 'index';
     dispatch('/sitemap.php');
@@ -89,7 +93,16 @@ if (preg_match('#^/blog/([^/]+)/?$#', $uri, $m) === 1) {
     dispatch('/blog-single.php');
     return true;
 }
-if (preg_match('#^/(about|contact|faq|privacy-policy)/?$#', $uri, $m) === 1) {
+if (preg_match('#^/career/?$#', $uri) === 1) {
+    header('Location: /careers', true, 301);
+    return true;
+}
+if (preg_match('#^/careers/([^/]+)/?$#', $uri, $m) === 1) {
+    $_GET['job'] = $m[1];
+    dispatch('/careers.php');
+    return true;
+}
+if (preg_match('#^/(about|contact|faq|privacy-policy|careers)/?$#', $uri, $m) === 1) {
     dispatch('/' . $m[1] . '.php');
     return true;
 }

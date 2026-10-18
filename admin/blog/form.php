@@ -146,11 +146,13 @@ admin_header($existing ? 'Edit Blog Post' : 'Add Blog Post', 'blog', ['Blog' => 
           <select id="blogLinkTarget">
             <option value="">Internal link…</option>
             <optgroup label="Pages">
-              <option value="page:products" data-label="products">All products</option>
+              <option value="page:home" data-label="Home">Homepage</option>
               <option value="page:about" data-label="About us">About us</option>
-              <option value="page:contact" data-label="contact">Contact</option>
+              <option value="page:products" data-label="products">All products</option>
               <option value="page:faq" data-label="FAQs">FAQs</option>
               <option value="page:blog" data-label="blog">Blog</option>
+              <option value="page:careers" data-label="Careers">Careers</option>
+              <option value="page:contact" data-label="contact">Contact</option>
             </optgroup>
             <?php if ($linkCategories): ?>
               <optgroup label="Categories">

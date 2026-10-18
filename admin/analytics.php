@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $analytics = [
         'gaId' => trim(post('gaId')),
         'gtmId' => trim(post('gtmId')),
+        'clarityId' => trim(post('clarityId')),
         'metaPixelId' => trim(post('metaPixelId')),
         'adsId' => strtoupper(trim(post('adsId'))),
         'adsLabel' => trim(post('adsLabel')),
@@ -23,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($analytics['gtmId'] !== '' && !preg_match('/^GTM-[A-Z0-9]{4,}$/', $analytics['gtmId'])) {
         $errors['gtmId'] = 'Should look like GTM-XXXXXXX, or leave it blank.';
+    }
+    if ($analytics['clarityId'] !== '' && !preg_match('/^[a-z0-9]{6,}$/', $analytics['clarityId'])) {
+        $errors['clarityId'] = 'Should be the Clarity project ID, or leave it blank.';
     }
     if ($analytics['metaPixelId'] !== '' && !preg_match('/^\d{6,}$/', $analytics['metaPixelId'])) {
         $errors['metaPixelId'] = 'Should be a numeric Pixel ID, or leave it blank.';
@@ -61,6 +65,11 @@ admin_header('Analytics', 'analytics');
       <input type="text" name="gtmId" value="<?= e($analytics['gtmId'] ?? '') ?>" placeholder="GTM-XXXXXXX">
       <span class="hint">Adds both the head script and the required body noscript tag.</span>
       <?= field_msg($errors, 'gtmId') ?>
+    </label>
+    <label class="<?= field_class($errors, 'clarityId') ?>">Microsoft Clarity project ID
+      <input type="text" name="clarityId" value="<?= e($analytics['clarityId'] ?? '') ?>" placeholder="ys3r50te0n">
+      <span class="hint">Adds the Clarity script in the page head.</span>
+      <?= field_msg($errors, 'clarityId') ?>
     </label>
     <label class="<?= field_class($errors, 'metaPixelId') ?>">Meta (Facebook) Pixel ID
       <input type="text" name="metaPixelId" value="<?= e($analytics['metaPixelId'] ?? '') ?>" placeholder="123456789012345">

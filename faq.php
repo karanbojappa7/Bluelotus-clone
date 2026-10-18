@@ -37,6 +37,7 @@ foreach ($groups as $group) {
     }
 }
 
+$faqCopy = page_copy('faq');
 $crumbs = ['Home' => '/', 'FAQ' => null];
 
 page_head([
@@ -47,13 +48,7 @@ page_head([
     'schema' => array_values(array_filter([schema_faq($schemaFaqs)])),
 ]);
 ?>
-<section class="page-header">
-  <div class="container">
-    <span class="eyebrow eyebrow--light">Help Center</span>
-    <h1 class="page-title">Frequently asked questions.</h1>
-    <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
-  </div>
-</section>
+<?php render_page_banner($faqCopy, $crumbs); ?>
 
 <section class="section">
   <div class="container">

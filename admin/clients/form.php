@@ -54,7 +54,7 @@ admin_header($existing ? 'Edit Client' : 'Add Client', 'clients', ['Clients' => 
 <?php endif; ?>
 <form method="post" class="form-panel" enctype="multipart/form-data">
   <?= csrf_field() ?>
-  <p class="muted">Shown in the homepage “Trusted By” strip as the logo beside the company name.</p>
+  <p class="muted">Shown as a logo only, in the strip under the homepage banner. The company name is used for accessibility and is not printed beside the logo.</p>
   <div class="form-grid">
     <label class="<?= field_class($errors, 'name', true) ?>">Company name
       <input type="text" name="name" required value="<?= e($item['name']) ?>" autofocus>

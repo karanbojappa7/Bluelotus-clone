@@ -11,6 +11,9 @@ if (!isset($labels[$slug])) {
     redirect(admin_url('pages/index.php'));
 }
 
+if ($slug === 'home') {
+    festival_expire();
+}
 $item = page_copy($slug);
 $fields = page_editor_fields($slug);
 $errors = [];
@@ -32,6 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             continue;
         }
         $type = (string) ($field['type'] ?? 'text');
+        if ($type === 'check') {
+            $next[$key] = isset($_POST[$key]) ? '1' : '0';
+            continue;
+        }
         if ($type === 'image') {
             try {
                 $keep = (string) ($item[$key] ?? '');
@@ -46,6 +53,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             continue;
         }
         $next[$key] = post($key);
+    }
+    if ($slug === 'home' && !$errors) {
+        $fromRaw = trim((string) ($next['festiveFrom'] ?? ''));
+        $toRaw = trim((string) ($next['festiveTo'] ?? ''));
+        $image = trim((string) ($next['festiveImage'] ?? ''));
+        if ($fromRaw === '' && $toRaw === '') {
+            if ($image !== '') {
+                delete_uploaded_image($image);
+            }
+            $next['festiveImage'] = '';
+            $next['festiveFrom'] = '';
+            $next['festiveTo'] = '';
+        } else {
+            $from = festival_time($fromRaw);
+            $to = festival_time($toRaw);
+            if (!$from) {
+                $errors['festiveFrom'] = 'Choose a start date and time.';
+            }
+            if (!$to) {
+                $errors['festiveTo'] = 'Choose an end date and time.';
+            } elseif ($from && $to <= $from) {
+                $errors['festiveTo'] = 'The end must be after the start.';
+            }
+            if ($image === '') {
+                $errors['festiveImage'] = 'Upload the festival picture.';
+            }
+            $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Kolkata'));
+            if (!$errors && $to && $now > $to) {
+                delete_uploaded_image($image);
+                $next['festiveImage'] = '';
+                $next['festiveFrom'] = '';
+                $next['festiveTo'] = '';
+            }
+        }
     }
     if (!$errors) {
         save_page_copy($slug, $next);
@@ -66,7 +107,11 @@ admin_header($labels[$slug], 'pages', ['Pages' => 'pages/index.php']);
   <?php if ($slug === 'contact'): ?>
     <p class="muted">Phone numbers, emails, WhatsApp, address, and maps are edited under <a href="<?= e(admin_url('contact.php')) ?>">Contact</a>.</p>
   <?php elseif ($slug === 'home'): ?>
-    <p class="muted">Homepage banner images and slide copy are edited under <a href="<?= e(admin_url('hero/index.php')) ?>">Homepage banner</a>.</p>
+    <p class="muted">Homepage hero slides are edited under <a href="<?= e(admin_url('hero/index.php')) ?>">Homepage banner</a>.</p>
+  <?php elseif ($slug === 'products'): ?>
+    <p class="muted">Individual category heroes are edited on each <a href="<?= e(admin_url('categories/index.php')) ?>">category</a>.</p>
+  <?php elseif ($slug === 'careers'): ?>
+    <p class="muted">Open roles are edited under <a href="<?= e(admin_url('jobs/index.php')) ?>">Careers</a>.</p>
   <?php endif; ?>
   <div class="form-grid">
     <?php foreach ($fields as $field): ?>
@@ -107,11 +152,13 @@ admin_header($labels[$slug], 'pages', ['Pages' => 'pages/index.php']);
               <select id="blogLinkTarget">
                 <option value="">Internal link…</option>
                 <optgroup label="Pages">
-                  <option value="page:products" data-label="products">All products</option>
+                  <option value="page:home" data-label="Home">Homepage</option>
                   <option value="page:about" data-label="About us">About us</option>
-                  <option value="page:contact" data-label="contact">Contact</option>
+                  <option value="page:products" data-label="products">All products</option>
                   <option value="page:faq" data-label="FAQs">FAQs</option>
                   <option value="page:blog" data-label="blog">Blog</option>
+                  <option value="page:careers" data-label="Careers">Careers</option>
+                  <option value="page:contact" data-label="contact">Contact</option>
                 </optgroup>
                 <?php if ($linkCategories): ?>
                   <optgroup label="Categories">
@@ -143,6 +190,24 @@ admin_header($labels[$slug], 'pages', ['Pages' => 'pages/index.php']);
             <span class="hint"><?= e((string) $field['hint']) ?></span>
           <?php endif; ?>
         </div>
+      <?php elseif ($type === 'datetime'): ?>
+        <label class="<?= field_class($errors, $key, $full) ?>"><?= e($label) ?>
+          <input type="datetime-local" name="<?= e($key) ?>" value="<?= e(festival_time($value) ? $value : '') ?>">
+          <?php if (!empty($field['hint'])): ?>
+            <span class="hint"><?= e((string) $field['hint']) ?></span>
+          <?php endif; ?>
+          <?= field_msg($errors, $key) ?>
+        </label>
+      <?php elseif ($type === 'check'): ?>
+        <label class="full seo-toggle">
+          <span>
+            <input type="checkbox" name="<?= e($key) ?>" value="1" <?= $value === '1' ? 'checked' : '' ?>>
+            <?= e($label) ?>
+          </span>
+          <?php if (!empty($field['hint'])): ?>
+            <span class="hint"><?= e((string) $field['hint']) ?></span>
+          <?php endif; ?>
+        </label>
       <?php elseif ($type === 'textarea'): ?>
         <label class="<?= field_class($errors, $key, $full) ?>"><?= e($label) ?>
           <textarea name="<?= e($key) ?>" rows="3"><?= e($value) ?></textarea>

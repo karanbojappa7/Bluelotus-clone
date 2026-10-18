@@ -75,6 +75,63 @@ function store_uploaded_image(array $file): string
     return CMS_UPLOADS_URL . '/' . $name;
 }
 
+function store_uploaded_resume(array $file): string
+{
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return '';
+    }
+    if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('Resume upload failed. Try a smaller PDF or Word file.');
+    }
+    if (($file['size'] ?? 0) > 5 * 1024 * 1024) {
+        throw new RuntimeException('Resume must be 5 MB or smaller.');
+    }
+
+    $tmp = (string) ($file['tmp_name'] ?? '');
+    if ($tmp === '' || !is_uploaded_file($tmp)) {
+        throw new RuntimeException('Invalid resume upload.');
+    }
+
+    $original = strtolower((string) ($file['name'] ?? ''));
+    $ext = pathinfo($original, PATHINFO_EXTENSION);
+    $allowed = ['pdf' => true, 'doc' => true, 'docx' => true];
+    if (!isset($allowed[$ext])) {
+        throw new RuntimeException('Upload a PDF or Word resume (.pdf, .doc, .docx).');
+    }
+
+    $dir = CMS_UPLOADS . '/resumes';
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+    $guard = $dir . '/.htaccess';
+    if (!is_file($guard)) {
+        file_put_contents($guard, "Require all denied\n");
+    }
+
+    $name = bin2hex(random_bytes(16)) . '.' . $ext;
+    if (!move_uploaded_file($tmp, $dir . '/' . $name)) {
+        throw new RuntimeException('Could not save the resume.');
+    }
+    return 'resumes/' . $name;
+}
+
+function delete_uploaded_image(string $path): void
+{
+    $path = str_replace('\\', '/', trim($path));
+    $prefix = CMS_UPLOADS_URL . '/';
+    if (!str_starts_with($path, $prefix)) {
+        return;
+    }
+    $name = substr($path, strlen($prefix));
+    if (preg_match('#^[a-f0-9]{16}\.(jpg|png|webp|gif)$#', $name) !== 1) {
+        return;
+    }
+    $file = CMS_UPLOADS . '/' . $name;
+    if (is_file($file)) {
+        @unlink($file);
+    }
+}
+
 function save_uploaded_image(string $field, ?string $keep = null): ?string
 {
     $files = uploaded_files($field);

@@ -13,11 +13,9 @@ $offset = ($page - 1) * BLOG_PER_PAGE;
 $list = array_slice($posts, $offset, BLOG_PER_PAGE);
 
 $blogCopy = page_copy('blog');
-$blogHero = trim((string) ($blogCopy['heroImage'] ?? ''));
-if ($blogHero === '') {
-    $blogHero = 'assets/img/hero.jpg';
-}
 $crumbs = ['Home' => '/', 'Blog' => null];
+$sprite = url_for('assets/img/sprite.svg');
+$pad = static fn (int $i): string => str_pad((string) $i, 2, '0', STR_PAD_LEFT);
 
 $schema = schema_url_list('Safety insights', $list, static fn ($post) => [
     'name' => (string) ($post['title'] ?? ''),
@@ -34,42 +32,91 @@ page_head([
     'next' => $page < $pages ? 'blog?page=' . ($page + 1) : null,
 ]);
 ?>
-<section class="page-header page-header--banner page-header--blog" style="--page-header-image:url('<?= e(url_for($blogHero)) ?>')">
-  <div class="container">
-    <span class="eyebrow eyebrow--light"><?= e(page_text($blogCopy, 'eyebrow')) ?></span>
-    <h1 class="page-title"><?= e(page_text($blogCopy, 'title')) ?></h1>
-    <div class="breadcrumb-row"><?= render_breadcrumbs($crumbs) ?></div>
-  </div>
-</section>
+<?php render_page_banner($blogCopy, $crumbs); ?>
 
-<section class="section">
-  <div class="container">
+<section class="section blog-index">
+  <div class="container blog-index-wrap">
     <?php if ($list): ?>
-      <div class="grid grid-3">
-        <?php foreach ($list as $post): ?>
+      <header class="blog-index-head" data-reveal>
+        <span class="eyebrow">The list</span>
+        <h2 class="section-title"><?= e($total === 1 ? 'One note from the field' : $total . ' notes from the field') ?></h2>
+        <p class="section-sub">Jump to a number, or read straight through. Each note is a short brief from the people who specify and install the kit.</p>
+      </header>
+
+      <nav class="blog-toc" aria-label="In this list" data-reveal>
+        <p class="blog-toc-label">In this list<?= $pages > 1 ? ' · page ' . $page : '' ?></p>
+        <ol>
+          <?php foreach ($list as $i => $post): ?>
+            <?php $anchor = 'note-' . ($offset + $i + 1); ?>
+            <li>
+              <a href="#<?= e($anchor) ?>">
+                <span><?= e($pad($offset + $i + 1)) ?></span>
+                <?= e((string) ($post['title'] ?? 'Untitled')) ?>
+              </a>
+            </li>
+          <?php endforeach; ?>
+        </ol>
+      </nav>
+
+      <ol class="blog-list">
+        <?php foreach ($list as $i => $post): ?>
           <?php
+          $n = $offset + $i + 1;
           $href = post_path((string) ($post['slug'] ?? ''));
+          $title = (string) ($post['title'] ?? '');
+          $excerpt = trim((string) ($post['excerpt'] ?? ''));
           $date = (string) ($post['date'] ?? '');
           $stamp = $date !== '' ? (int) strtotime($date) : 0;
+          $mins = blog_read_minutes($post);
+          $image = url_for((string) ($post['image'] ?? 'assets/img/blog-1.jpg'));
+          $anchor = 'note-' . $n;
+          $featured = $page === 1 && $i === 0;
+          $meta = array_values(array_filter([
+              $stamp ? date('j M Y', $stamp) : '',
+              $mins . ' min read',
+          ]));
           ?>
-          <article class="blog-card">
-            <a class="blog-card-media" href="<?= e($href) ?>">
-              <?php if ($stamp): ?>
-                <span class="blog-card-date"><?= e(date('d M', $stamp)) ?></span>
-              <?php endif; ?>
-              <img src="<?= e(url_for((string) ($post['image'] ?? 'assets/img/blog-1.jpg'))) ?>"
-                   alt="<?= e((string) ($post['title'] ?? '')) ?>" width="600" height="400" loading="lazy" data-fallback>
-            </a>
-            <div class="blog-card-body">
-              <h2><a href="<?= e($href) ?>"><?= e((string) ($post['title'] ?? '')) ?></a></h2>
-              <p><?= e((string) ($post['excerpt'] ?? '')) ?></p>
-              <a class="blog-read-more" href="<?= e($href) ?>">Read More
-                <svg width="18" height="18" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-arrow"></use></svg>
+          <?php if ($featured): ?>
+            <li class="blog-feature" id="<?= e($anchor) ?>" data-reveal>
+              <a class="blog-feature-media" href="<?= e($href) ?>" aria-label="<?= e($title) ?>">
+                <img src="<?= e($image) ?>" alt="" width="960" height="640" data-fallback>
               </a>
-            </div>
-          </article>
+              <div class="blog-feature-copy">
+                <span class="blog-num" aria-hidden="true"><?= e($pad($n)) ?></span>
+                <?php if ($meta): ?>
+                  <p class="blog-meta"><?= e(implode(' · ', $meta)) ?></p>
+                <?php endif; ?>
+                <h2><a href="<?= e($href) ?>"><?= e($title) ?></a></h2>
+                <?php if ($excerpt !== ''): ?>
+                  <p class="blog-excerpt"><?= e($excerpt) ?></p>
+                <?php endif; ?>
+                <a class="btn btn-primary" href="<?= e($href) ?>">Read the article
+                  <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-arrow"></use></svg>
+                </a>
+              </div>
+            </li>
+          <?php else: ?>
+            <li class="blog-row" id="<?= e($anchor) ?>" data-reveal>
+              <span class="blog-num" aria-hidden="true"><?= e($pad($n)) ?></span>
+              <a class="blog-row-media" href="<?= e($href) ?>" aria-label="<?= e($title) ?>">
+                <img src="<?= e($image) ?>" alt="" width="360" height="240" loading="lazy" data-fallback>
+              </a>
+              <div class="blog-row-copy">
+                <?php if ($meta): ?>
+                  <p class="blog-meta"><?= e(implode(' · ', $meta)) ?></p>
+                <?php endif; ?>
+                <h2><a href="<?= e($href) ?>"><?= e($title) ?></a></h2>
+                <?php if ($excerpt !== ''): ?>
+                  <p class="blog-excerpt"><?= e($excerpt) ?></p>
+                <?php endif; ?>
+                <a class="blog-read-more" href="<?= e($href) ?>">Read the article
+                  <svg width="18" height="18" aria-hidden="true"><use href="<?= e($sprite) ?>#icon-arrow"></use></svg>
+                </a>
+              </div>
+            </li>
+          <?php endif; ?>
         <?php endforeach; ?>
-      </div>
+      </ol>
       <?= render_public_pagination($page, $pages, 'blog') ?>
     <?php else: ?>
       <?= render_empty_state(
