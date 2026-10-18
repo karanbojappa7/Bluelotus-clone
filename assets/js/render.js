@@ -309,6 +309,47 @@
     );
   }
 
+  function bindClientTooltips() {
+    const track = document.querySelector(".client-strip .client-track");
+    if (!track || track.dataset.tips === "on") return;
+    track.dataset.tips = "on";
+
+    let tip = document.querySelector(".client-tip");
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "client-tip";
+      tip.setAttribute("role", "tooltip");
+      tip.hidden = true;
+      document.body.appendChild(tip);
+    }
+
+    function hide() {
+      tip.hidden = true;
+    }
+
+    track.addEventListener("mouseover", function (e) {
+      const logo = e.target.closest(".client-logo");
+      if (!logo || !track.contains(logo)) return;
+      const name = logo.getAttribute("data-name") || "";
+      if (!name) {
+        hide();
+        return;
+      }
+      tip.textContent = name;
+      tip.hidden = false;
+      const box = logo.getBoundingClientRect();
+      tip.style.left = box.left + box.width / 2 + "px";
+      tip.style.top = box.top - 8 + "px";
+    });
+    track.addEventListener("mouseout", function (e) {
+      const logo = e.target.closest(".client-logo");
+      if (!logo) return;
+      const next = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest(".client-logo") : null;
+      if (next && track.contains(next)) return;
+      hide();
+    });
+  }
+
   function runClientMarquee() {
     const track = document.querySelector(".client-strip .client-track");
     if (!track || track.dataset.marquee === "on") return;
@@ -366,7 +407,7 @@
     const mark = client.logo
       ? `<span class="client-logo-mark"><img src="${esc(siteUrl(client.logo))}" alt="" width="148" height="64"></span>`
       : `<span class="client-logo-mark" aria-hidden="true">${initial}</span>`;
-    return `<span class="client-logo" role="img" aria-label="${esc(client.name)}"${dup}>${mark}</span>`;
+    return `<span class="client-logo" role="img" aria-label="${esc(client.name)}" data-name="${esc(client.name)}"${dup}>${mark}</span>`;
   }
 
   function buildClients() {
@@ -389,6 +430,7 @@
         })
         .join("")
     );
+    bindClientTooltips();
     window.requestAnimationFrame(runClientMarquee);
   }
 

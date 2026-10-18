@@ -359,6 +359,28 @@
   display: none;
 }
 
+.client-tip {
+  position: fixed;
+  z-index: 30;
+  transform: translate(-50%, -100%);
+  padding: 0.32rem 0.6rem;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 8px 18px rgba(15, 20, 25, 0.18);
+}
+
+.client-tip[hidden] {
+  display: none;
+}
+
 .festive-pop {
   position: fixed;
   inset: 0;
