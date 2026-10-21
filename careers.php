@@ -4,6 +4,10 @@ require_once __DIR__ . '/admin/bootstrap.php';
 
 $copy = page_copy('careers');
 $jobs = open_jobs();
+usort($jobs, static function (array $a, array $b): int {
+    $byDate = strcmp((string) ($b['posted'] ?? ''), (string) ($a['posted'] ?? ''));
+    return $byDate !== 0 ? $byDate : strcmp((string) $a['title'], (string) $b['title']);
+});
 $jobSlug = isset($_GET['job']) ? slugify((string) $_GET['job']) : '';
 $sent = isset($_GET['sent']);
 $sendError = isset($_GET['error']);

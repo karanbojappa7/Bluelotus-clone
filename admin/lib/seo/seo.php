@@ -162,17 +162,44 @@ function format_document_title(string $title = ''): string
     return $title . ' | ' . $brand;
 }
 
-function seo_image(?string $image = null): string
+function seo_image_path(?string $image = null): string
 {
     $image = trim((string) $image);
     if ($image === '') {
         $default = trim((string) (seo_settings()['ogImage'] ?? ''));
         $image = $default !== '' ? $default : 'assets/img/og-cover.jpg';
     }
+    return $image;
+}
+
+function seo_image(?string $image = null): string
+{
+    $image = seo_image_path($image);
     if (preg_match('#^https?://#i', $image)) {
         return $image;
     }
     return seo_url($image);
+}
+
+function seo_image_meta(?string $image = null): array
+{
+    $path = seo_image_path($image);
+    $meta = ['width' => '', 'height' => '', 'type' => ''];
+    if (preg_match('#^https?://#i', $path)) {
+        return $meta;
+    }
+    $file = CMS_ROOT . '/' . ltrim(str_replace('\\', '/', $path), '/');
+    if (!is_file($file)) {
+        return $meta;
+    }
+    $info = @getimagesize($file);
+    if (!is_array($info)) {
+        return $meta;
+    }
+    $meta['width'] = (string) ($info[0] ?? '');
+    $meta['height'] = (string) ($info[1] ?? '');
+    $meta['type'] = (string) ($info['mime'] ?? '');
+    return $meta;
 }
 
 function meta_text(?string $value, int $limit, string $fallback = ''): string
@@ -222,7 +249,7 @@ function schema_organization(): array
         'url' => seo_url(),
         'description' => (string) (seo_settings()['defaultDescription'] ?? ''),
         'image' => seo_image(),
-        'logo' => seo_image((string) (seo_company()['logo'] ?? 'assets/img/logo.png')),
+        'logo' => seo_image('assets/img/favicon.png'),
     ];
     if (!empty($phones[0]['number'])) {
         $node['telephone'] = (string) $phones[0]['number'];
@@ -810,6 +837,7 @@ function page_head(array $page): void
     $keywords = trim((string) ($page['keywords'] ?? ($seo['keywords'] ?? '')));
     $canonical = page_absolute_url($page);
     $image = seo_image($page['image'] ?? null);
+    $imageMeta = seo_image_meta($page['image'] ?? null);
     $robots = (string) ($page['robots'] ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     $type = (string) ($page['type'] ?? 'website');
 
@@ -862,6 +890,14 @@ function page_head(array $page): void
 <meta property="og:description" content="<?= e($description) ?>">
 <meta property="og:url" content="<?= e($canonical) ?>">
 <meta property="og:image" content="<?= e($image) ?>">
+<meta property="og:image:secure_url" content="<?= e($image) ?>">
+<?php if ($imageMeta['type'] !== ''): ?>
+<meta property="og:image:type" content="<?= e($imageMeta['type']) ?>">
+<?php endif; ?>
+<?php if ($imageMeta['width'] !== '' && $imageMeta['height'] !== ''): ?>
+<meta property="og:image:width" content="<?= e($imageMeta['width']) ?>">
+<meta property="og:image:height" content="<?= e($imageMeta['height']) ?>">
+<?php endif; ?>
 <meta property="og:image:alt" content="<?= e($rawTitle !== '' ? $rawTitle : $brand) ?>">
 <meta name="twitter:url" content="<?= e($canonical) ?>">
 <?php if ($type === 'article' && !empty($page['publishedTime'])): ?>
@@ -878,7 +914,8 @@ function page_head(array $page): void
 <meta name="twitter:description" content="<?= e($description) ?>">
 <meta name="twitter:image" content="<?= e($image) ?>">
 <meta name="theme-color" content="#0f1419">
-<link rel="icon" href="<?= e(url_for('assets/img/logo.png')) ?>" type="image/png">
+<link rel="icon" href="<?= e(url_for('assets/img/favicon.png')) ?>" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="<?= e(url_for('assets/img/favicon.png')) ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">

@@ -285,7 +285,9 @@
   }
 
   function buildBlog(limit) {
-    const all = CFG.blog || [];
+    const all = (CFG.blog || []).slice().sort(function (a, b) {
+      return String(b.date || "").localeCompare(String(a.date || ""));
+    });
     const list = limit ? all.slice(0, Number(limit)) : all;
     fill(
       "[data-render='blog']",

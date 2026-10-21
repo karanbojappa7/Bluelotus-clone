@@ -51,7 +51,7 @@ foreach (all_categories() as $cat) {
 $lines[] = '';
 $lines[] = '## Blog articles';
 $count = 0;
-foreach (setting_list('blog') as $post) {
+foreach (blog_posts() as $post) {
     $slug = trim((string) ($post['slug'] ?? ''));
     $title = trim((string) ($post['title'] ?? ''));
     if ($slug === '' || $title === '') {

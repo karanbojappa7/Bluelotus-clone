@@ -131,7 +131,7 @@ function sitemap_products_xml(): string
 
 function sitemap_posts_xml(): string
 {
-    $rows = db_ready() ? setting_list('blog') : [];
+    $rows = blog_posts();
     return sitemap_collection_xml(
         $rows,
         'weekly',

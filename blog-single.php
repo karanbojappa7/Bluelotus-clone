@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/admin/bootstrap.php';
 
 $slug = isset($_GET['post']) ? trim((string) $_GET['post']) : '';
-$posts = db_ready() ? setting_list('blog') : [];
+$posts = blog_posts();
 
 $post = null;
 foreach ($posts as $candidate) {

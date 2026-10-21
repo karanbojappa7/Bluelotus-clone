@@ -12,7 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && post('action') === 'delete') {
     redirect(admin_url('blog/index.php'));
 }
 
-$all = setting_list('blog');
+$all = [];
+foreach (setting_list('blog') as $i => $item) {
+    $item['_index'] = $i;
+    $all[] = $item;
+}
+usort($all, static function (array $a, array $b): int {
+    return strcmp((string) ($b['date'] ?? ''), (string) ($a['date'] ?? ''));
+});
 $pager = paginate_items($all, 10);
 $list = $pager['items'];
 $offset = ($pager['page'] - 1) * $pager['per_page'];
@@ -29,7 +36,7 @@ admin_header('Blog Posts', 'blog');
     <tbody>
       <?php if (!$list): ?><tr><td colspan="4" class="muted">No blog posts yet.</td></tr><?php endif; ?>
       <?php foreach ($list as $i => $item): ?>
-        <?php $realIndex = $offset + $i; ?>
+        <?php $realIndex = (int) ($item['_index'] ?? ($offset + $i)); ?>
         <tr>
           <td><strong><?= e($item['title'] ?? '') ?></strong><div class="muted"><?= e(truncate($item['excerpt'] ?? '', 80)) ?></div></td>
           <td><span class="badge"><?= e($item['slug'] ?? '') ?></span></td>

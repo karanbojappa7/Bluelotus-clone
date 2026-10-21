@@ -1165,7 +1165,7 @@ function build_site_config(): array
         'products' => all_products(),
         'services' => all_services(),
         'testimonials' => setting('testimonials', []),
-        'blog' => setting('blog', []),
+        'blog' => blog_posts(),
         'clients' => all_clients(),
         'faqs' => site_faqs(),
         'hero' => hero_slides(),
@@ -1312,6 +1312,19 @@ function blog_read_minutes(array $post): int
     $text = trim((string) ($post['excerpt'] ?? '') . ' ' . (string) ($post['body'] ?? ''));
     $words = str_word_count(strip_tags($text));
     return max(1, (int) ceil($words / 180));
+}
+
+function blog_posts(): array
+{
+    $posts = setting_list('blog');
+    usort($posts, static function (array $a, array $b): int {
+        $byDate = strcmp((string) ($b['date'] ?? ''), (string) ($a['date'] ?? ''));
+        if ($byDate !== 0) {
+            return $byDate;
+        }
+        return strcmp((string) ($b['updated'] ?? ''), (string) ($a['updated'] ?? ''));
+    });
+    return $posts;
 }
 
 function popular_blog_posts(array $all, string $excludeSlug = '', int $limit = 6): array

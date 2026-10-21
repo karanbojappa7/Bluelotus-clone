@@ -4,7 +4,7 @@ require_once __DIR__ . '/admin/bootstrap.php';
 
 const BLOG_PER_PAGE = 8;
 
-$posts = db_ready() ? setting_list('blog') : [];
+$posts = blog_posts();
 $total = count($posts);
 $pages = max(1, (int) ceil($total / BLOG_PER_PAGE));
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
