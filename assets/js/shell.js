@@ -7,7 +7,6 @@
     { key: "products", href: "products", label: "Products", dropdown: true },
     { key: "faq", href: "faq", label: "FAQ" },
     { key: "blog", href: "blog", label: "Blog" },
-    { key: "careers", href: "careers", label: "Careers" },
     { key: "contact", href: "contact", label: "Contact Us" }
   ];
 
@@ -172,12 +171,13 @@
       <div>
         <h2 class="footer-heading">Company</h2>
         <ul class="footer-links">
+          <li><a href="${url("")}">Home</a></li>
           <li><a href="${url("about")}">About Us</a></li>
-          <li><a href="${url("careers")}">Careers</a></li>
           <li><a href="${url("products")}">Products</a></li>
           <li><a href="${url("faq")}">FAQ</a></li>
           <li><a href="${url("blog")}">Blog</a></li>
           <li><a href="${url("contact")}">Contact</a></li>
+          <li><a href="${url("careers")}">Careers</a></li>
         </ul>
       </div>
       <div>
