@@ -66,23 +66,18 @@ page_head([
         <h2 class="section-title"><?= e(page_text($about, 'approachTitle')) ?></h2>
       </div>
     </div>
+    <?php $approachTiles = about_approach_tiles($about); ?>
+    <?php if ($approachTiles): ?>
     <div class="grid grid-3">
+      <?php foreach ($approachTiles as $tile): ?>
       <div class="tile" data-reveal>
-        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-consult"></use></svg></div>
-        <h3><?= e(page_text($about, 'tile1Title')) ?></h3>
-        <p><?= e(page_text($about, 'tile1Body')) ?></p>
+        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-<?= e($tile['icon']) ?>"></use></svg></div>
+        <h3><?= e($tile['title']) ?></h3>
+        <p><?= e($tile['body']) ?></p>
       </div>
-      <div class="tile" data-reveal>
-        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-shield"></use></svg></div>
-        <h3><?= e(page_text($about, 'tile2Title')) ?></h3>
-        <p><?= e(page_text($about, 'tile2Body')) ?></p>
-      </div>
-      <div class="tile" data-reveal>
-        <div class="icon-wrap"><svg width="24" height="24" aria-hidden="true"><use href="<?= e(url_for('assets/img/sprite.svg')) ?>#icon-award"></use></svg></div>
-        <h3><?= e(page_text($about, 'tile3Title')) ?></h3>
-        <p><?= e(page_text($about, 'tile3Body')) ?></p>
-      </div>
+      <?php endforeach; ?>
     </div>
+    <?php endif; ?>
   </div>
 </section>
 

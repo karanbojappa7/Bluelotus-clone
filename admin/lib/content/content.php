@@ -574,6 +574,11 @@ function page_copy(string $slug): array
     $defaults = default_page_copy()[$slug] ?? [];
     $all = setting('pages', []);
     $stored = is_array($all) && is_array($all[$slug] ?? null) ? $all[$slug] : [];
+    foreach ($stored as $key => $next) {
+        if (is_array($next)) {
+            $defaults[$key] = $next;
+        }
+    }
     foreach ($defaults as $key => $value) {
         if (!array_key_exists($key, $stored)) {
             continue;
@@ -584,6 +589,75 @@ function page_copy(string $slug): array
         }
     }
     return $defaults;
+}
+
+function about_approach_icons(): array
+{
+    return [
+        'consult' => 'Person',
+        'shield' => 'Shield',
+        'award' => 'Award',
+        'check' => 'Check',
+        'maintenance' => 'Tools',
+        'resource' => 'Document',
+    ];
+}
+
+function about_approach_tiles(array $copy): array
+{
+    $icons = about_approach_icons();
+    $stored = $copy['approachTiles'] ?? null;
+    if (is_array($stored)) {
+        $tiles = [];
+        foreach ($stored as $tile) {
+            if (!is_array($tile)) {
+                continue;
+            }
+            $title = trim((string) ($tile['title'] ?? ''));
+            $body = trim((string) ($tile['body'] ?? ''));
+            if ($title === '' && $body === '') {
+                continue;
+            }
+            $icon = (string) ($tile['icon'] ?? 'consult');
+            if (!isset($icons[$icon])) {
+                $icon = 'consult';
+            }
+            $tiles[] = ['icon' => $icon, 'title' => $title, 'body' => $body];
+        }
+        return $tiles;
+    }
+
+    $fallback = [
+        ['icon' => 'consult', 'title' => page_text($copy, 'tile1Title'), 'body' => page_text($copy, 'tile1Body')],
+        ['icon' => 'shield', 'title' => page_text($copy, 'tile2Title'), 'body' => page_text($copy, 'tile2Body')],
+        ['icon' => 'award', 'title' => page_text($copy, 'tile3Title'), 'body' => page_text($copy, 'tile3Body')],
+    ];
+    return array_values(array_filter($fallback, static fn (array $tile): bool => $tile['title'] !== '' || $tile['body'] !== ''));
+}
+
+function about_tiles_from_post(): array
+{
+    $icons = array_keys(about_approach_icons());
+    $titles = $_POST['tileTitle'] ?? [];
+    $bodies = $_POST['tileBody'] ?? [];
+    $chosen = $_POST['tileIcon'] ?? [];
+    if (!is_array($titles)) {
+        return [];
+    }
+    $tiles = [];
+    foreach ($titles as $i => $title) {
+        $title = trim((string) $title);
+        $body = trim((string) ($bodies[$i] ?? ''));
+        if ($title === '' && $body === '') {
+            continue;
+        }
+        $icon = (string) ($chosen[$i] ?? 'consult');
+        if (!in_array($icon, $icons, true)) {
+            $icon = 'consult';
+        }
+        $tiles[] = ['icon' => $icon, 'title' => $title, 'body' => $body];
+    }
+    return $tiles;
 }
 
 function save_page_copy(string $slug, array $data): void
@@ -753,12 +827,7 @@ function page_editor_fields(string $slug): array
             ['legend' => 'Approach tiles'],
             ['key' => 'approachEyebrow', 'label' => 'Eyebrow'],
             ['key' => 'approachTitle', 'label' => 'Heading', 'full' => true],
-            ['key' => 'tile1Title', 'label' => 'Tile 1 title'],
-            ['key' => 'tile1Body', 'label' => 'Tile 1 text', 'type' => 'textarea'],
-            ['key' => 'tile2Title', 'label' => 'Tile 2 title'],
-            ['key' => 'tile2Body', 'label' => 'Tile 2 text', 'type' => 'textarea'],
-            ['key' => 'tile3Title', 'label' => 'Tile 3 title'],
-            ['key' => 'tile3Body', 'label' => 'Tile 3 text', 'type' => 'textarea'],
+            ['key' => 'approachTiles', 'label' => 'Cards', 'type' => 'approach-tiles', 'full' => true],
             ['legend' => 'Leadership & CTA'],
             ['key' => 'teamEyebrow', 'label' => 'Team eyebrow'],
             ['key' => 'teamTitle', 'label' => 'Team heading'],

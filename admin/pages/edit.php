@@ -52,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $next[$key] = (string) ($_POST[$key] ?? '');
             continue;
         }
+        if ($type === 'approach-tiles') {
+            $next[$key] = about_tiles_from_post();
+            continue;
+        }
         $next[$key] = post($key);
     }
     if ($slug === 'home' && !$errors) {
@@ -208,6 +212,51 @@ admin_header($labels[$slug], 'pages', ['Pages' => 'pages/index.php']);
             <span class="hint"><?= e((string) $field['hint']) ?></span>
           <?php endif; ?>
         </label>
+      <?php elseif ($type === 'approach-tiles'): ?>
+        <?php $approachTiles = about_approach_tiles($item); ?>
+        <div class="full">
+          <p class="muted">Add as many cards as you need. Leave a card blank to skip it.</p>
+          <div data-approach-list>
+            <?php foreach ($approachTiles as $tile): ?>
+              <?php $icon = (string) ($tile['icon'] ?? 'consult'); ?>
+              <div class="form-grid" data-approach-card style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--line)">
+                <label>Icon
+                  <select name="tileIcon[]">
+                    <?php foreach (about_approach_icons() as $iconKey => $iconLabel): ?>
+                      <option value="<?= e($iconKey) ?>" <?= $icon === $iconKey ? 'selected' : '' ?>><?= e($iconLabel) ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </label>
+                <label>Title
+                  <input type="text" name="tileTitle[]" value="<?= e((string) ($tile['title'] ?? '')) ?>">
+                </label>
+                <label class="full">Text
+                  <textarea name="tileBody[]" rows="3"><?= e((string) ($tile['body'] ?? '')) ?></textarea>
+                </label>
+                <div class="full"><button class="btn btn-danger btn-sm" type="button" data-remove-approach>Remove</button></div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <template id="approach-tile-template">
+            <div class="form-grid" data-approach-card style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--line)">
+              <label>Icon
+                <select name="tileIcon[]">
+                  <?php foreach (about_approach_icons() as $iconKey => $iconLabel): ?>
+                    <option value="<?= e($iconKey) ?>"><?= e($iconLabel) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </label>
+              <label>Title
+                <input type="text" name="tileTitle[]" value="">
+              </label>
+              <label class="full">Text
+                <textarea name="tileBody[]" rows="3"></textarea>
+              </label>
+              <div class="full"><button class="btn btn-danger btn-sm" type="button" data-remove-approach>Remove</button></div>
+            </div>
+          </template>
+          <button class="btn btn-secondary" type="button" data-add-approach>Add card</button>
+        </div>
       <?php elseif ($type === 'textarea'): ?>
         <label class="<?= field_class($errors, $key, $full) ?>"><?= e($label) ?>
           <textarea name="<?= e($key) ?>" rows="3"><?= e($value) ?></textarea>
@@ -230,4 +279,20 @@ admin_header($labels[$slug], 'pages', ['Pages' => 'pages/index.php']);
     <a class="btn btn-secondary" href="<?= e(admin_url('pages/index.php')) ?>">Back</a>
   </div>
 </form>
+<script>
+document.querySelectorAll("[data-add-approach]").forEach(function (button) {
+  button.addEventListener("click", function () {
+    var list = document.querySelector("[data-approach-list]");
+    var template = document.getElementById("approach-tile-template");
+    if (!list || !template) return;
+    list.appendChild(template.content.cloneNode(true));
+  });
+});
+document.addEventListener("click", function (event) {
+  var button = event.target.closest("[data-remove-approach]");
+  if (!button) return;
+  var card = button.closest("[data-approach-card]");
+  if (card) card.remove();
+});
+</script>
 <?php admin_footer(); ?>
