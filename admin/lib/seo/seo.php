@@ -621,10 +621,29 @@ function analytics_settings(): array
     return $cache;
 }
 
+function gtm_container_id(): string
+{
+    $id = trim((string) (analytics_settings()['gtmId'] ?? ''));
+    if (preg_match('/^GTM-[A-Z0-9]{4,}$/', $id) !== 1) {
+        $id = 'GTM-WBQQ5MMZ';
+    }
+    return $id;
+}
+
 function analytics_head(): string
 {
     $a = analytics_settings();
-    $html = '';
+    $gtmId = gtm_container_id();
+    $html = <<<HTML
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','{$gtmId}');</script>
+<!-- End Google Tag Manager -->
+
+HTML;
 
     $gaId = trim((string) ($a['gaId'] ?? ''));
     $adsId = trim((string) ($a['adsId'] ?? ''));
@@ -640,14 +659,6 @@ function analytics_head(): string
             $html .= 'gtag("config",' . json_encode($adsId) . ');';
         }
         $html .= '</script>';
-    }
-
-    $gtmId = trim((string) ($a['gtmId'] ?? ''));
-    if ($gtmId !== '') {
-        $html .= '<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});'
-            . 'var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";'
-            . 'j.async=true;j.src="https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);'
-            . '})(window,document,"script","dataLayer",' . json_encode($gtmId) . ');</script>';
     }
 
     $clarityId = trim((string) ($a['clarityId'] ?? ''));
@@ -680,12 +691,13 @@ function analytics_head(): string
 
 function analytics_body(): string
 {
-    $gtmId = trim((string) (analytics_settings()['gtmId'] ?? ''));
-    if ($gtmId === '') {
-        return '';
-    }
-    return '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=' . e($gtmId)
-        . '" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>';
+    $gtmId = gtm_container_id();
+    return <<<HTML
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={$gtmId}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+HTML;
 }
 
 function ads_conversion_send_to(): string
